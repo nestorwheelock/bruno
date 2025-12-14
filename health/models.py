@@ -537,6 +537,305 @@ class VCOGCTCAEEvent(models.Model):
         return f"{self.get_event_display()} (Grade {self.grade}) on {self.date}"
 
 
+class DogProfile(models.Model):
+    """
+    Dog profile for calculating nutritional targets based on body weight.
+
+    Nutritional calculations based on:
+    - Ogilvie GK et al. Cancer. 2000;88(8):1916-1928. (EPA/DHA dosing)
+    - Case LP et al. Canine and Feline Nutrition. 3rd ed. 2011. (general nutrition)
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, default='Bruno')
+    weight_kg = models.DecimalField(
+        max_digits=5, decimal_places=2,
+        validators=[MinValueValidator(1)],
+        help_text="Current weight in kilograms"
+    )
+    target_weight_kg = models.DecimalField(
+        max_digits=5, decimal_places=2, null=True, blank=True,
+        help_text="Target/ideal weight in kilograms"
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.weight_kg} kg)"
+
+    @property
+    def daily_food_min_g(self):
+        """Minimum daily food intake (2.5% of body weight)."""
+        return float(self.weight_kg) * 1000 * 0.025
+
+    @property
+    def daily_food_max_g(self):
+        """Maximum daily food intake (3.0% of body weight)."""
+        return float(self.weight_kg) * 1000 * 0.030
+
+    @property
+    def daily_calcium_min_mg(self):
+        """Minimum daily calcium (50 mg/kg)."""
+        return float(self.weight_kg) * 50
+
+    @property
+    def daily_calcium_max_mg(self):
+        """Maximum daily calcium (60 mg/kg)."""
+        return float(self.weight_kg) * 60
+
+    @property
+    def daily_omega3_min_mg(self):
+        """Minimum daily EPA+DHA (50 mg/kg)."""
+        return float(self.weight_kg) * 50
+
+    @property
+    def daily_omega3_max_mg(self):
+        """Maximum daily EPA+DHA (100 mg/kg)."""
+        return float(self.weight_kg) * 100
+
+
+class Food(models.Model):
+    """
+    Food database for cancer-supportive nutrition.
+
+    Classification based on:
+    - Vail DM, Ogilvie GK et al. J Vet Intern Med. 1990;4(1):8-14. (Warburg effect)
+    - Phungviwatnikul T et al. Clin Transl Med. 2022;12(9):e1065. (ketogenic approach)
+    """
+    CATEGORY_CHOICES = [
+        ('protein', 'Protein'),
+        ('fat', 'Fat/Oil'),
+        ('vegetable', 'Vegetable'),
+        ('carb', 'Carbohydrate'),
+        ('supplement', 'Supplement'),
+        ('commercial', 'Commercial Food'),
+        ('other', 'Other'),
+    ]
+
+    STATUS_CHOICES = [
+        ('approved', 'Approved'),
+        ('limited', 'Limited Use'),
+        ('avoid', 'Avoid'),
+        ('blocked', 'Blocked - Do Not Use'),
+    ]
+
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='approved')
+
+    # Nutritional info per 100g
+    calories_per_100g = models.IntegerField(null=True, blank=True)
+    protein_g_per_100g = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
+    fat_g_per_100g = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
+    carbs_g_per_100g = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True)
+
+    # Specific nutrients
+    epa_mg_per_100g = models.IntegerField(null=True, blank=True, help_text="EPA omega-3 in mg")
+    dha_mg_per_100g = models.IntegerField(null=True, blank=True, help_text="DHA omega-3 in mg")
+    calcium_mg_per_100g = models.IntegerField(null=True, blank=True)
+
+    # Usage guidelines
+    max_per_day = models.CharField(max_length=100, blank=True,
+        help_text="Maximum recommended per day (e.g., '2 eggs', '3 meals/week')")
+    max_per_week = models.IntegerField(null=True, blank=True,
+        help_text="Maximum servings per week (for limited foods)")
+
+    notes = models.TextField(blank=True)
+    warning = models.TextField(blank=True, help_text="Warning message if status is limited/avoid")
+
+    class Meta:
+        ordering = ['category', 'name']
+
+    def __str__(self):
+        return f"{self.name} ({self.get_status_display()})"
+
+
+class Meal(models.Model):
+    """
+    Individual meal tracking.
+
+    Based on feeding recommendations:
+    - 3-4 small meals per day
+    - Zero carbohydrate approach for cancer support
+    """
+    MEAL_TYPE_CHOICES = [
+        ('breakfast', 'Breakfast'),
+        ('lunch', 'Lunch'),
+        ('dinner', 'Dinner'),
+        ('snack', 'Snack'),
+    ]
+
+    APPETITE_CHOICES = [
+        ('excellent', 'Excellent - Ate eagerly'),
+        ('good', 'Good - Ate well'),
+        ('fair', 'Fair - Ate some'),
+        ('poor', 'Poor - Barely ate'),
+        ('refused', 'Refused to eat'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    meal_type = models.CharField(max_length=20, choices=MEAL_TYPE_CHOICES)
+    time = models.TimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Appetite tracking
+    appetite = models.CharField(max_length=20, choices=APPETITE_CHOICES, blank=True)
+    hand_fed = models.BooleanField(default=False, help_text="Food was hand-fed")
+    warmed = models.BooleanField(default=False, help_text="Food was warmed to enhance smell")
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-date', '-time']
+
+    def __str__(self):
+        return f"{self.get_meal_type_display()} on {self.date}"
+
+    @property
+    def total_grams(self):
+        return sum(item.amount_g for item in self.items.all())
+
+    @property
+    def total_protein_g(self):
+        total = 0
+        for item in self.items.all():
+            if item.food and item.food.protein_g_per_100g:
+                total += float(item.food.protein_g_per_100g) * item.amount_g / 100
+        return round(total, 1)
+
+    @property
+    def total_fat_g(self):
+        total = 0
+        for item in self.items.all():
+            if item.food and item.food.fat_g_per_100g:
+                total += float(item.food.fat_g_per_100g) * item.amount_g / 100
+        return round(total, 1)
+
+    @property
+    def total_carbs_g(self):
+        total = 0
+        for item in self.items.all():
+            if item.food and item.food.carbs_g_per_100g:
+                total += float(item.food.carbs_g_per_100g) * item.amount_g / 100
+        return round(total, 1)
+
+
+class MealItem(models.Model):
+    """Individual food items within a meal."""
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name='items')
+    food = models.ForeignKey(Food, on_delete=models.SET_NULL, null=True, blank=True)
+    custom_food_name = models.CharField(max_length=100, blank=True,
+        help_text="If food not in database")
+    amount_g = models.IntegerField(help_text="Amount in grams")
+    amount_display = models.CharField(max_length=50, blank=True,
+        help_text="Human readable amount (e.g., '2 eggs', '1 cup')")
+
+    def __str__(self):
+        name = self.food.name if self.food else self.custom_food_name
+        return f"{name} ({self.amount_g}g)"
+
+
+class SupplementDose(models.Model):
+    """
+    Track daily supplement doses.
+
+    Required supplements for home-prepared cancer diet:
+    - Calcium: 50-60 mg/kg/day
+    - Omega-3 (EPA+DHA): 50-100 mg/kg/day
+    - Multivitamin: Daily
+
+    Based on: Ogilvie GK et al. Cancer. 2000;88(8):1916-1928.
+    """
+    SUPPLEMENT_CHOICES = [
+        ('calcium', 'Calcium'),
+        ('fish_oil', 'Fish Oil (Omega-3)'),
+        ('multivitamin', 'Multivitamin'),
+        ('vitamin_e', 'Vitamin E'),
+        ('vitamin_b', 'B-Complex'),
+        ('probiotic', 'Probiotic'),
+        ('other', 'Other'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    supplement_type = models.CharField(max_length=20, choices=SUPPLEMENT_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Dosage info
+    product_name = models.CharField(max_length=200, blank=True)
+    dose_amount = models.CharField(max_length=50, blank=True,
+        help_text="e.g., '1 tsp', '2 capsules', '1000 mg'")
+
+    # Specific amounts (for calculation)
+    calcium_mg = models.IntegerField(null=True, blank=True)
+    epa_mg = models.IntegerField(null=True, blank=True)
+    dha_mg = models.IntegerField(null=True, blank=True)
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-date', 'supplement_type']
+
+    def __str__(self):
+        return f"{self.get_supplement_type_display()} on {self.date}"
+
+    @property
+    def omega3_total_mg(self):
+        """Total EPA + DHA in mg."""
+        epa = self.epa_mg or 0
+        dha = self.dha_mg or 0
+        return epa + dha
+
+
+class DailyNutritionSummary(models.Model):
+    """
+    Aggregated daily nutrition summary with targets and warnings.
+
+    Targets based on:
+    - Daily food: 2.5-3.0% of body weight
+    - Protein: 30-45% of calories
+    - Fat: 30-50% of calories
+    - Carbs: <15-25% (ideally near zero)
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # Totals (auto-calculated from meals)
+    total_food_g = models.IntegerField(default=0)
+    total_protein_g = models.DecimalField(max_digits=6, decimal_places=1, default=0)
+    total_fat_g = models.DecimalField(max_digits=6, decimal_places=1, default=0)
+    total_carbs_g = models.DecimalField(max_digits=6, decimal_places=1, default=0)
+
+    # Supplement totals
+    total_calcium_mg = models.IntegerField(default=0)
+    total_omega3_mg = models.IntegerField(default=0)
+    multivitamin_given = models.BooleanField(default=False)
+
+    # Counts
+    meals_count = models.IntegerField(default=0)
+    eggs_count = models.IntegerField(default=0)
+    tuna_servings = models.IntegerField(default=0)
+
+    # Flags/Warnings
+    carbs_warning = models.BooleanField(default=False)
+    calcium_low = models.BooleanField(default=False)
+    omega3_low = models.BooleanField(default=False)
+    food_low = models.BooleanField(default=False)
+    eggs_warning = models.BooleanField(default=False)
+    tuna_warning = models.BooleanField(default=False)
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = 'Daily Nutrition Summary'
+        verbose_name_plural = 'Daily Nutrition Summaries'
+
+    def __str__(self):
+        return f"Nutrition Summary for {self.date}"
+
+
 class TreatmentSession(models.Model):
     """
     Track chemotherapy and other treatment sessions.

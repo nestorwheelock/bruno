@@ -12,7 +12,8 @@ import json
 
 from .models import (
     DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
-    CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession
+    CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession,
+    DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary
 )
 
 
@@ -543,3 +544,416 @@ def set_language(request):
         if lang in [code for code, _ in settings.LANGUAGES]:
             request.session['django_language'] = lang
     return redirect(request.META.get('HTTP_REFERER', '/health/'))
+
+
+# ==================== NUTRITION TRACKING ====================
+
+@login_required(login_url='health:login')
+def nutrition_view(request):
+    """
+    Main nutrition tracking page.
+
+    Shows daily meal logging, supplement tracking, and nutritional targets
+    based on dog's weight and zero-carbohydrate cancer diet protocol.
+
+    Scientific basis:
+    - Ogilvie GK et al. Cancer. 2000;88(8):1916-1928.
+    - Vail DM, Ogilvie GK et al. J Vet Intern Med. 1990;4(1):8-14.
+    """
+    today = date.today()
+
+    # Get or create dog profile
+    profile, created = DogProfile.objects.get_or_create(
+        user=request.user,
+        defaults={'name': 'Bruno', 'weight_kg': 22}
+    )
+
+    # Today's meals
+    meals = Meal.objects.filter(user=request.user, date=today)
+
+    # Today's supplements
+    supplements = SupplementDose.objects.filter(user=request.user, date=today)
+
+    # Calculate today's totals
+    total_food_g = sum(m.total_grams for m in meals)
+    total_protein_g = sum(m.total_protein_g for m in meals)
+    total_fat_g = sum(m.total_fat_g for m in meals)
+    total_carbs_g = sum(m.total_carbs_g for m in meals)
+
+    # Supplement totals
+    calcium_supplements = supplements.filter(supplement_type='calcium')
+    fish_oil_supplements = supplements.filter(supplement_type='fish_oil')
+    total_calcium_mg = sum(s.calcium_mg or 0 for s in calcium_supplements)
+    total_omega3_mg = sum(s.omega3_total_mg for s in fish_oil_supplements)
+    multivitamin_given = supplements.filter(supplement_type='multivitamin').exists()
+
+    # Get approved foods for the form
+    approved_foods = Food.objects.filter(status__in=['approved', 'limited']).order_by('category', 'name')
+
+    # Warnings
+    warnings = []
+    if total_carbs_g > 5:
+        warnings.append(_('Carbohydrate intake detected! Zero-carb target exceeded.'))
+    if total_calcium_mg < profile.daily_calcium_min_mg * 0.5:
+        warnings.append(_('Calcium supplementation below target.'))
+    if total_omega3_mg < profile.daily_omega3_min_mg * 0.5:
+        warnings.append(_('Omega-3 (EPA/DHA) supplementation below target.'))
+    if not multivitamin_given:
+        warnings.append(_('Daily multivitamin not logged yet.'))
+
+    context = {
+        'profile': profile,
+        'meals': meals,
+        'supplements': supplements,
+        'approved_foods': approved_foods,
+        'today': today,
+        # Totals
+        'total_food_g': total_food_g,
+        'total_protein_g': total_protein_g,
+        'total_fat_g': total_fat_g,
+        'total_carbs_g': total_carbs_g,
+        'total_calcium_mg': total_calcium_mg,
+        'total_omega3_mg': total_omega3_mg,
+        'multivitamin_given': multivitamin_given,
+        # Targets
+        'food_target_min': profile.daily_food_min_g,
+        'food_target_max': profile.daily_food_max_g,
+        'calcium_target_min': profile.daily_calcium_min_mg,
+        'calcium_target_max': profile.daily_calcium_max_mg,
+        'omega3_target_min': profile.daily_omega3_min_mg,
+        'omega3_target_max': profile.daily_omega3_max_mg,
+        # Warnings
+        'warnings': warnings,
+    }
+    return render(request, 'health/nutrition.html', context)
+
+
+@login_required(login_url='health:login')
+@require_POST
+def save_meal(request):
+    """Save a meal with items."""
+    data = json.loads(request.body)
+
+    meal = Meal.objects.create(
+        user=request.user,
+        date=data.get('date', date.today()),
+        meal_type=data['meal_type'],
+        time=data.get('time'),
+        appetite=data.get('appetite', ''),
+        hand_fed=data.get('hand_fed', False),
+        warmed=data.get('warmed', False),
+        notes=data.get('notes', '')
+    )
+
+    # Add meal items
+    items = data.get('items', [])
+    for item in items:
+        food_id = item.get('food_id')
+        food = Food.objects.get(pk=food_id) if food_id else None
+
+        MealItem.objects.create(
+            meal=meal,
+            food=food,
+            custom_food_name=item.get('custom_food_name', ''),
+            amount_g=item['amount_g'],
+            amount_display=item.get('amount_display', '')
+        )
+
+        # Check for blocked foods
+        if food and food.status == 'blocked':
+            return JsonResponse({
+                'status': 'warning',
+                'message': f'{food.name}: {food.warning}',
+                'id': meal.id
+            })
+
+    return JsonResponse({
+        'status': 'success',
+        'id': meal.id,
+        'total_grams': meal.total_grams,
+        'total_protein_g': meal.total_protein_g,
+        'total_fat_g': meal.total_fat_g,
+        'total_carbs_g': meal.total_carbs_g,
+    })
+
+
+@login_required(login_url='health:login')
+@require_POST
+def save_supplement(request):
+    """Save a supplement dose."""
+    data = json.loads(request.body)
+
+    supplement = SupplementDose.objects.create(
+        user=request.user,
+        date=data.get('date', date.today()),
+        supplement_type=data['supplement_type'],
+        product_name=data.get('product_name', ''),
+        dose_amount=data.get('dose_amount', ''),
+        calcium_mg=data.get('calcium_mg'),
+        epa_mg=data.get('epa_mg'),
+        dha_mg=data.get('dha_mg'),
+        notes=data.get('notes', '')
+    )
+
+    return JsonResponse({
+        'status': 'success',
+        'id': supplement.id,
+        'omega3_total': supplement.omega3_total_mg
+    })
+
+
+@login_required(login_url='health:login')
+@require_POST
+def update_weight(request):
+    """Update dog's weight."""
+    data = json.loads(request.body)
+
+    profile, created = DogProfile.objects.get_or_create(
+        user=request.user,
+        defaults={'name': 'Bruno', 'weight_kg': data['weight_kg']}
+    )
+
+    if not created:
+        profile.weight_kg = data['weight_kg']
+        if 'target_weight_kg' in data:
+            profile.target_weight_kg = data['target_weight_kg']
+        profile.save()
+
+    return JsonResponse({
+        'status': 'success',
+        'weight_kg': float(profile.weight_kg),
+        'daily_food_min_g': profile.daily_food_min_g,
+        'daily_food_max_g': profile.daily_food_max_g,
+        'daily_calcium_min_mg': profile.daily_calcium_min_mg,
+        'daily_calcium_max_mg': profile.daily_calcium_max_mg,
+        'daily_omega3_min_mg': profile.daily_omega3_min_mg,
+        'daily_omega3_max_mg': profile.daily_omega3_max_mg,
+    })
+
+
+@login_required(login_url='health:login')
+def food_database(request):
+    """View food database with status indicators."""
+    foods = Food.objects.all().order_by('status', 'category', 'name')
+
+    context = {
+        'foods': foods,
+        'categories': Food.CATEGORY_CHOICES,
+        'statuses': Food.STATUS_CHOICES,
+    }
+    return render(request, 'health/food_database.html', context)
+
+
+@login_required(login_url='health:login')
+def api_foods(request):
+    """API endpoint for food database."""
+    category = request.GET.get('category')
+    status = request.GET.get('status')
+
+    foods = Food.objects.all()
+    if category:
+        foods = foods.filter(category=category)
+    if status:
+        foods = foods.filter(status=status)
+
+    data = [{
+        'id': f.id,
+        'name': f.name,
+        'category': f.category,
+        'status': f.status,
+        'calories_per_100g': f.calories_per_100g,
+        'protein_g_per_100g': float(f.protein_g_per_100g) if f.protein_g_per_100g else None,
+        'fat_g_per_100g': float(f.fat_g_per_100g) if f.fat_g_per_100g else None,
+        'carbs_g_per_100g': float(f.carbs_g_per_100g) if f.carbs_g_per_100g else None,
+        'warning': f.warning,
+        'notes': f.notes,
+    } for f in foods]
+
+    return JsonResponse({'foods': data})
+
+
+@login_required(login_url='health:login')
+def api_nutrition_summary(request):
+    """API endpoint for nutrition summary over time."""
+    days = int(request.GET.get('days', 7))
+    end_date = date.today()
+    start_date = end_date - timedelta(days=days)
+
+    # Get meals for the period
+    meals_by_date = {}
+    meals = Meal.objects.filter(
+        user=request.user,
+        date__gte=start_date,
+        date__lte=end_date
+    ).order_by('date')
+
+    for meal in meals:
+        d = meal.date.isoformat()
+        if d not in meals_by_date:
+            meals_by_date[d] = {
+                'food_g': 0,
+                'protein_g': 0,
+                'fat_g': 0,
+                'carbs_g': 0,
+            }
+        meals_by_date[d]['food_g'] += meal.total_grams
+        meals_by_date[d]['protein_g'] += meal.total_protein_g
+        meals_by_date[d]['fat_g'] += meal.total_fat_g
+        meals_by_date[d]['carbs_g'] += meal.total_carbs_g
+
+    # Build response
+    labels = []
+    food_data = []
+    protein_data = []
+    fat_data = []
+    carbs_data = []
+
+    current = start_date
+    while current <= end_date:
+        d = current.isoformat()
+        labels.append(current.strftime('%m/%d'))
+        if d in meals_by_date:
+            food_data.append(meals_by_date[d]['food_g'])
+            protein_data.append(meals_by_date[d]['protein_g'])
+            fat_data.append(meals_by_date[d]['fat_g'])
+            carbs_data.append(meals_by_date[d]['carbs_g'])
+        else:
+            food_data.append(0)
+            protein_data.append(0)
+            fat_data.append(0)
+            carbs_data.append(0)
+        current += timedelta(days=1)
+
+    return JsonResponse({
+        'labels': labels,
+        'food_g': food_data,
+        'protein_g': protein_data,
+        'fat_g': fat_data,
+        'carbs_g': carbs_data,
+    })
+
+
+@login_required(login_url='health:login')
+def meal_planning_view(request):
+    """
+    Comprehensive meal planning guide for homemade cancer diet.
+
+    Includes:
+    - Sample weekly meal plans
+    - Food preparation instructions
+    - Supplement preparation guides
+    - Shopping lists
+    - Portion calculators based on weight
+    """
+    # Get or create dog profile
+    profile, created = DogProfile.objects.get_or_create(
+        user=request.user,
+        defaults={'name': 'Bruno', 'weight_kg': 22}
+    )
+
+    # Calculate daily food targets
+    weight_kg = float(profile.weight_kg)
+    daily_food_min = weight_kg * 1000 * 0.025  # 2.5% body weight
+    daily_food_max = weight_kg * 1000 * 0.030  # 3.0% body weight
+    daily_food_target = (daily_food_min + daily_food_max) / 2
+
+    # Meal portions (assuming 3 meals/day)
+    meal_portion = daily_food_target / 3
+
+    # Macronutrient targets (grams per day)
+    # High protein: 30-45% of calories from protein
+    # High fat: 30-50% of calories from fat
+    # Zero carbs
+
+    # Sample meal plans with portion sizes based on weight
+    sample_meals = {
+        'breakfast': [
+            {
+                'name': _('Scrambled Eggs + Chicken'),
+                'items': [
+                    {'food': 'Eggs (scrambled)', 'amount': round(meal_portion * 0.3)},
+                    {'food': 'Chicken breast (boiled)', 'amount': round(meal_portion * 0.7)},
+                ],
+                'prep_time': '10 min',
+                'notes': _('Scramble eggs without oil. Chop pre-cooked chicken.')
+            },
+            {
+                'name': _('Sardine Bowl'),
+                'items': [
+                    {'food': 'Sardines (canned in water)', 'amount': round(meal_portion * 0.5)},
+                    {'food': 'Hard-boiled egg', 'amount': round(meal_portion * 0.3)},
+                    {'food': 'Chicken broth', 'amount': round(meal_portion * 0.2)},
+                ],
+                'prep_time': '5 min',
+                'notes': _('Mash sardines, chop egg, mix with warm broth.')
+            },
+        ],
+        'lunch': [
+            {
+                'name': _('Ground Beef Mix'),
+                'items': [
+                    {'food': 'Ground beef (cooked)', 'amount': round(meal_portion * 0.8)},
+                    {'food': 'Chicken liver (cooked)', 'amount': round(meal_portion * 0.2)},
+                ],
+                'prep_time': '15 min',
+                'notes': _('Pan-cook beef until no pink. Add small amount of liver for nutrients.')
+            },
+            {
+                'name': _('Turkey & Egg'),
+                'items': [
+                    {'food': 'Turkey (ground, cooked)', 'amount': round(meal_portion * 0.7)},
+                    {'food': 'Egg (scrambled)', 'amount': round(meal_portion * 0.3)},
+                ],
+                'prep_time': '12 min',
+                'notes': _('Cook turkey thoroughly. Mix with scrambled egg.')
+            },
+        ],
+        'dinner': [
+            {
+                'name': _('Salmon Dinner'),
+                'items': [
+                    {'food': 'Salmon (baked/canned)', 'amount': round(meal_portion * 0.6)},
+                    {'food': 'Chicken thigh (boiled)', 'amount': round(meal_portion * 0.4)},
+                ],
+                'prep_time': '20 min',
+                'notes': _('Excellent omega-3 source. Remove skin if watching fat.')
+            },
+            {
+                'name': _('Lamb & Chicken'),
+                'items': [
+                    {'food': 'Lamb (ground, cooked)', 'amount': round(meal_portion * 0.5)},
+                    {'food': 'Chicken breast (boiled)', 'amount': round(meal_portion * 0.5)},
+                ],
+                'prep_time': '15 min',
+                'notes': _('Higher fat option good for maintaining weight.')
+            },
+        ],
+    }
+
+    # Weekly shopping list based on 7-day plan
+    weekly_protein_g = daily_food_target * 7
+    shopping_list = [
+        {'item': _('Chicken breast/thigh'), 'amount': f'{round(weekly_protein_g * 0.3 / 1000, 1)} kg'},
+        {'item': _('Ground beef (lean)'), 'amount': f'{round(weekly_protein_g * 0.25 / 1000, 1)} kg'},
+        {'item': _('Eggs'), 'amount': f'{min(21, round(weekly_protein_g * 0.15 / 50))} units'},  # Max 3/day
+        {'item': _('Sardines (canned)'), 'amount': f'{round(weekly_protein_g * 0.1 / 100)} cans'},
+        {'item': _('Salmon (fresh or canned)'), 'amount': f'{round(weekly_protein_g * 0.1 / 1000, 1)} kg'},
+        {'item': _('Turkey (ground)'), 'amount': f'{round(weekly_protein_g * 0.1 / 1000, 1)} kg'},
+    ]
+
+    # Supplement needs
+    calcium_daily = weight_kg * 55  # 50-60mg per kg
+    omega3_daily = weight_kg * 75   # 50-100mg per kg
+
+    context = {
+        'profile': profile,
+        'daily_food_min': daily_food_min,
+        'daily_food_max': daily_food_max,
+        'daily_food_target': daily_food_target,
+        'meal_portion': meal_portion,
+        'sample_meals': sample_meals,
+        'shopping_list': shopping_list,
+        'calcium_daily': calcium_daily,
+        'omega3_daily': omega3_daily,
+    }
+    return render(request, 'health/meal_planning.html', context)

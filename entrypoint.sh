@@ -9,6 +9,9 @@ done
 echo "Running migrations..."
 python manage.py migrate --noinput
 
+echo "Loading food database..."
+python manage.py loaddata foods --verbosity=1 2>/dev/null || echo "Foods fixture already loaded or not found"
+
 echo "Creating users..."
 python manage.py shell << EOF
 from django.contrib.auth.models import User

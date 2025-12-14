@@ -1,0 +1,384 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Food Database" %} - Bruno{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sub-nav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .sub-nav a {
+        padding: 8px 16px;
+        background: var(--gray-100);
+        border-radius: 20px;
+        text-decoration: none;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .sub-nav a.active {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    .filter-section {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 8px 14px;
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .filter-btn.active {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+    }
+
+    .filter-btn.approved { border-color: var(--success); color: var(--success); }
+    .filter-btn.approved.active { background: var(--success); color: var(--white); }
+
+    .filter-btn.limited { border-color: var(--warning); color: var(--warning); }
+    .filter-btn.limited.active { background: var(--warning); color: var(--white); }
+
+    .filter-btn.avoid { border-color: #f97316; color: #f97316; }
+    .filter-btn.avoid.active { background: #f97316; color: var(--white); }
+
+    .filter-btn.blocked { border-color: var(--danger); color: var(--danger); }
+    .filter-btn.blocked.active { background: var(--danger); color: var(--white); }
+
+    .food-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .food-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-left: 4px solid var(--gray-300);
+    }
+
+    .food-card.approved { border-left-color: var(--success); }
+    .food-card.limited { border-left-color: var(--warning); }
+    .food-card.avoid { border-left-color: #f97316; }
+    .food-card.blocked { border-left-color: var(--danger); background: #fee2e2; }
+
+    .food-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+    }
+
+    .food-name {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .food-status {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .food-status.approved { background: #d1fae5; color: #065f46; }
+    .food-status.limited { background: #fef3c7; color: #92400e; }
+    .food-status.avoid { background: #ffedd5; color: #9a3412; }
+    .food-status.blocked { background: #fee2e2; color: #991b1b; }
+
+    .food-category {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+        margin-bottom: 8px;
+        text-transform: capitalize;
+    }
+
+    .food-nutrition {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 0.8125rem;
+    }
+
+    .nutrition-item {
+        text-align: center;
+        padding: 6px;
+        background: var(--gray-50);
+        border-radius: 6px;
+    }
+
+    .nutrition-value {
+        font-weight: 600;
+        display: block;
+    }
+
+    .nutrition-label {
+        color: var(--gray-500);
+        font-size: 0.75rem;
+    }
+
+    .food-warning {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        margin-top: 8px;
+    }
+
+    .food-notes {
+        color: var(--gray-500);
+        font-size: 0.8125rem;
+        margin-top: 8px;
+        font-style: italic;
+    }
+
+    .omega-info {
+        background: #dbeafe;
+        color: #1e40af;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 0.8125rem;
+        margin-top: 8px;
+    }
+
+    .legend {
+        margin-top: 24px;
+        padding: 16px;
+        background: var(--gray-50);
+        border-radius: 12px;
+    }
+
+    .legend h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .legend-color.approved { background: var(--success); }
+    .legend-color.limited { background: var(--warning); }
+    .legend-color.avoid { background: #f97316; }
+    .legend-color.blocked { background: var(--danger); }
+
+    .legend-text {
+        font-size: 0.875rem;
+    }
+
+    .legend-title {
+        font-weight: 600;
+    }
+
+    .prep-section {
+        margin-top: 16px;
+        padding: 16px;
+        background: #f0fdf4;
+        border-radius: 12px;
+    }
+
+    .prep-section h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+        color: #166534;
+    }
+
+    .prep-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .prep-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #dcfce7;
+        font-size: 0.875rem;
+        color: var(--gray-700);
+    }
+
+    .prep-list li:last-child {
+        border-bottom: none;
+    }
+
+    .prep-list strong {
+        color: #166534;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="sub-nav">
+    <a href="{% url 'health:nutrition' %}">{% trans "Daily Log" %}</a>
+    <a href="{% url 'health:food_database' %}" class="active">{% trans "Food Database" %}</a>
+    <a href="{% url 'health:meal_planning' %}">{% trans "Meal Planning" %}</a>
+</div>
+
+<div class="card">
+    <h2>{% trans "Cancer-Supportive Food Database" %}</h2>
+    <p class="card-subtitle">{% trans "Zero-carbohydrate nutrition protocol for canine lymphoma" %}</p>
+
+    <div class="filter-section">
+        <button class="filter-btn active" onclick="filterFoods('all')">{% trans "All" %}</button>
+        <button class="filter-btn approved" onclick="filterFoods('approved')">{% trans "Approved" %}</button>
+        <button class="filter-btn limited" onclick="filterFoods('limited')">{% trans "Limited" %}</button>
+        <button class="filter-btn avoid" onclick="filterFoods('avoid')">{% trans "Avoid" %}</button>
+        <button class="filter-btn blocked" onclick="filterFoods('blocked')">{% trans "Blocked" %}</button>
+    </div>
+</div>
+
+<div class="food-list" id="foodList">
+    {% for food in foods %}
+    <div class="food-card {{ food.status }}" data-status="{{ food.status }}" data-category="{{ food.category }}">
+        <div class="food-header">
+            <span class="food-name">{{ food.name }}</span>
+            <span class="food-status {{ food.status }}">{{ food.get_status_display }}</span>
+        </div>
+        <div class="food-category">{{ food.get_category_display }}</div>
+
+        {% if food.calories_per_100g or food.protein_g_per_100g %}
+        <div class="food-nutrition">
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{ food.calories_per_100g|default:"-" }}</span>
+                <span class="nutrition-label">{% trans "kcal" %}</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{ food.protein_g_per_100g|default:"-" }}g</span>
+                <span class="nutrition-label">{% trans "Protein" %}</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{ food.fat_g_per_100g|default:"-" }}g</span>
+                <span class="nutrition-label">{% trans "Fat" %}</span>
+            </div>
+            <div class="nutrition-item">
+                <span class="nutrition-value">{{ food.carbs_g_per_100g|default:"0" }}g</span>
+                <span class="nutrition-label">{% trans "Carbs" %}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if food.epa_mg_per_100g or food.dha_mg_per_100g %}
+        <div class="omega-info">
+            {% trans "Omega-3" %}: EPA {{ food.epa_mg_per_100g|default:0 }}mg + DHA {{ food.dha_mg_per_100g|default:0 }}mg {% trans "per 100g" %}
+        </div>
+        {% endif %}
+
+        {% if food.warning %}
+        <div class="food-warning">{{ food.warning }}</div>
+        {% endif %}
+
+        {% if food.notes %}
+        <div class="food-notes">{{ food.notes }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card prep-section">
+    <h3>{% trans "Food Preparation Guidelines" %}</h3>
+    <ul class="prep-list">
+        <li><strong>{% trans "Chicken/Turkey" %}:</strong> {% trans "Boil boneless parts until fully cooked. Save broth (no salt) as appetite enhancer. Remove skin if dog has pancreatitis history." %}</li>
+        <li><strong>{% trans "Ground Beef/Lamb" %}:</strong> {% trans "Pan-cook until no pink remains. Drain excess fat for leaner dogs, keep fat for underweight dogs." %}</li>
+        <li><strong>{% trans "Eggs" %}:</strong> {% trans "Scramble without oil/butter, or hard-boil. Limit 2-3 per day max. Save shells for calcium." %}</li>
+        <li><strong>{% trans "Sardines/Salmon" %}:</strong> {% trans "Use water-packed canned without added salt. Fresh fish should be fully cooked." %}</li>
+        <li><strong>{% trans "Liver" %}:</strong> {% trans "Boil or pan-cook. Limit to 1-2 servings/week due to vitamin A content." %}</li>
+    </ul>
+</div>
+
+<div class="card prep-section" style="background: #fef3c7;">
+    <h3 style="color: #92400e;">{% trans "Homemade Supplement Preparation" %}</h3>
+    <ul class="prep-list">
+        <li><strong>{% trans "Eggshell Calcium" %}:</strong> {% trans "Save eggshells, boil 10 minutes, dry completely, grind to fine powder. 1/2 tsp = ~400mg calcium. Store in airtight container." %}</li>
+        <li><strong>{% trans "Fish Oil Dosing" %}:</strong> {% trans "Target 50-100mg EPA+DHA per kg body weight. Check capsule label for EPA/DHA content (not just 'fish oil')." %}</li>
+        <li><strong>{% trans "Multivitamin" %}:</strong> {% trans "Use canine-specific multivitamin daily to cover micronutrient gaps from home-cooked diet." %}</li>
+    </ul>
+</div>
+
+<div class="legend">
+    <h3>{% trans "Status Guide" %}</h3>
+    <div class="legend-item">
+        <div class="legend-color approved"></div>
+        <div class="legend-text">
+            <span class="legend-title">{% trans "Approved" %}:</span> {% trans "Safe for daily use in cancer diet. Zero or minimal carbs, high protein/fat." %}
+        </div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color limited"></div>
+        <div class="legend-text">
+            <span class="legend-title">{% trans "Limited" %}:</span> {% trans "Use occasionally with portion control. May have specific weekly limits." %}
+        </div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color avoid"></div>
+        <div class="legend-text">
+            <span class="legend-title">{% trans "Avoid" %}:</span> {% trans "Contains carbohydrates or other concerns. Use only if necessary." %}
+        </div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color blocked"></div>
+        <div class="legend-text">
+            <span class="legend-title">{% trans "Blocked" %}:</span> {% trans "DO NOT USE. High carbohydrates feed cancer cells. Will trigger warning if logged." %}
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 16px; background: #eff6ff;">
+    <h3 style="color: #1e40af;">{% trans "Scientific Basis" %}</h3>
+    <p style="font-size: 0.875rem; color: #374151; margin-bottom: 8px;">
+        {% trans "This protocol is based on the Warburg effect: cancer cells preferentially metabolize glucose for energy." %}
+    </p>
+    <p style="font-size: 0.8125rem; color: #6b7280;">
+        {% trans "References: Ogilvie GK et al. (1990, 1994, 2000). Carbohydrate restriction and omega-3 supplementation have been shown to improve outcomes in dogs with lymphoma." %}
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterFoods(status) {
+        const cards = document.querySelectorAll('.food-card');
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        cards.forEach(card => {
+            if (status === 'all' || card.dataset.status === status) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}

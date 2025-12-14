@@ -1,0 +1,502 @@
+[
+  {
+    "model": "health.food",
+    "pk": 1,
+    "fields": {
+      "name": "Egg (cooked)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 155,
+      "protein_g_per_100g": "12.6",
+      "fat_g_per_100g": "10.6",
+      "carbs_g_per_100g": "1.1",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 50,
+      "max_per_day": "2-3 eggs",
+      "max_per_week": null,
+      "notes": "Excellent amino acid profile. 1 large egg = ~50g",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 2,
+    "fields": {
+      "name": "Chicken breast (cooked)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 165,
+      "protein_g_per_100g": "31.0",
+      "fat_g_per_100g": "3.6",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 15,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Lean protein source. Can be primary protein.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 3,
+    "fields": {
+      "name": "Chicken thigh (cooked, with skin)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 229,
+      "protein_g_per_100g": "24.2",
+      "fat_g_per_100g": "15.5",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 12,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Higher fat content - good for calorie needs. Preferred for weight maintenance.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 4,
+    "fields": {
+      "name": "Turkey (cooked)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 189,
+      "protein_g_per_100g": "29.0",
+      "fat_g_per_100g": "7.4",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 10,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Good lean protein alternative to chicken.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 5,
+    "fields": {
+      "name": "Ground beef (lean, cooked)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 250,
+      "protein_g_per_100g": "26.0",
+      "fat_g_per_100g": "15.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 18,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Good protein and fat balance. Higher iron content.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 6,
+    "fields": {
+      "name": "Lamb (cooked)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 294,
+      "protein_g_per_100g": "25.0",
+      "fat_g_per_100g": "21.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 17,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "High fat content - good for calorie-dense meals.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 7,
+    "fields": {
+      "name": "Sardines (canned in water)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 208,
+      "protein_g_per_100g": "24.6",
+      "fat_g_per_100g": "11.5",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": 473,
+      "dha_mg_per_100g": 509,
+      "calcium_mg_per_100g": 382,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "PREFERRED fish - high omega-3, low mercury, includes bones for calcium.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 8,
+    "fields": {
+      "name": "Tuna (canned in water)",
+      "category": "protein",
+      "status": "limited",
+      "calories_per_100g": 116,
+      "protein_g_per_100g": "25.5",
+      "fat_g_per_100g": "0.8",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": 47,
+      "dha_mg_per_100g": 223,
+      "calcium_mg_per_100g": 11,
+      "max_per_day": "Max 30% of meal",
+      "max_per_week": 3,
+      "notes": "Limited due to mercury accumulation. Good for palatability on low appetite days.",
+      "warning": "Limit to 2-3 meals per week due to mercury content. Always supplement with fish oil when using tuna."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 9,
+    "fields": {
+      "name": "Salmon (cooked)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 208,
+      "protein_g_per_100g": "20.4",
+      "fat_g_per_100g": "13.4",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": 862,
+      "dha_mg_per_100g": 1115,
+      "calcium_mg_per_100g": 9,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Excellent omega-3 source. Wild-caught preferred over farmed.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 10,
+    "fields": {
+      "name": "Fish oil supplement",
+      "category": "supplement",
+      "status": "approved",
+      "calories_per_100g": 900,
+      "protein_g_per_100g": "0.0",
+      "fat_g_per_100g": "100.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": 18000,
+      "dha_mg_per_100g": 12000,
+      "calcium_mg_per_100g": 0,
+      "max_per_day": "Per weight calculation",
+      "max_per_week": null,
+      "notes": "REQUIRED daily supplement. Target: 50-100mg EPA+DHA per kg body weight.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 11,
+    "fields": {
+      "name": "Eggshell powder (calcium)",
+      "category": "supplement",
+      "status": "approved",
+      "calories_per_100g": 0,
+      "protein_g_per_100g": "0.0",
+      "fat_g_per_100g": "0.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 38000,
+      "max_per_day": "Per weight calculation",
+      "max_per_week": null,
+      "notes": "REQUIRED for home-prepared diet. 1/2 tsp = ~500-550mg calcium. Target: 50-60mg/kg/day.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 12,
+    "fields": {
+      "name": "Olive oil",
+      "category": "fat",
+      "status": "approved",
+      "calories_per_100g": 884,
+      "protein_g_per_100g": "0.0",
+      "fat_g_per_100g": "100.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 0,
+      "max_per_day": "1-2 tsp",
+      "max_per_week": null,
+      "notes": "Small amounts for added calories if needed.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 13,
+    "fields": {
+      "name": "Coconut oil",
+      "category": "fat",
+      "status": "approved",
+      "calories_per_100g": 862,
+      "protein_g_per_100g": "0.0",
+      "fat_g_per_100g": "100.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 0,
+      "max_per_day": "1 tsp",
+      "max_per_week": null,
+      "notes": "MCT fats may support ketosis. Use small amounts.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 14,
+    "fields": {
+      "name": "Chicken fat/drippings",
+      "category": "fat",
+      "status": "approved",
+      "calories_per_100g": 900,
+      "protein_g_per_100g": "0.0",
+      "fat_g_per_100g": "100.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 0,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Natural fat from cooking. Good calorie source.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 15,
+    "fields": {
+      "name": "White rice",
+      "category": "carb",
+      "status": "blocked",
+      "calories_per_100g": 130,
+      "protein_g_per_100g": "2.7",
+      "fat_g_per_100g": "0.3",
+      "carbs_g_per_100g": "28.2",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 10,
+      "max_per_day": "0",
+      "max_per_week": 0,
+      "notes": "",
+      "warning": "BLOCKED: High carbohydrate content feeds cancer cells. Not compatible with zero-carb cancer diet."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 16,
+    "fields": {
+      "name": "Sweet potato",
+      "category": "carb",
+      "status": "blocked",
+      "calories_per_100g": 86,
+      "protein_g_per_100g": "1.6",
+      "fat_g_per_100g": "0.1",
+      "carbs_g_per_100g": "20.1",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 30,
+      "max_per_day": "0",
+      "max_per_week": 0,
+      "notes": "",
+      "warning": "BLOCKED: High carbohydrate content. Not compatible with zero-carb cancer diet."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 17,
+    "fields": {
+      "name": "Pumpkin",
+      "category": "carb",
+      "status": "blocked",
+      "calories_per_100g": 26,
+      "protein_g_per_100g": "1.0",
+      "fat_g_per_100g": "0.1",
+      "carbs_g_per_100g": "6.5",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 21,
+      "max_per_day": "0",
+      "max_per_week": 0,
+      "notes": "",
+      "warning": "BLOCKED: Contains carbohydrates. Not compatible with strict zero-carb cancer diet."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 18,
+    "fields": {
+      "name": "Corn",
+      "category": "carb",
+      "status": "blocked",
+      "calories_per_100g": 96,
+      "protein_g_per_100g": "3.4",
+      "fat_g_per_100g": "1.5",
+      "carbs_g_per_100g": "21.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 2,
+      "max_per_day": "0",
+      "max_per_week": 0,
+      "notes": "",
+      "warning": "BLOCKED: High carbohydrate content. Common ingredient in kibble to avoid."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 19,
+    "fields": {
+      "name": "Wheat/bread",
+      "category": "carb",
+      "status": "blocked",
+      "calories_per_100g": 265,
+      "protein_g_per_100g": "9.0",
+      "fat_g_per_100g": "3.2",
+      "carbs_g_per_100g": "49.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 125,
+      "max_per_day": "0",
+      "max_per_week": 0,
+      "notes": "",
+      "warning": "BLOCKED: Very high carbohydrate content. Not compatible with cancer diet."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 20,
+    "fields": {
+      "name": "Beneful (or similar high-carb kibble)",
+      "category": "commercial",
+      "status": "blocked",
+      "calories_per_100g": 350,
+      "protein_g_per_100g": "23.0",
+      "fat_g_per_100g": "12.0",
+      "carbs_g_per_100g": "45.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": null,
+      "max_per_day": "0",
+      "max_per_week": 0,
+      "notes": "",
+      "warning": "BLOCKED: High carbohydrate kibble. Contains corn, wheat, and other carbs that feed cancer cells. Discontinue immediately for cancer patients."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 21,
+    "fields": {
+      "name": "Hill's ONC Care",
+      "category": "commercial",
+      "status": "approved",
+      "calories_per_100g": null,
+      "protein_g_per_100g": null,
+      "fat_g_per_100g": null,
+      "carbs_g_per_100g": null,
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": null,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Veterinary oncology diet - high fat, controlled carbs. Acceptable transition option.",
+      "warning": ""
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 22,
+    "fields": {
+      "name": "Greek yogurt (plain, no sugar)",
+      "category": "protein",
+      "status": "limited",
+      "calories_per_100g": 97,
+      "protein_g_per_100g": "9.0",
+      "fat_g_per_100g": "5.0",
+      "carbs_g_per_100g": "3.6",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 110,
+      "max_per_day": "2-3 tbsp",
+      "max_per_week": null,
+      "notes": "Small amounts for palatability if tolerated. Contains some carbs from lactose.",
+      "warning": "Contains some carbohydrates. Use sparingly. Discontinue if GI upset."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 23,
+    "fields": {
+      "name": "Cottage cheese",
+      "category": "protein",
+      "status": "limited",
+      "calories_per_100g": 98,
+      "protein_g_per_100g": "11.1",
+      "fat_g_per_100g": "4.3",
+      "carbs_g_per_100g": "3.4",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 83,
+      "max_per_day": "2-3 tbsp",
+      "max_per_week": null,
+      "notes": "Good protein source if tolerated. Contains some carbs from lactose.",
+      "warning": "Contains some carbohydrates. Use sparingly."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 24,
+    "fields": {
+      "name": "Liver (chicken/beef)",
+      "category": "protein",
+      "status": "limited",
+      "calories_per_100g": 135,
+      "protein_g_per_100g": "21.0",
+      "fat_g_per_100g": "4.8",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 5,
+      "max_per_day": "Max 5% of total food",
+      "max_per_week": null,
+      "notes": "Good vitamin A source. Limit to avoid vitamin A toxicity.",
+      "warning": "Limit to 5% of total diet to avoid vitamin A toxicity."
+    }
+  },
+  {
+    "model": "health.food",
+    "pk": 25,
+    "fields": {
+      "name": "Pork (cooked, lean)",
+      "category": "protein",
+      "status": "approved",
+      "calories_per_100g": 242,
+      "protein_g_per_100g": "27.3",
+      "fat_g_per_100g": "14.0",
+      "carbs_g_per_100g": "0.0",
+      "epa_mg_per_100g": null,
+      "dha_mg_per_100g": null,
+      "calcium_mg_per_100g": 5,
+      "max_per_day": "",
+      "max_per_week": null,
+      "notes": "Good protein alternative. Ensure thoroughly cooked.",
+      "warning": ""
+    }
+  }
+]

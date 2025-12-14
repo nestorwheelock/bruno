@@ -53,6 +53,27 @@ The Veterinary Cooperative Oncology Group Common Terminology Criteria for Advers
 
 > LeBlanc AK, Atherton M, Bentley RT, et al. Veterinary Cooperative Oncology Group—Common Terminology Criteria for Adverse Events (VCOG-CTCAE v2) following investigational therapy in dogs and cats. *Veterinary and Comparative Oncology*. 2021;19(2):311-352. doi:[10.1111/vco.12677](https://doi.org/10.1111/vco.12677). PMID: [33427378](https://pubmed.ncbi.nlm.nih.gov/33427378/)
 
+### 4. Cancer-Supportive Nutrition Module
+
+Evidence-based nutrition tracking for homemade zero-carbohydrate cancer diets based on the Warburg effect (cancer cells preferentially metabolize glucose).
+
+**Features:**
+- **Food Database:** Pre-populated with approved, limited, and blocked foods
+- **Meal Tracking:** Log daily meals with automatic macro calculation
+- **Supplement Tracking:** Calcium, fish oil (EPA/DHA), multivitamin logging
+- **Personalized Targets:** Calculate daily food/supplement needs based on body weight
+- **Meal Planning:** Sample meal plans with portion sizes and preparation guides
+- **Warnings:** Automatic alerts for carbohydrate intake and supplement deficiencies
+
+**Nutritional Targets:**
+- **Macros:** High protein (30-45%), high fat (30-50%), zero carbohydrates
+- **Omega-3:** 50-100 mg EPA+DHA per kg body weight daily
+- **Calcium:** 50-60 mg per kg body weight daily
+
+> Ogilvie GK, Vail DM, Wheeler SL, et al. Effects of chemotherapy and remission on carbohydrate metabolism in dogs with lymphoma. *Cancer*. 1992;69(1):233-238. [PubMed](https://pubmed.ncbi.nlm.nih.gov/1727668/)
+
+> Ogilvie GK, Fettman MJ, Mallinckrodt CH, et al. Effect of fish oil, arginine, and doxorubicin chemotherapy on remission and survival time for dogs with lymphoma: a double-blind, randomized placebo-controlled study. *Cancer*. 2000;88(8):1916-1928. [PubMed](https://pubmed.ncbi.nlm.nih.gov/10760765/)
+
 ## Additional Features
 
 - **Daily Health Tracking:** Record quality-of-life metrics including mood, appetite, energy, and comfort levels
@@ -61,6 +82,7 @@ The Veterinary Cooperative Oncology Group Common Terminology Criteria for Advers
 - **Treatment Sessions:** Log chemotherapy cycles, protocols (CHOP, COP, Madison-Wisconsin), and agents
 - **History & Trends:** View summaries and track progress over time
 - **Multi-User Support:** Multiple family members/caregivers can log in and track simultaneously
+- **Spanish Language Support:** Full i18n with Spanish translations
 
 ## Tech Stack
 
@@ -126,10 +148,18 @@ bruno/
 │   │   ├── TreatmentSession # Chemo/treatment tracking
 │   │   ├── Medication      # Medication management
 │   │   ├── MedicationDose  # Dose recording
-│   │   └── LymphNodeMeasurement # Node size tracking
+│   │   ├── LymphNodeMeasurement # Node size tracking
+│   │   ├── DogProfile      # Weight-based nutrition targets
+│   │   ├── Food            # Food database with status
+│   │   ├── Meal / MealItem # Meal logging
+│   │   ├── SupplementDose  # Supplement tracking
+│   │   └── DailyNutritionSummary # Daily totals/warnings
+│   ├── fixtures/foods.json # Pre-populated food database
 │   ├── views.py            # All views
 │   ├── urls.py             # URL routing
 │   └── tests.py            # Test suite
+├── planning/               # Research documentation
+│   └── NUTRITION_RESEARCH.md  # Nutrition research citations
 ├── fundraiser/             # Public fundraising page
 ├── templates/              # HTML templates
 ├── static/                 # Static assets
@@ -149,16 +179,30 @@ bruno/
 3. **VCOG-CTCAE v2:**
    LeBlanc AK, et al. Veterinary Cooperative Oncology Group—Common Terminology Criteria for Adverse Events (VCOG-CTCAE v2). *Vet Comp Oncol*. 2021;19(2):311-352. [PubMed](https://pubmed.ncbi.nlm.nih.gov/33427378/) | [Full Text (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC8248125/)
 
+### Nutrition Research
+
+4. **Carbohydrate Metabolism in Canine Lymphoma:**
+   Ogilvie GK, Vail DM, Wheeler SL, et al. Effects of chemotherapy and remission on carbohydrate metabolism in dogs with lymphoma. *Cancer*. 1992;69(1):233-238. [PubMed](https://pubmed.ncbi.nlm.nih.gov/1727668/)
+
+5. **Fish Oil and Survival in Canine Lymphoma:**
+   Ogilvie GK, Fettman MJ, Mallinckrodt CH, et al. Effect of fish oil, arginine, and doxorubicin chemotherapy on remission and survival time for dogs with lymphoma: a double-blind, randomized placebo-controlled study. *Cancer*. 2000;88(8):1916-1928. [PubMed](https://pubmed.ncbi.nlm.nih.gov/10760765/)
+
+6. **Lactate Metabolism in Canine Lymphoma:**
+   Vail DM, Ogilvie GK, Wheeler SL, et al. Alterations in carbohydrate metabolism in canine lymphoma. *J Vet Intern Med*. 1990;4(1):8-14. [PubMed](https://pubmed.ncbi.nlm.nih.gov/2407842/)
+
+7. **Dietary Fat and Canine Lymphoma:**
+   Ogilvie GK, Ford RB, Vail DM, et al. Alterations in lipoprotein profiles in dogs with lymphoma. *J Vet Intern Med*. 1994;8(1):62-66. [PubMed](https://pubmed.ncbi.nlm.nih.gov/9055974/)
+
 ### Supporting Literature
 
-4. **QoL Measurement in Veterinary Oncology:**
+8. **QoL Measurement in Veterinary Oncology:**
    Giuffrida MA, Kerrigan SM. Quality of life measurement in prospective studies of cancer treatments in dogs and cats. *J Vet Intern Med*. 2014;28(6):1824-29. [PubMed](https://pubmed.ncbi.nlm.nih.gov/25308707/) | [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4895614/)
 
-5. **CBPI International Validation:**
+9. **CBPI International Validation:**
    Enomoto M, et al. Linguistic Validation of the Canine Brief Pain Inventory (CBPI) for Global Use. *Front Vet Sci*. 2021;8:777261. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8666957/)
 
-6. **QoL Assessment Evidence Review:**
-   Belshaw Z, et al. Quality of life assessment in domestic dogs: An evidence-based rapid review. *Vet J*. 2015;206(2):203-12. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4641869/)
+10. **QoL Assessment Evidence Review:**
+    Belshaw Z, et al. Quality of life assessment in domestic dogs: An evidence-based rapid review. *Vet J*. 2015;206(2):203-12. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC4641869/)
 
 ## Clinical Use
 

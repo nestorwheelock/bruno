@@ -1,0 +1,626 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Meal Planning" %} - Bruno{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sub-nav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .sub-nav a {
+        padding: 8px 16px;
+        background: var(--gray-100);
+        border-radius: 20px;
+        text-decoration: none;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .sub-nav a.active {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    .targets-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .target-box {
+        background: var(--gray-50);
+        padding: 16px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .target-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .target-label {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+    }
+
+    .meal-section {
+        margin-bottom: 24px;
+    }
+
+    .meal-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .meal-emoji {
+        font-size: 1.25rem;
+    }
+
+    .meal-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .meal-option {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .meal-option-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .meal-option-name {
+        font-weight: 600;
+        color: var(--gray-900);
+    }
+
+    .meal-prep-time {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+        background: var(--gray-100);
+        padding: 4px 10px;
+        border-radius: 12px;
+    }
+
+    .meal-ingredients {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .ingredient-tag {
+        background: #dbeafe;
+        color: #1e40af;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 0.8125rem;
+    }
+
+    .ingredient-amount {
+        font-weight: 600;
+    }
+
+    .meal-notes {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+        font-style: italic;
+        padding-top: 8px;
+        border-top: 1px solid var(--gray-100);
+    }
+
+    .prep-section {
+        background: #f0fdf4;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+
+    .prep-section.supplements {
+        background: #fef3c7;
+    }
+
+    .prep-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #166534;
+    }
+
+    .prep-section.supplements h3 {
+        color: #92400e;
+    }
+
+    .prep-step {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .prep-step:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .step-number {
+        width: 28px;
+        height: 28px;
+        background: #166534;
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    .prep-section.supplements .step-number {
+        background: #92400e;
+    }
+
+    .step-content h4 {
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--gray-900);
+    }
+
+    .step-content p {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+        line-height: 1.5;
+    }
+
+    .shopping-list {
+        background: #eff6ff;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .shopping-list h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #1e40af;
+    }
+
+    .shopping-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .shopping-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+        background: var(--white);
+        border-radius: 8px;
+    }
+
+    .shopping-checkbox {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary);
+    }
+
+    .shopping-name {
+        flex: 1;
+        font-size: 0.875rem;
+    }
+
+    .shopping-amount {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+        font-weight: 500;
+    }
+
+    .supplement-needs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .supplement-box {
+        background: var(--white);
+        padding: 14px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .supplement-box .value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #92400e;
+    }
+
+    .supplement-box .label {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+
+    .important-note {
+        background: #fee2e2;
+        border-left: 4px solid var(--danger);
+        padding: 14px;
+        border-radius: 0 8px 8px 0;
+        margin: 16px 0;
+    }
+
+    .important-note strong {
+        color: #991b1b;
+    }
+
+    .important-note p {
+        font-size: 0.875rem;
+        color: #991b1b;
+        margin: 0;
+    }
+
+    .tip-box {
+        background: #ecfdf5;
+        border-left: 4px solid var(--success);
+        padding: 14px;
+        border-radius: 0 8px 8px 0;
+        margin: 16px 0;
+    }
+
+    .tip-box strong {
+        color: #065f46;
+    }
+
+    .tip-box p {
+        font-size: 0.875rem;
+        color: #065f46;
+        margin: 0;
+    }
+
+    .batch-cooking {
+        background: #faf5ff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 16px;
+    }
+
+    .batch-cooking h3 {
+        color: #7c3aed;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .batch-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .batch-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #e9d5ff;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .batch-list li:last-child {
+        border-bottom: none;
+    }
+
+    .batch-icon {
+        font-size: 1.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="sub-nav">
+    <a href="{% url 'health:nutrition' %}">{% trans "Daily Log" %}</a>
+    <a href="{% url 'health:food_database' %}">{% trans "Food Database" %}</a>
+    <a href="{% url 'health:meal_planning' %}" class="active">{% trans "Meal Planning" %}</a>
+</div>
+
+<div class="card">
+    <h2>{% trans "Personalized Meal Plan" %}</h2>
+    <p class="card-subtitle">{% trans "Based on" %} {{ profile.name }} ({{ profile.weight_kg }}kg)</p>
+
+    <div class="targets-grid">
+        <div class="target-box">
+            <div class="target-value">{{ daily_food_target|floatformat:0 }}g</div>
+            <div class="target-label">{% trans "Daily Food" %}</div>
+        </div>
+        <div class="target-box">
+            <div class="target-value">{{ meal_portion|floatformat:0 }}g</div>
+            <div class="target-label">{% trans "Per Meal" %}</div>
+        </div>
+        <div class="target-box">
+            <div class="target-value">3</div>
+            <div class="target-label">{% trans "Meals/Day" %}</div>
+        </div>
+    </div>
+
+    <div class="important-note">
+        <strong>{% trans "Zero-Carb Protocol" %}:</strong>
+        <p>{% trans "All meals below are designed to have ZERO carbohydrates. Cancer cells depend on glucose - by eliminating carbs, we reduce their energy supply." %}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>{% trans "Sample Meal Ideas" %}</h2>
+    <p class="card-subtitle">{% trans "Portions calculated for" %} {{ profile.weight_kg }}kg</p>
+
+    <div class="meal-section">
+        <h3><span class="meal-emoji">🌅</span> {% trans "Breakfast Options" %}</h3>
+        <div class="meal-options">
+            {% for meal in sample_meals.breakfast %}
+            <div class="meal-option">
+                <div class="meal-option-header">
+                    <span class="meal-option-name">{{ meal.name }}</span>
+                    <span class="meal-prep-time">{{ meal.prep_time }}</span>
+                </div>
+                <div class="meal-ingredients">
+                    {% for item in meal.items %}
+                    <span class="ingredient-tag">
+                        {{ item.food }}: <span class="ingredient-amount">{{ item.amount }}g</span>
+                    </span>
+                    {% endfor %}
+                </div>
+                <div class="meal-notes">{{ meal.notes }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="meal-section">
+        <h3><span class="meal-emoji">☀️</span> {% trans "Lunch Options" %}</h3>
+        <div class="meal-options">
+            {% for meal in sample_meals.lunch %}
+            <div class="meal-option">
+                <div class="meal-option-header">
+                    <span class="meal-option-name">{{ meal.name }}</span>
+                    <span class="meal-prep-time">{{ meal.prep_time }}</span>
+                </div>
+                <div class="meal-ingredients">
+                    {% for item in meal.items %}
+                    <span class="ingredient-tag">
+                        {{ item.food }}: <span class="ingredient-amount">{{ item.amount }}g</span>
+                    </span>
+                    {% endfor %}
+                </div>
+                <div class="meal-notes">{{ meal.notes }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="meal-section">
+        <h3><span class="meal-emoji">🌙</span> {% trans "Dinner Options" %}</h3>
+        <div class="meal-options">
+            {% for meal in sample_meals.dinner %}
+            <div class="meal-option">
+                <div class="meal-option-header">
+                    <span class="meal-option-name">{{ meal.name }}</span>
+                    <span class="meal-prep-time">{{ meal.prep_time }}</span>
+                </div>
+                <div class="meal-ingredients">
+                    {% for item in meal.items %}
+                    <span class="ingredient-tag">
+                        {{ item.food }}: <span class="ingredient-amount">{{ item.amount }}g</span>
+                    </span>
+                    {% endfor %}
+                </div>
+                <div class="meal-notes">{{ meal.notes }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="card prep-section">
+    <h3>{% trans "Food Preparation Guide" %}</h3>
+
+    <div class="prep-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>{% trans "Boiling Chicken" %}</h4>
+            <p>{% trans "Place boneless chicken breasts/thighs in pot, cover with water. Bring to boil, reduce heat, simmer 20-25 minutes until internal temp reaches 165°F (74°C). Save the broth - it's a natural appetite enhancer!" %}</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>{% trans "Cooking Ground Beef" %}</h4>
+            <p>{% trans "Pan-cook over medium heat, breaking apart with spatula. Cook until no pink remains (internal temp 160°F/71°C). For leaner dogs, drain fat. For underweight dogs, keep the fat for extra calories." %}</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>{% trans "Preparing Eggs" %}</h4>
+            <p>{% trans "Scramble WITHOUT oil or butter - use non-stick pan. Or hard-boil: place in cold water, bring to boil, turn off heat, cover 10-12 minutes. Maximum 2-3 eggs per day to avoid biotin issues." %}</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h4>{% trans "Cooking Liver" %}</h4>
+            <p>{% trans "Boil 5-7 minutes until no longer pink inside, or pan-fry 2-3 minutes per side. Limit to 1-2 servings per week due to high vitamin A content. Great for iron and B vitamins." %}</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+            <h4>{% trans "Using Canned Fish" %}</h4>
+            <p>{% trans "Choose sardines/salmon packed in WATER (not oil). Drain, mash with fork. Check for bones in salmon (small ones are fine, good calcium). Limit tuna to 2-3 meals/week due to mercury." %}</p>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <strong>{% trans "Pro Tip" %}:</strong>
+        <p>{% trans "Slightly warm the food before serving - it releases aromas and makes it more appetizing for dogs with reduced appetite. Never serve cold from refrigerator." %}</p>
+    </div>
+</div>
+
+<div class="card prep-section supplements">
+    <h3>{% trans "Supplement Preparation Guide" %}</h3>
+
+    <div class="supplement-needs">
+        <div class="supplement-box">
+            <div class="value">{{ calcium_daily|floatformat:0 }}mg</div>
+            <div class="label">{% trans "Calcium/Day" %}</div>
+        </div>
+        <div class="supplement-box">
+            <div class="value">{{ omega3_daily|floatformat:0 }}mg</div>
+            <div class="label">{% trans "Omega-3/Day" %}</div>
+        </div>
+    </div>
+
+    <div class="prep-step" style="margin-top: 20px;">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h4>{% trans "Making Eggshell Calcium" %}</h4>
+            <p>{% trans "Save eggshells and rinse. Boil shells for 10 minutes to sanitize. Dry completely (air dry or 200°F oven for 10 min). Grind to fine powder in coffee grinder or mortar. Store in airtight container. 1/2 teaspoon ≈ 400mg calcium." %}</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h4>{% trans "Fish Oil Dosing" %}</h4>
+            <p>{% trans "Read the label carefully - look for EPA and DHA amounts specifically (not just 'fish oil'). Target" %} {{ omega3_daily|floatformat:0 }}mg {% trans "combined EPA+DHA daily. Give with food to reduce fishy burps." %}</p>
+        </div>
+    </div>
+
+    <div class="prep-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h4>{% trans "Daily Multivitamin" %}</h4>
+            <p>{% trans "Homemade diets can be deficient in zinc, iodine, and other micronutrients. Use a canine-specific multivitamin daily. Follow package dosing based on weight." %}</p>
+        </div>
+    </div>
+
+    <div class="important-note">
+        <strong>{% trans "Important" %}:</strong>
+        <p>{% trans "Supplements should be added to food, not given separately. This ensures absorption and reduces stomach upset." %}</p>
+    </div>
+</div>
+
+<div class="card shopping-list">
+    <h3>{% trans "Weekly Shopping List" %}</h3>
+    <p class="card-subtitle">{% trans "Based on 7-day meal plan for" %} {{ profile.weight_kg }}kg</p>
+
+    <div class="shopping-items">
+        {% for item in shopping_list %}
+        <div class="shopping-item">
+            <input type="checkbox" class="shopping-checkbox">
+            <span class="shopping-name">{{ item.item }}</span>
+            <span class="shopping-amount">{{ item.amount }}</span>
+        </div>
+        {% endfor %}
+        <div class="shopping-item">
+            <input type="checkbox" class="shopping-checkbox">
+            <span class="shopping-name">{% trans "Fish oil capsules" %}</span>
+            <span class="shopping-amount">{% trans "1 bottle" %}</span>
+        </div>
+        <div class="shopping-item">
+            <input type="checkbox" class="shopping-checkbox">
+            <span class="shopping-name">{% trans "Canine multivitamin" %}</span>
+            <span class="shopping-amount">{% trans "30 day supply" %}</span>
+        </div>
+    </div>
+</div>
+
+<div class="card batch-cooking">
+    <h3>{% trans "Batch Cooking Tips" %}</h3>
+    <ul class="batch-list">
+        <li>
+            <span class="batch-icon">🍗</span>
+            <div>
+                <strong>{% trans "Sunday Prep" %}:</strong> {% trans "Boil 1-2kg chicken, cook 500g ground beef. Portion into daily containers. Refrigerate 3-4 days worth, freeze the rest." %}
+            </div>
+        </li>
+        <li>
+            <span class="batch-icon">🥚</span>
+            <div>
+                <strong>{% trans "Egg Prep" %}:</strong> {% trans "Hard-boil a dozen eggs at once. Store in shell in refrigerator for up to 1 week. Peel and chop when needed." %}
+            </div>
+        </li>
+        <li>
+            <span class="batch-icon">🦴</span>
+            <div>
+                <strong>{% trans "Eggshell Calcium" %}:</strong> {% trans "Process a week's worth of shells at once. Makes about 2-3 tablespoons of powder. Keep dry and sealed." %}
+            </div>
+        </li>
+        <li>
+            <span class="batch-icon">❄️</span>
+            <div>
+                <strong>{% trans "Freezer Portions" %}:</strong> {% trans "Prepare individual meal portions in freezer bags. Thaw in refrigerator overnight. Warm before serving." %}
+            </div>
+        </li>
+        <li>
+            <span class="batch-icon">🍲</span>
+            <div>
+                <strong>{% trans "Broth Storage" %}:</strong> {% trans "Freeze chicken broth in ice cube trays. Pop cubes into meals for extra flavor and moisture." %}
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="card" style="background: #eff6ff; margin-top: 16px;">
+    <h3 style="color: #1e40af;">{% trans "Scientific Basis" %}</h3>
+    <p style="font-size: 0.875rem; color: #374151; margin-bottom: 8px;">
+        {% trans "This feeding protocol is based on research showing that cancer cells preferentially use glucose for energy (Warburg effect), while healthy cells can efficiently use fats and proteins." %}
+    </p>
+    <p style="font-size: 0.8125rem; color: #6b7280;">
+        {% trans "Key studies: Ogilvie GK et al. (2000), Vail DM et al. (1990). Omega-3 fatty acids (EPA/DHA) have been shown to slow tumor growth and improve survival in dogs with lymphoma." %}
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Save shopping list state to localStorage
+    document.querySelectorAll('.shopping-checkbox').forEach((checkbox, index) => {
+        const key = 'shopping_' + index;
+        checkbox.checked = localStorage.getItem(key) === 'true';
+
+        checkbox.addEventListener('change', () => {
+            localStorage.setItem(key, checkbox.checked);
+        });
+    });
+</script>
+{% endblock %}

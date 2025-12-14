@@ -37,4 +37,14 @@ urlpatterns = [
 
     # Language
     path('set-language/', views.set_language, name='set_language'),
+
+    # Nutrition Tracking
+    path('nutrition/', views.nutrition_view, name='nutrition'),
+    path('nutrition/meal/save/', views.save_meal, name='save_meal'),
+    path('nutrition/supplement/save/', views.save_supplement, name='save_supplement'),
+    path('nutrition/weight/update/', views.update_weight, name='update_weight'),
+    path('nutrition/foods/', views.food_database, name='food_database'),
+    path('nutrition/planning/', views.meal_planning_view, name='meal_planning'),
+    path('api/foods/', views.api_foods, name='api_foods'),
+    path('api/nutrition/', views.api_nutrition_summary, name='api_nutrition_summary'),
 ]

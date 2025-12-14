@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import (
     DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
-    CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession
+    CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession,
+    DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary
 )
 
 
@@ -103,3 +104,91 @@ class TreatmentSessionAdmin(admin.ModelAdmin):
     list_display = ['date', 'treatment_type', 'protocol', 'agent', 'cycle_number', 'user']
     list_filter = ['treatment_type', 'protocol', 'date']
     date_hierarchy = 'date'
+
+
+@admin.register(DogProfile)
+class DogProfileAdmin(admin.ModelAdmin):
+    list_display = ['name', 'weight_kg', 'target_weight_kg', 'user', 'updated_at']
+    readonly_fields = ['daily_food_min_g', 'daily_food_max_g', 'daily_calcium_min_mg',
+                      'daily_calcium_max_mg', 'daily_omega3_min_mg', 'daily_omega3_max_mg']
+    fieldsets = (
+        ('Profile', {
+            'fields': ('user', 'name', 'weight_kg', 'target_weight_kg')
+        }),
+        ('Calculated Daily Targets', {
+            'fields': ('daily_food_min_g', 'daily_food_max_g',
+                      'daily_calcium_min_mg', 'daily_calcium_max_mg',
+                      'daily_omega3_min_mg', 'daily_omega3_max_mg'),
+            'description': 'Auto-calculated based on weight'
+        }),
+    )
+
+
+@admin.register(Food)
+class FoodAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'status', 'calories_per_100g', 'protein_g_per_100g',
+                   'fat_g_per_100g', 'carbs_g_per_100g']
+    list_filter = ['category', 'status']
+    search_fields = ['name']
+    fieldsets = (
+        ('Basic Info', {
+            'fields': ('name', 'category', 'status')
+        }),
+        ('Nutrition per 100g', {
+            'fields': ('calories_per_100g', 'protein_g_per_100g', 'fat_g_per_100g', 'carbs_g_per_100g')
+        }),
+        ('Omega-3 & Calcium', {
+            'fields': ('epa_mg_per_100g', 'dha_mg_per_100g', 'calcium_mg_per_100g')
+        }),
+        ('Usage Guidelines', {
+            'fields': ('max_per_day', 'max_per_week', 'notes', 'warning')
+        }),
+    )
+
+
+class MealItemInline(admin.TabularInline):
+    model = MealItem
+    extra = 1
+
+
+@admin.register(Meal)
+class MealAdmin(admin.ModelAdmin):
+    list_display = ['date', 'meal_type', 'time', 'appetite', 'total_grams', 'user']
+    list_filter = ['meal_type', 'appetite', 'date']
+    date_hierarchy = 'date'
+    inlines = [MealItemInline]
+
+
+@admin.register(SupplementDose)
+class SupplementDoseAdmin(admin.ModelAdmin):
+    list_display = ['date', 'supplement_type', 'product_name', 'dose_amount', 'user']
+    list_filter = ['supplement_type', 'date']
+    date_hierarchy = 'date'
+
+
+@admin.register(DailyNutritionSummary)
+class DailyNutritionSummaryAdmin(admin.ModelAdmin):
+    list_display = ['date', 'total_food_g', 'total_protein_g', 'total_fat_g', 'total_carbs_g',
+                   'total_calcium_mg', 'total_omega3_mg', 'multivitamin_given']
+    list_filter = ['carbs_warning', 'calcium_low', 'omega3_low', 'date']
+    date_hierarchy = 'date'
+    fieldsets = (
+        ('Date & User', {
+            'fields': ('user', 'date')
+        }),
+        ('Food Totals', {
+            'fields': ('total_food_g', 'total_protein_g', 'total_fat_g', 'total_carbs_g', 'meals_count')
+        }),
+        ('Supplement Totals', {
+            'fields': ('total_calcium_mg', 'total_omega3_mg', 'multivitamin_given')
+        }),
+        ('Counts', {
+            'fields': ('eggs_count', 'tuna_servings')
+        }),
+        ('Warnings', {
+            'fields': ('carbs_warning', 'calcium_low', 'omega3_low', 'food_low', 'eggs_warning', 'tuna_warning')
+        }),
+        ('Notes', {
+            'fields': ('notes',)
+        }),
+    )

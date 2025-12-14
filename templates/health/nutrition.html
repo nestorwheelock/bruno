@@ -1,0 +1,768 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Nutrition Tracker" %} - Bruno{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sub-nav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .sub-nav a {
+        padding: 8px 16px;
+        background: var(--gray-100);
+        border-radius: 20px;
+        text-decoration: none;
+        color: var(--gray-700);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .sub-nav a.active {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    .warning-banner {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .warning-banner.danger {
+        background: #fee2e2;
+        border-color: #ef4444;
+    }
+
+    .warning-banner ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .warning-banner li {
+        color: #92400e;
+        font-size: 0.875rem;
+        margin-bottom: 4px;
+    }
+
+    .warning-banner.danger li {
+        color: #991b1b;
+    }
+
+    .profile-section {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .profile-weight {
+        flex: 1;
+    }
+
+    .profile-weight input {
+        width: 80px;
+        padding: 8px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .update-weight-btn {
+        padding: 8px 16px;
+        background: var(--primary);
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .progress-section {
+        margin-bottom: 20px;
+    }
+
+    .progress-item {
+        margin-bottom: 16px;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .progress-label {
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .progress-value {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: var(--gray-200);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--success);
+        border-radius: 4px;
+        transition: width 0.3s;
+    }
+
+    .progress-fill.warning {
+        background: var(--warning);
+    }
+
+    .progress-fill.danger {
+        background: var(--danger);
+    }
+
+    .target-range {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: 4px;
+    }
+
+    .meals-list {
+        margin-bottom: 16px;
+    }
+
+    .meal-item {
+        padding: 14px;
+        background: var(--gray-50);
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .meal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .meal-type {
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    .meal-time {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+    }
+
+    .meal-details {
+        font-size: 0.875rem;
+        color: var(--gray-700);
+    }
+
+    .meal-foods {
+        margin-top: 8px;
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+    }
+
+    .supplement-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: var(--gray-50);
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .supplement-type {
+        font-weight: 500;
+    }
+
+    .supplement-dose {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+
+    .supplement-check {
+        color: var(--success);
+        font-weight: 600;
+    }
+
+    .food-select-container {
+        margin-bottom: 12px;
+    }
+
+    .food-select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: var(--white);
+    }
+
+    .food-item-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+    }
+
+    .food-item-row select {
+        flex: 2;
+        padding: 10px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+    }
+
+    .food-item-row input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+    }
+
+    .remove-item-btn {
+        padding: 10px;
+        background: var(--danger);
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .add-item-btn {
+        padding: 8px 16px;
+        background: var(--gray-200);
+        color: var(--gray-700);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+    }
+
+    .checkbox-row {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 12px;
+    }
+
+    .checkbox-row label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.875rem;
+    }
+
+    .supplement-form-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .supplement-form-row select,
+    .supplement-form-row input {
+        padding: 10px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+    }
+
+    .supplement-form-row select {
+        flex: 2;
+    }
+
+    .supplement-form-row input {
+        flex: 1;
+    }
+
+    .quick-supplement-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .quick-supp-btn {
+        padding: 10px 16px;
+        background: var(--gray-100);
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+    }
+
+    .quick-supp-btn:hover {
+        background: var(--gray-200);
+    }
+
+    .quick-supp-btn.given {
+        background: #d1fae5;
+        border-color: var(--success);
+        color: #065f46;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="sub-nav">
+    <a href="{% url 'health:nutrition' %}" class="active">{% trans "Daily Log" %}</a>
+    <a href="{% url 'health:food_database' %}">{% trans "Food Database" %}</a>
+    <a href="{% url 'health:meal_planning' %}">{% trans "Meal Planning" %}</a>
+</div>
+
+{% if warnings %}
+<div class="warning-banner {% if total_carbs_g > 0 %}danger{% endif %}">
+    <ul>
+        {% for warning in warnings %}
+        <li>{{ warning }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>{{ profile.name }}'s {% trans "Profile" %}</h2>
+    <div class="profile-section">
+        <div class="profile-weight">
+            <label>{% trans "Weight" %}:</label>
+            <input type="number" id="dogWeight" value="{{ profile.weight_kg }}" step="0.1" min="1"> kg
+        </div>
+        <button class="update-weight-btn" onclick="updateWeight()">{% trans "Update" %}</button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>{% trans "Today's Nutrition" %}</h2>
+    <p class="card-subtitle">{{ today|date:"l, F j, Y" }}</p>
+
+    <div class="progress-section">
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">{% trans "Total Food" %}</span>
+                <span class="progress-value">{{ total_food_g|floatformat:0 }}g</span>
+            </div>
+            <div class="progress-bar">
+                {% with percent=total_food_g|divisibleby:food_target_max %}
+                <div class="progress-fill" style="width: {% widthratio total_food_g food_target_max 100 %}%"></div>
+                {% endwith %}
+            </div>
+            <div class="target-range">{% trans "Target" %}: {{ food_target_min|floatformat:0 }}g - {{ food_target_max|floatformat:0 }}g</div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">{% trans "Protein" %}</span>
+                <span class="progress-value">{{ total_protein_g|floatformat:1 }}g</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {% widthratio total_protein_g food_target_max 100 %}%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">{% trans "Fat" %}</span>
+                <span class="progress-value">{{ total_fat_g|floatformat:1 }}g</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {% widthratio total_fat_g food_target_max 100 %}%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">{% trans "Carbohydrates" %}</span>
+                <span class="progress-value">{{ total_carbs_g|floatformat:1 }}g</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill {% if total_carbs_g > 0 %}danger{% endif %}" style="width: {% if total_carbs_g > 0 %}100{% else %}0{% endif %}%"></div>
+            </div>
+            <div class="target-range">{% trans "Target: 0g (zero-carb cancer protocol)" %}</div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">{% trans "Calcium" %}</span>
+                <span class="progress-value">{{ total_calcium_mg|floatformat:0 }}mg</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill {% if total_calcium_mg < calcium_target_min %}warning{% endif %}" style="width: {% widthratio total_calcium_mg calcium_target_max 100 %}%"></div>
+            </div>
+            <div class="target-range">{% trans "Target" %}: {{ calcium_target_min|floatformat:0 }}mg - {{ calcium_target_max|floatformat:0 }}mg</div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-header">
+                <span class="progress-label">{% trans "Omega-3 (EPA+DHA)" %}</span>
+                <span class="progress-value">{{ total_omega3_mg|floatformat:0 }}mg</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill {% if total_omega3_mg < omega3_target_min %}warning{% endif %}" style="width: {% widthratio total_omega3_mg omega3_target_max 100 %}%"></div>
+            </div>
+            <div class="target-range">{% trans "Target" %}: {{ omega3_target_min|floatformat:0 }}mg - {{ omega3_target_max|floatformat:0 }}mg</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>{% trans "Today's Meals" %}</h2>
+    <div class="meals-list">
+        {% for meal in meals %}
+        <div class="meal-item">
+            <div class="meal-header">
+                <span class="meal-type">{{ meal.get_meal_type_display }}</span>
+                <span class="meal-time">{% if meal.time %}{{ meal.time|time:"g:i A" }}{% endif %}</span>
+            </div>
+            <div class="meal-details">
+                {{ meal.total_grams }}g total |
+                P: {{ meal.total_protein_g|floatformat:1 }}g |
+                F: {{ meal.total_fat_g|floatformat:1 }}g
+                {% if meal.total_carbs_g > 0 %}| <strong style="color: var(--danger);">C: {{ meal.total_carbs_g|floatformat:1 }}g</strong>{% endif %}
+            </div>
+            {% if meal.items.all %}
+            <div class="meal-foods">
+                {% for item in meal.items.all %}
+                    {{ item.food.name|default:item.custom_food_name }} ({{ item.amount_g }}g){% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if meal.appetite %}<div class="meal-foods">{% trans "Appetite" %}: {{ meal.get_appetite_display }}</div>{% endif %}
+        </div>
+        {% empty %}
+        <p class="empty-state">{% trans "No meals logged yet today" %}</p>
+        {% endfor %}
+    </div>
+    <button class="add-btn" onclick="showMealModal()">+ {% trans "Add Meal" %}</button>
+</div>
+
+<div class="card">
+    <h2>{% trans "Supplements" %}</h2>
+    <div class="quick-supplement-btns">
+        <button class="quick-supp-btn {% if multivitamin_given %}given{% endif %}" onclick="quickSupplement('multivitamin')">
+            {% if multivitamin_given %}✓{% endif %} {% trans "Multivitamin" %}
+        </button>
+        <button class="quick-supp-btn" onclick="showSupplementModal('calcium')">+ {% trans "Calcium" %}</button>
+        <button class="quick-supp-btn" onclick="showSupplementModal('fish_oil')">+ {% trans "Fish Oil" %}</button>
+    </div>
+
+    <div id="supplementsList">
+        {% for supp in supplements %}
+        <div class="supplement-item">
+            <div>
+                <span class="supplement-type">{{ supp.get_supplement_type_display }}</span>
+                <span class="supplement-dose">
+                    {% if supp.supplement_type == 'calcium' %}
+                        {{ supp.calcium_mg }}mg
+                    {% elif supp.supplement_type == 'fish_oil' %}
+                        EPA: {{ supp.epa_mg|default:0 }}mg + DHA: {{ supp.dha_mg|default:0 }}mg
+                    {% endif %}
+                </span>
+            </div>
+            <span class="supplement-check">✓</span>
+        </div>
+        {% empty %}
+        <p class="empty-state">{% trans "No supplements logged yet today" %}</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Meal Modal -->
+<div class="modal" id="mealModal">
+    <div class="modal-content">
+        <h3>{% trans "Add Meal" %}</h3>
+        <form id="mealForm">
+            <div class="form-group">
+                <label>{% trans "Meal Type" %}</label>
+                <select name="meal_type" required>
+                    <option value="breakfast">{% trans "Breakfast" %}</option>
+                    <option value="lunch">{% trans "Lunch" %}</option>
+                    <option value="dinner">{% trans "Dinner" %}</option>
+                    <option value="snack">{% trans "Snack" %}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>{% trans "Appetite" %}</label>
+                <select name="appetite">
+                    <option value="">--</option>
+                    <option value="excellent">{% trans "Excellent" %}</option>
+                    <option value="good">{% trans "Good" %}</option>
+                    <option value="fair">{% trans "Fair" %}</option>
+                    <option value="poor">{% trans "Poor" %}</option>
+                    <option value="refused">{% trans "Refused" %}</option>
+                </select>
+            </div>
+
+            <div class="checkbox-row">
+                <label><input type="checkbox" name="hand_fed"> {% trans "Hand fed" %}</label>
+                <label><input type="checkbox" name="warmed"> {% trans "Warmed food" %}</label>
+            </div>
+
+            <div class="form-group">
+                <label>{% trans "Food Items" %}</label>
+                <div id="foodItemsContainer">
+                    <div class="food-item-row">
+                        <select name="food_id[]" class="food-select">
+                            <option value="">{% trans "Select food..." %}</option>
+                            {% for food in approved_foods %}
+                            <option value="{{ food.id }}"
+                                data-protein="{{ food.protein_g_per_100g|default:0 }}"
+                                data-fat="{{ food.fat_g_per_100g|default:0 }}"
+                                data-carbs="{{ food.carbs_g_per_100g|default:0 }}"
+                                {% if food.status == 'limited' %}style="color: #f59e0b;"{% endif %}>
+                                {{ food.name }} {% if food.status == 'limited' %}({% trans "limited" %}){% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="amount_g[]" placeholder="g" min="1">
+                        <button type="button" class="remove-item-btn" onclick="this.parentElement.remove()">✕</button>
+                    </div>
+                </div>
+                <button type="button" class="add-item-btn" onclick="addFoodItem()">+ {% trans "Add another food" %}</button>
+            </div>
+
+            <div class="form-group">
+                <label>{% trans "Notes" %}</label>
+                <textarea name="notes" rows="2" placeholder="{% trans 'Optional notes...' %}"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeMealModal()">{% trans "Cancel" %}</button>
+                <button type="submit" class="save-btn">{% trans "Save Meal" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Supplement Modal -->
+<div class="modal" id="supplementModal">
+    <div class="modal-content">
+        <h3 id="supplementModalTitle">{% trans "Add Supplement" %}</h3>
+        <form id="supplementForm">
+            <input type="hidden" name="supplement_type" id="supplementType">
+
+            <div class="form-group" id="calciumFields" style="display: none;">
+                <label>{% trans "Calcium Amount" %} (mg)</label>
+                <input type="number" name="calcium_mg" placeholder="e.g., 500">
+                <p class="metric-hint">{% trans "Target" %}: {{ calcium_target_min|floatformat:0 }}-{{ calcium_target_max|floatformat:0 }}mg/{% trans "day" %}</p>
+            </div>
+
+            <div id="fishOilFields" style="display: none;">
+                <div class="form-group">
+                    <label>EPA (mg)</label>
+                    <input type="number" name="epa_mg" placeholder="e.g., 180">
+                </div>
+                <div class="form-group">
+                    <label>DHA (mg)</label>
+                    <input type="number" name="dha_mg" placeholder="e.g., 120">
+                </div>
+                <p class="metric-hint">{% trans "Target total Omega-3" %}: {{ omega3_target_min|floatformat:0 }}-{{ omega3_target_max|floatformat:0 }}mg/{% trans "day" %}</p>
+            </div>
+
+            <div class="form-group">
+                <label>{% trans "Product Name" %} ({% trans "optional" %})</label>
+                <input type="text" name="product_name" placeholder="{% trans 'e.g., Nordic Naturals' %}">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeSupplementModal()">{% trans "Cancel" %}</button>
+                <button type="submit" class="save-btn">{% trans "Save" %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showMealModal() {
+        document.getElementById('mealModal').classList.add('active');
+    }
+
+    function closeMealModal() {
+        document.getElementById('mealModal').classList.remove('active');
+        document.getElementById('mealForm').reset();
+        // Reset food items to single row
+        const container = document.getElementById('foodItemsContainer');
+        while (container.children.length > 1) {
+            container.removeChild(container.lastChild);
+        }
+    }
+
+    function addFoodItem() {
+        const container = document.getElementById('foodItemsContainer');
+        const firstRow = container.querySelector('.food-item-row');
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelector('select').value = '';
+        newRow.querySelector('input').value = '';
+        container.appendChild(newRow);
+    }
+
+    function showSupplementModal(type) {
+        document.getElementById('supplementType').value = type;
+        document.getElementById('calciumFields').style.display = type === 'calcium' ? 'block' : 'none';
+        document.getElementById('fishOilFields').style.display = type === 'fish_oil' ? 'block' : 'none';
+
+        const titles = {
+            'calcium': '{% trans "Add Calcium Supplement" %}',
+            'fish_oil': '{% trans "Add Fish Oil Supplement" %}'
+        };
+        document.getElementById('supplementModalTitle').textContent = titles[type] || '{% trans "Add Supplement" %}';
+        document.getElementById('supplementModal').classList.add('active');
+    }
+
+    function closeSupplementModal() {
+        document.getElementById('supplementModal').classList.remove('active');
+        document.getElementById('supplementForm').reset();
+    }
+
+    async function quickSupplement(type) {
+        if (type === 'multivitamin') {
+            try {
+                const response = await fetch('{% url "health:save_supplement" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        supplement_type: 'multivitamin'
+                    }),
+                });
+
+                if (response.ok) {
+                    showToast('{% trans "Multivitamin logged!" %}');
+                    location.reload();
+                }
+            } catch (err) {
+                showToast('{% trans "Error saving supplement" %}');
+            }
+        }
+    }
+
+    async function updateWeight() {
+        const weight = document.getElementById('dogWeight').value;
+        try {
+            const response = await fetch('{% url "health:update_weight" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({ weight_kg: weight }),
+            });
+
+            if (response.ok) {
+                showToast('{% trans "Weight updated! Targets recalculated." %}');
+                location.reload();
+            }
+        } catch (err) {
+            showToast('{% trans "Error updating weight" %}');
+        }
+    }
+
+    document.getElementById('mealForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        // Collect food items
+        const items = [];
+        const foodSelects = form.querySelectorAll('select[name="food_id[]"]');
+        const amountInputs = form.querySelectorAll('input[name="amount_g[]"]');
+
+        for (let i = 0; i < foodSelects.length; i++) {
+            const foodId = foodSelects[i].value;
+            const amount = amountInputs[i].value;
+            if (foodId && amount) {
+                items.push({
+                    food_id: parseInt(foodId),
+                    amount_g: parseInt(amount)
+                });
+            }
+        }
+
+        if (items.length === 0) {
+            showToast('{% trans "Please add at least one food item" %}');
+            return;
+        }
+
+        const data = {
+            meal_type: formData.get('meal_type'),
+            appetite: formData.get('appetite'),
+            hand_fed: form.querySelector('input[name="hand_fed"]').checked,
+            warmed: form.querySelector('input[name="warmed"]').checked,
+            notes: formData.get('notes'),
+            items: items
+        };
+
+        try {
+            const response = await fetch('{% url "health:save_meal" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            if (result.status === 'warning') {
+                alert('{% trans "Warning" %}: ' + result.message);
+            }
+            showToast('{% trans "Meal saved!" %}');
+            location.reload();
+        } catch (err) {
+            showToast('{% trans "Error saving meal" %}');
+        }
+    });
+
+    document.getElementById('supplementForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const data = {
+            supplement_type: formData.get('supplement_type'),
+            product_name: formData.get('product_name'),
+        };
+
+        if (data.supplement_type === 'calcium') {
+            data.calcium_mg = parseInt(formData.get('calcium_mg')) || 0;
+        } else if (data.supplement_type === 'fish_oil') {
+            data.epa_mg = parseInt(formData.get('epa_mg')) || 0;
+            data.dha_mg = parseInt(formData.get('dha_mg')) || 0;
+        }
+
+        try {
+            const response = await fetch('{% url "health:save_supplement" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                showToast('{% trans "Supplement logged!" %}');
+                location.reload();
+            }
+        } catch (err) {
+            showToast('{% trans "Error saving supplement" %}');
+        }
+    });
+</script>
+{% endblock %}
