@@ -18,12 +18,12 @@ services:
   web:
     build: .
     ports:
-      - "3000:8000"
+      - "1080:8000"
     environment:
       DATABASE_URL: postgres://bruno:helpbruno@db:5432/bruno
       DJANGO_SECRET_KEY: your-production-secret-key-change-this
       DEBUG: "False"
-      ALLOWED_HOSTS: localhost,127.0.0.1
+      ALLOWED_HOSTS: localhost,127.0.0.1,0.0.0.0,*
     depends_on:
       db:
         condition: service_healthy
