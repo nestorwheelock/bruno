@@ -1047,8 +1047,55 @@ def record_detail(request, record_id):
     context = {
         'record': record,
         'lab_values': lab_values,
+        'record_types': MedicalRecord.RECORD_TYPE_CHOICES,
     }
     return render(request, 'health/record_detail.html', context)
+
+
+@login_required(login_url='health:login')
+def edit_record(request, record_id):
+    """Edit a medical record."""
+    record = get_object_or_404(MedicalRecord, id=record_id, user=request.user)
+
+    if request.method == 'POST':
+        record.record_type = request.POST.get('record_type', record.record_type)
+        record.title = request.POST.get('title', record.title)
+        record.date = request.POST.get('date', record.date)
+        record.source = request.POST.get('source', record.source)
+        record.clinic_name = request.POST.get('clinic_name', record.clinic_name)
+        record.veterinarian = request.POST.get('veterinarian', record.veterinarian)
+        record.notes = request.POST.get('notes', record.notes)
+
+        # Handle file replacement if new file uploaded
+        if request.FILES.get('file'):
+            record.file = request.FILES['file']
+
+        record.save()
+        return redirect('health:record_detail', record_id=record.id)
+
+    context = {
+        'record': record,
+        'record_types': MedicalRecord.RECORD_TYPE_CHOICES,
+    }
+    return render(request, 'health/record_edit.html', context)
+
+
+@login_required(login_url='health:login')
+@require_POST
+def delete_record(request, record_id):
+    """Delete a medical record."""
+    record = get_object_or_404(MedicalRecord, id=record_id, user=request.user)
+
+    # Delete the file from storage
+    if record.file:
+        record.file.delete(save=False)
+
+    record.delete()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'success'})
+
+    return redirect('health:records')
 
 
 @login_required(login_url='health:login')

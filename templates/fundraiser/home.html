@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Help Bruno Fight Cancer{% endblock %}
+{% block title %}{% trans "Help Bruno Fight Cancer" %}{% endblock %}
 
 {% block extra_fonts %}
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -43,6 +44,48 @@ h1, h2, h3 {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+.lang-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    gap: 8px;
+    background: rgba(255,255,255,0.95);
+    padding: 8px 12px;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.lang-toggle button {
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 2px;
+    transition: all 0.2s;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lang-toggle button:hover {
+    transform: scale(1.1);
+}
+
+.lang-toggle button.active {
+    border-color: var(--primary-color);
+}
+
+.lang-toggle .flag {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .hero {
@@ -274,9 +317,177 @@ h1, h2, h3 {
     font-size: 1rem;
 }
 
-.gallery {
+.prognosis {
     padding: 100px 0;
     background: var(--white);
+}
+
+.prognosis h2 {
+    font-size: 3.75rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.prognosis .subtitle {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.urgency-notice {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+    border: 2px solid #ffc107;
+    border-left: 6px solid #dc3545;
+    border-radius: 12px;
+    padding: 20px 25px;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+    color: #856404;
+    text-align: left;
+}
+
+.urgency-notice strong {
+    color: #dc3545;
+}
+
+.prognosis-card.urgent {
+    animation: pulse-urgent 2s infinite;
+}
+
+@keyframes pulse-urgent {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+    50% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
+}
+
+.prognosis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.prognosis-card {
+    background: var(--background-light);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+}
+
+.prognosis-card.with-treatment {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 3px solid #28a745;
+}
+
+.prognosis-card.without-treatment {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border: 3px solid #dc3545;
+}
+
+.prognosis-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.prognosis-stat {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.with-treatment .prognosis-stat {
+    color: #28a745;
+}
+
+.without-treatment .prognosis-stat {
+    color: #dc3545;
+}
+
+.prognosis-card p {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+.prognosis-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.chart-container {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.chart-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 992px) {
+    .prognosis-charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+.prognosis-facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.fact-box {
+    text-align: center;
+    padding: 30px 20px;
+    background: var(--background-light);
+    border-radius: 15px;
+}
+
+.fact-box .number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.fact-box p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.prognosis-source {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.prognosis-source a {
+    color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .prognosis-grid {
+        grid-template-columns: 1fr;
+    }
+    .prognosis-facts {
+        grid-template-columns: 1fr;
+    }
+}
+
+.gallery {
+    padding: 100px 0;
+    background: var(--background-light);
 }
 
 .gallery h2 {
@@ -485,13 +696,33 @@ footer .location {
 {% endblock %}
 
 {% block content %}
+<!-- Language Toggle -->
+<div class="lang-toggle">
+    <form action="{% url 'set_language' %}" method="post" id="lang-form-en">
+        {% csrf_token %}
+        <input type="hidden" name="language" value="en">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}" title="English">
+            <img src="https://flagcdn.com/w40/us.png" alt="English" class="flag">
+        </button>
+    </form>
+    <form action="{% url 'set_language' %}" method="post" id="lang-form-es">
+        {% csrf_token %}
+        <input type="hidden" name="language" value="es">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="{% if LANGUAGE_CODE == 'es' %}active{% endif %}" title="Español">
+            <img src="https://flagcdn.com/w40/mx.png" alt="Español" class="flag">
+        </button>
+    </form>
+</div>
+
 <header class="hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1>Help Bruno Fight Cancer</h1>
-        <p class="tagline">He doesn't know he's sick. He just knows he loves us.</p>
+        <h1>{% trans "Help Bruno Fight Cancer" %}</h1>
+        <p class="tagline">{% trans "He doesn't know he's sick. He just knows he loves us." %}</p>
         <a href="https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a/donate" class="donate-btn primary" target="_blank" rel="noopener">
-            Donate Now
+            {% trans "Donate Now" %}
         </a>
     </div>
 </header>
@@ -552,6 +783,61 @@ footer .location {
         </div>
     </section>
 
+    <section class="prognosis">
+        <div class="container">
+            <h2>Why We Need to Act Now</h2>
+            <p class="subtitle">Canine lymphoma is treatable, but time is critical. With chemotherapy, dogs can live significantly longer with a good quality of life.</p>
+
+            <div class="urgency-notice">
+                <strong>We've already lost precious time.</strong> It's been two weeks since we discovered Bruno's swollen lymph nodes—and they've tripled in size since then. The diagnostic testing had to be sent to Mexico City, which delayed the diagnosis. Every day without treatment, the cancer spreads.
+            </div>
+
+            <div class="prognosis-grid">
+                <div class="prognosis-card without-treatment urgent">
+                    <h3>Without Treatment</h3>
+                    <div class="prognosis-stat">2-4 weeks</div>
+                    <p>Bruno could have as little as 2 weeks left without treatment</p>
+                </div>
+                <div class="prognosis-card with-treatment">
+                    <h3>With CHOP Chemotherapy</h3>
+                    <div class="prognosis-stat">12-18 months</div>
+                    <p>Expected survival for B-cell Stage IIIa lymphoma</p>
+                </div>
+            </div>
+
+            <div class="prognosis-charts">
+                <div class="chart-container">
+                    <img src="{% static 'images/without-chop.png' %}" alt="Canine Lymphoma Prognosis by Treatment - comparing survival weeks for Prednisone alone, Laverdia-CA1, and CHOP chemotherapy">
+                </div>
+                <div class="chart-container">
+                    <img src="{% static 'images/chop-stages.png' %}" alt="CHOP Chemotherapy Prognosis by cell type and stage - showing probability bands for B-cell and T-cell lymphoma">
+                </div>
+            </div>
+
+            <div class="prognosis-facts">
+                <div class="fact-box">
+                    <div class="number">80-90%</div>
+                    <p>of dogs respond positively to chemotherapy</p>
+                </div>
+                <div class="fact-box">
+                    <div class="number">60-80%</div>
+                    <p>achieve complete remission</p>
+                </div>
+                <div class="fact-box">
+                    <div class="number">25%</div>
+                    <p>survive 2 years or longer</p>
+                </div>
+            </div>
+
+            <p class="prognosis-source">
+                Statistics from veterinary oncology research. Individual outcomes vary based on lymphoma type, stage, and timing of treatment.
+                <br>
+                <a href="https://pubmed.ncbi.nlm.nih.gov/15566067/" target="_blank">Garrett et al., Vet Comp Oncol. 2002</a> |
+                <a href="https://pubmed.ncbi.nlm.nih.gov/17542696/" target="_blank">Vail DM, Vet Clin North Am. 2007</a>
+            </p>
+        </div>
+    </section>
+
     <section class="gallery">
         <div class="container">
             <h2>This Is Who We're Fighting For</h2>
@@ -577,8 +863,8 @@ footer .location {
                     </a>
                     <p class="share-text">Can't donate? Please share Bruno's story!</p>
                     <div class="share-buttons">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a" target="_blank" rel="noopener" class="share-btn facebook">Share on Facebook</a>
-                        <a href="https://twitter.com/intent/tweet?text=Help%20Bruno%20fight%20cancer!%20Every%20donation%20counts.&url=https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a" target="_blank" rel="noopener" class="share-btn twitter">Share on X</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://helpbruno.com" target="_blank" rel="noopener" class="share-btn facebook">Share on Facebook</a>
+                        <a href="https://twitter.com/intent/tweet?text=Help%20Bruno%20fight%20cancer!%20Every%20donation%20counts.&url=https://helpbruno.com" target="_blank" rel="noopener" class="share-btn twitter">Share on X</a>
                     </div>
                 </div>
             </div>

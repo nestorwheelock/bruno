@@ -107,6 +107,25 @@
         font-size: 0.6875rem;
         font-weight: 500;
     }
+
+    .delete-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        background: var(--gray-200);
+        color: var(--gray-500);
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .delete-icon:hover {
+        background: var(--danger);
+        color: white;
+    }
 </style>
 {% endblock %}
 
@@ -182,20 +201,25 @@
     <p class="card-subtitle">{{ records|length }} {% trans "records on file" %}</p>
 
     {% for record in records %}
-    <a href="{% url 'health:record_detail' record.id %}" class="record-card" style="text-decoration: none; color: inherit;">
-        <div class="record-info">
-            <h4>
-                {{ record.title|default:record.get_record_type_display }}
-                {% if record.ai_parsed %}<span class="ai-badge">AI Parsed</span>{% endif %}
-            </h4>
-            <div class="meta">
-                {{ record.date|date:"M d, Y" }}
-                {% if record.clinic_name %} &bull; {{ record.clinic_name }}{% endif %}
-                <span class="source-badge {{ record.source }}">{{ record.get_source_display }}</span>
+    <div class="record-card">
+        <a href="{% url 'health:record_detail' record.id %}" style="text-decoration: none; color: inherit; flex: 1;">
+            <div class="record-info">
+                <h4>
+                    {{ record.title|default:record.get_record_type_display }}
+                    {% if record.ai_parsed %}<span class="ai-badge">AI Parsed</span>{% endif %}
+                </h4>
+                <div class="meta">
+                    {{ record.date|date:"M d, Y" }}
+                    {% if record.clinic_name %} &bull; {{ record.clinic_name }}{% endif %}
+                    <span class="source-badge {{ record.source }}">{{ record.get_source_display }}</span>
+                </div>
             </div>
+        </a>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="record-type-badge {{ record.record_type }}">{{ record.get_record_type_display }}</span>
+            <button class="delete-icon" onclick="deleteRecord({{ record.id }})" title="{% trans 'Delete' %}">x</button>
         </div>
-        <span class="record-type-badge {{ record.record_type }}">{{ record.get_record_type_display }}</span>
-    </a>
+    </div>
     {% endfor %}
 </div>
 {% endif %}
@@ -331,5 +355,31 @@ uploadForm.addEventListener('submit', async function(e) {
         uploadBtn.textContent = '{% trans "Upload Record" %}';
     }
 });
+
+// Delete record
+async function deleteRecord(recordId) {
+    if (!confirm('{% trans "Are you sure you want to delete this record?" %}')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/tracker/records/${recordId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (response.ok) {
+            showToast('{% trans "Record deleted" %}');
+            setTimeout(() => location.reload(), 500);
+        } else {
+            showToast('{% trans "Error deleting record" %}');
+        }
+    } catch (error) {
+        showToast('{% trans "Error deleting record" %}');
+    }
+}
 </script>
 {% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Edit Record" %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 16px;
+    }
+    .current-file {
+        background: var(--gray-50);
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        font-size: 0.875rem;
+    }
+    .source-options {
+        display: flex;
+        gap: 12px;
+    }
+    .source-option {
+        flex: 1;
+    }
+    .source-option input {
+        display: none;
+    }
+    .source-option label {
+        display: block;
+        padding: 12px;
+        text-align: center;
+        border: 2px solid var(--gray-200);
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .source-option input:checked + label {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<a href="{% url 'health:record_detail' record.id %}" class="back-link">&larr; {% trans "Back to Record" %}</a>
+
+<div class="card">
+    <h2>{% trans "Edit Medical Record" %}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="metric">
+            <label>{% trans "Record Type" %}</label>
+            <select name="record_type" class="form-input">
+                {% for code, name in record_types %}
+                <option value="{{ code }}" {% if record.record_type == code %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Title / Description" %}</label>
+            <input type="text" name="title" value="{{ record.title }}" class="form-input" placeholder="{% trans 'e.g., Pre-chemo CBC' %}">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Date" %}</label>
+            <input type="date" name="date" value="{{ record.date|date:'Y-m-d' }}" class="form-input">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Source" %}</label>
+            <div class="source-options">
+                <div class="source-option">
+                    <input type="radio" name="source" value="clinic" id="source_clinic" {% if record.source == 'clinic' %}checked{% endif %}>
+                    <label for="source_clinic">{% trans "Vet Clinic" %}</label>
+                </div>
+                <div class="source-option">
+                    <input type="radio" name="source" value="home" id="source_home" {% if record.source == 'home' %}checked{% endif %}>
+                    <label for="source_home">{% trans "At Home" %}</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Clinic Name" %}</label>
+            <input type="text" name="clinic_name" value="{{ record.clinic_name }}" class="form-input" placeholder="{% trans 'Veterinary clinic name' %}">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Veterinarian" %}</label>
+            <input type="text" name="veterinarian" value="{{ record.veterinarian }}" class="form-input" placeholder="{% trans 'Dr. name' %}">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Document File" %}</label>
+            {% if record.file %}
+            <div class="current-file">
+                {% trans "Current:" %} {{ record.file.name|cut:"medical_records/" }}
+            </div>
+            {% endif %}
+            <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" class="form-input">
+            <small style="color: var(--gray-500);">{% trans "Leave empty to keep current file" %}</small>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Notes" %}</label>
+            <textarea name="notes" rows="3" class="form-input" style="resize: vertical;">{{ record.notes }}</textarea>
+        </div>
+
+        <button type="submit" class="save-btn">{% trans "Save Changes" %}</button>
+    </form>
+</div>
+{% endblock %}

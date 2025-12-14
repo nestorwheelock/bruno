@@ -128,6 +128,37 @@
         text-decoration: underline;
     }
 
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 16px;
+    }
+    .edit-btn {
+        flex: 1;
+        padding: 12px;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+    }
+    .delete-btn {
+        flex: 1;
+        padding: 12px;
+        background: var(--danger);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .delete-btn:hover {
+        opacity: 0.9;
+    }
+
     .extracted-text {
         background: var(--gray-50);
         padding: 16px;
@@ -154,6 +185,11 @@
     <span class="record-type-badge {{ record.record_type }}">{{ record.get_record_type_display }}</span>
     <span class="source-badge {{ record.source }}">{{ record.get_source_display }}</span>
     {% if record.ai_parsed %}<span class="ai-badge">AI Parsed</span>{% endif %}
+
+    <div class="action-buttons">
+        <a href="{% url 'health:edit_record' record.id %}" class="edit-btn">{% trans "Edit" %}</a>
+        <button type="button" class="delete-btn" onclick="confirmDelete()">{% trans "Delete" %}</button>
+    </div>
 </div>
 
 {% if record.file %}
@@ -229,4 +265,18 @@
     <p>{{ record.notes }}</p>
 </div>
 {% endif %}
+
+<form id="deleteForm" method="post" action="{% url 'health:delete_record' record.id %}" style="display: none;">
+    {% csrf_token %}
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete() {
+    if (confirm('{% trans "Are you sure you want to delete this record? This action cannot be undone." %}')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
+</script>
 {% endblock %}

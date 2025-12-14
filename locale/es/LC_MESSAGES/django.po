@@ -718,3 +718,127 @@ msgstr "Preocupaciones de calidad de vida - consultar veterinario"
 
 msgid "No assessment data available"
 msgstr "No hay datos de evaluacion disponibles"
+
+# Fundraiser Page
+msgid "Help Bruno Fight Cancer"
+msgstr "Ayuda a Bruno a Luchar Contra el Cancer"
+
+msgid "He doesn't know he's sick. He just knows he loves us."
+msgstr "El no sabe que esta enfermo. Solo sabe que nos ama."
+
+msgid "Donate Now"
+msgstr "Donar Ahora"
+
+msgid "Meet Bruno"
+msgstr "Conoce a Bruno"
+
+msgid "Bruno is a 6-year-old dog with a heart of gold. He was recently diagnosed with lymphoma, a common but aggressive cancer in dogs. Without treatment, he may only have weeks left."
+msgstr "Bruno es un perro de 6 anos con un corazon de oro. Recientemente le diagnosticaron linfoma, un cancer comun pero agresivo en perros. Sin tratamiento, puede que solo le queden semanas."
+
+msgid "With your help, Bruno can receive chemotherapy that could give him months—even years—of quality time with his family who loves him more than words can say."
+msgstr "Con tu ayuda, Bruno puede recibir quimioterapia que podria darle meses—incluso anos—de tiempo de calidad con su familia que lo ama mas de lo que las palabras pueden expresar."
+
+msgid "Bruno's Story"
+msgstr "La Historia de Bruno"
+
+msgid "A Love Like No Other"
+msgstr "Un Amor Como Ningun Otro"
+
+msgid "Bruno came into our lives six years ago, and from day one, he's been our shadow, our comfort, and our joy. He greets every morning with a wagging tail and ends every night curled up at our feet."
+msgstr "Bruno llego a nuestras vidas hace seis anos, y desde el primer dia, ha sido nuestra sombra, nuestro consuelo y nuestra alegria. Saluda cada manana con la cola meneando y termina cada noche acurrucado a nuestros pies."
+
+msgid "The Diagnosis"
+msgstr "El Diagnostico"
+
+msgid "When we noticed his lymph nodes were swollen, our hearts sank. The vet confirmed our fears: B-cell lymphoma. But there's hope—with CHOP chemotherapy, Bruno could have 12-18 more months of tail wags and belly rubs."
+msgstr "Cuando notamos que sus ganglios linfaticos estaban inflamados, nuestros corazones se hundieron. El veterinario confirmo nuestros temores: linfoma de celulas B. Pero hay esperanza—con quimioterapia CHOP, Bruno podria tener 12-18 meses mas de meneos de cola y caricias en la panza."
+
+msgid "We Can't Do This Alone"
+msgstr "No Podemos Hacerlo Solos"
+
+msgid "With only one income and no savings to fall back on, the cost of treatment feels impossible. We cancelled Christmas travel to stay by his side. We'd give anything for more time with him—but we need help to make it happen."
+msgstr "Con un solo ingreso y sin ahorros en que apoyarnos, el costo del tratamiento parece imposible. Cancelamos nuestro viaje de Navidad para quedarnos a su lado. Dariamos cualquier cosa por mas tiempo con el—pero necesitamos ayuda para que suceda."
+
+msgid "Every Day Counts"
+msgstr "Cada Dia Cuenta"
+
+msgid "The sooner we start, the more good days we get to keep."
+msgstr "Cuanto antes comencemos, mas dias buenos podremos conservar."
+
+msgid "Lymphoma moves fast. Early treatment can slow the disease and give Bruno more time—more walks, more naps in the sun, more moments together. Your donation goes directly toward:"
+msgstr "El linfoma avanza rapido. El tratamiento temprano puede frenar la enfermedad y darle a Bruno mas tiempo—mas paseos, mas siestas al sol, mas momentos juntos. Tu donacion va directamente a:"
+
+msgid "Veterinary oncology visits"
+msgstr "Consultas de oncologia veterinaria"
+
+msgid "Chemotherapy treatments"
+msgstr "Tratamientos de quimioterapia"
+
+msgid "Ongoing monitoring"
+msgstr "Monitoreo continuo"
+
+msgid "Transportation to frequent appointments"
+msgstr "Transporte a citas frecuentes"
+
+msgid "Why We Need to Act Now"
+msgstr "Por Que Necesitamos Actuar Ahora"
+
+msgid "Canine lymphoma is treatable, but time is critical. With chemotherapy, dogs can live significantly longer with a good quality of life."
+msgstr "El linfoma canino es tratable, pero el tiempo es critico. Con quimioterapia, los perros pueden vivir significativamente mas con buena calidad de vida."
+
+msgid "We've already lost precious time."
+msgstr "Ya hemos perdido tiempo valioso."
+
+msgid "Without Treatment"
+msgstr "Sin Tratamiento"
+
+msgid "With CHOP Chemotherapy"
+msgstr "Con Quimioterapia CHOP"
+
+msgid "Bruno could have as little as 2 weeks left without treatment"
+msgstr "A Bruno podrian quedarle tan solo 2 semanas sin tratamiento"
+
+msgid "Expected survival for B-cell Stage IIIa lymphoma"
+msgstr "Supervivencia esperada para linfoma de celulas B etapa IIIa"
+
+msgid "of dogs respond positively to chemotherapy"
+msgstr "de los perros responden positivamente a la quimioterapia"
+
+msgid "achieve complete remission"
+msgstr "logran remision completa"
+
+msgid "survive 2 years or longer"
+msgstr "sobreviven 2 anos o mas"
+
+msgid "Share Bruno's Story"
+msgstr "Comparte la Historia de Bruno"
+
+msgid "Can't donate? Sharing helps just as much!"
+msgstr "No puedes donar? Compartir ayuda igual!"
+
+msgid "Share on Facebook"
+msgstr "Compartir en Facebook"
+
+msgid "Share on Twitter"
+msgstr "Compartir en Twitter"
+
+msgid "Share on WhatsApp"
+msgstr "Compartir en WhatsApp"
+
+msgid "Copy Link"
+msgstr "Copiar Enlace"
+
+msgid "Link copied!"
+msgstr "Enlace copiado!"
+
+msgid "Photo Gallery"
+msgstr "Galeria de Fotos"
+
+msgid "Thank you for caring."
+msgstr "Gracias por preocuparte."
+
+msgid "Every dollar, every share, every kind thought helps Bruno fight. From our family to yours—thank you."
+msgstr "Cada dolar, cada compartida, cada pensamiento amable ayuda a Bruno a luchar. De nuestra familia a la tuya—gracias."
+
+msgid "Give Bruno More Time"
+msgstr "Dale a Bruno Mas Tiempo"
