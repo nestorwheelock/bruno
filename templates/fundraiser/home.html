@@ -698,23 +698,33 @@ footer .location {
 {% block content %}
 <!-- Language Toggle -->
 <div class="lang-toggle">
-    <form action="{% url 'set_language' %}" method="post" id="lang-form-en">
-        {% csrf_token %}
-        <input type="hidden" name="language" value="en">
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}" title="English">
-            <img src="https://flagcdn.com/w40/us.png" alt="English" class="flag">
-        </button>
-    </form>
-    <form action="{% url 'set_language' %}" method="post" id="lang-form-es">
-        {% csrf_token %}
-        <input type="hidden" name="language" value="es">
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit" class="{% if LANGUAGE_CODE == 'es' %}active{% endif %}" title="Español">
-            <img src="https://flagcdn.com/w40/mx.png" alt="Español" class="flag">
-        </button>
-    </form>
+    <button type="button" onclick="switchLanguage('en')" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}" title="English">
+        <img src="https://flagcdn.com/w40/us.png" alt="English" class="flag">
+    </button>
+    <button type="button" onclick="switchLanguage('es')" class="{% if LANGUAGE_CODE == 'es' %}active{% endif %}" title="Español">
+        <img src="https://flagcdn.com/w40/mx.png" alt="Español" class="flag">
+    </button>
 </div>
+
+<script>
+function switchLanguage(lang) {
+    var currentPath = window.location.pathname;
+    var newPath;
+
+    // Remove any existing language prefix
+    currentPath = currentPath.replace(/^\/(en|es)\//, '/');
+
+    if (lang === 'es') {
+        // Add Spanish prefix
+        newPath = '/es' + currentPath;
+    } else {
+        // English has no prefix (default language)
+        newPath = currentPath;
+    }
+
+    window.location.href = newPath;
+}
+</script>
 
 <header class="hero">
     <div class="hero-overlay"></div>
