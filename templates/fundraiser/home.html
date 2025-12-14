@@ -807,10 +807,18 @@ footer .location {
 
             <div class="prognosis-charts">
                 <div class="chart-container">
+                    {% if LANGUAGE_CODE == 'es' %}
+                    <img src="{% static 'images/without-chop-es.png' %}" alt="Pronóstico de Linfoma Canino por Tratamiento - comparando semanas de supervivencia para Prednisona sola, Laverdia-CA1 y quimioterapia CHOP">
+                    {% else %}
                     <img src="{% static 'images/without-chop.png' %}" alt="Canine Lymphoma Prognosis by Treatment - comparing survival weeks for Prednisone alone, Laverdia-CA1, and CHOP chemotherapy">
+                    {% endif %}
                 </div>
                 <div class="chart-container">
+                    {% if LANGUAGE_CODE == 'es' %}
+                    <img src="{% static 'images/chop-stages-es.png' %}" alt="Pronóstico de Quimioterapia CHOP por tipo de célula y etapa - mostrando bandas de probabilidad para linfoma de células B y T">
+                    {% else %}
                     <img src="{% static 'images/chop-stages.png' %}" alt="CHOP Chemotherapy Prognosis by cell type and stage - showing probability bands for B-cell and T-cell lymphoma">
+                    {% endif %}
                 </div>
             </div>
 
