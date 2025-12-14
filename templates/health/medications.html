@@ -1,0 +1,135 @@
+{% extends 'health/base_health.html' %}
+
+{% block main_content %}
+<div class="card">
+    <h2>Medications</h2>
+    <div id="medsList">
+        {% for med in medications %}
+        <div class="med-item" data-id="{{ med.id }}">
+            <div class="med-info">
+                <h4>{{ med.name }}</h4>
+                <span>{{ med.dosage }} - {{ med.get_frequency_display }}</span>
+            </div>
+            <button class="dose-btn" onclick="recordDose({{ med.id }})">Given</button>
+        </div>
+        {% empty %}
+        <p class="empty-state">No medications added yet</p>
+        {% endfor %}
+    </div>
+    <button class="add-btn" id="addMedBtn">+ Add Medication</button>
+</div>
+
+<div class="card">
+    <h2>Today's Doses</h2>
+    <div id="todayDoses">
+        {% for dose in today_doses %}
+        <div class="entry-item">
+            <span class="entry-date">{{ dose.medication.name }}</span>
+            <span class="entry-status good">{{ dose.given_at|time:"g:i A" }}</span>
+        </div>
+        {% empty %}
+        <p class="empty-state">No doses recorded today</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal" id="medModal">
+    <div class="modal-content">
+        <h3>Add Medication</h3>
+        <form id="medForm">
+            <div class="form-group">
+                <label>Medication Name</label>
+                <input type="text" name="name" required placeholder="e.g., Prednisone">
+            </div>
+            <div class="form-group">
+                <label>Dosage</label>
+                <input type="text" name="dosage" required placeholder="e.g., 20mg">
+            </div>
+            <div class="form-group">
+                <label>Frequency</label>
+                <select name="frequency">
+                    <option value="once">Once daily</option>
+                    <option value="twice">Twice daily</option>
+                    <option value="three">Three times daily</option>
+                    <option value="asNeeded">As needed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <input type="text" name="notes" placeholder="e.g., With food">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" id="cancelMed">Cancel</button>
+                <button type="submit" class="save-btn">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('addMedBtn').addEventListener('click', () => {
+        document.getElementById('medModal').classList.add('active');
+    });
+
+    document.getElementById('cancelMed').addEventListener('click', () => {
+        document.getElementById('medModal').classList.remove('active');
+    });
+
+    document.getElementById('medForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const data = {
+            name: formData.get('name'),
+            dosage: formData.get('dosage'),
+            frequency: formData.get('frequency'),
+            notes: formData.get('notes'),
+        };
+
+        try {
+            const response = await fetch('{% url "health:add_medication" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                showToast('Medication added!');
+                location.reload();
+            } else {
+                showToast('Error adding medication');
+            }
+        } catch (err) {
+            showToast('Error adding medication');
+        }
+    });
+
+    async function recordDose(medId) {
+        try {
+            const response = await fetch(`/tracker/medications/${medId}/dose/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                showToast(`Dose recorded at ${data.time}`);
+                location.reload();
+            } else {
+                showToast('Error recording dose');
+            }
+        } catch (err) {
+            showToast('Error recording dose');
+        }
+    }
+</script>
+{% endblock %}

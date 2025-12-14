@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Bruno's Health Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Bruno's Tracker</h1>
+        <p class="date" id="currentDate"></p>
+    </header>
+
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="daily">Daily</button>
+        <button class="tab-btn" data-tab="meds">Meds</button>
+        <button class="tab-btn" data-tab="nodes">Nodes</button>
+        <button class="tab-btn" data-tab="history">History</button>
+    </nav>
+
+    <main>
+        <!-- Daily Entry Tab -->
+        <section id="daily" class="tab-content active">
+            <form id="dailyForm">
+                <!-- Good Day Summary -->
+                <div class="card summary-card">
+                    <h2>Was today a good day?</h2>
+                    <div class="day-rating">
+                        <label class="rating-option">
+                            <input type="radio" name="goodDay" value="yes">
+                            <span class="rating-btn good">Yes</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="goodDay" value="mixed">
+                            <span class="rating-btn mixed">Mixed</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="goodDay" value="no">
+                            <span class="rating-btn bad">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Mood & Engagement -->
+                <div class="card">
+                    <h2>Mood & Engagement</h2>
+                    <p class="card-subtitle">Happiness indicators - most important signals</p>
+
+                    <div class="metric">
+                        <label>Tail / Body Language</label>
+                        <p class="metric-hint">Relaxed, wagging, loose vs stiff, withdrawn</p>
+                        <div class="score-slider">
+                            <input type="range" name="tailBodyLanguage" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Interest in People</label>
+                        <p class="metric-hint">Seeks affection, follows you vs disengaged</p>
+                        <div class="score-slider">
+                            <input type="range" name="interestPeople" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Interest in Environment</label>
+                        <p class="metric-hint">Sniffing, watching, alert vs dull</p>
+                        <div class="score-slider">
+                            <input type="range" name="interestEnvironment" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Enjoyment of Favorites</label>
+                        <p class="metric-hint">Toys, walks, treats, sun, car rides</p>
+                        <div class="score-slider">
+                            <input type="range" name="enjoymentFavorites" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Overall "Spark"</label>
+                        <p class="metric-hint">Your gut sense of joy vs flatness</p>
+                        <div class="score-slider">
+                            <input type="range" name="overallSpark" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appetite & Eating -->
+                <div class="card">
+                    <h2>Appetite & Eating</h2>
+
+                    <div class="metric">
+                        <label>Appetite</label>
+                        <p class="metric-hint">Eats willingly vs refusal</p>
+                        <div class="score-slider">
+                            <input type="range" name="appetite" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Food Enjoyment</label>
+                        <p class="metric-hint">Excited, slow, or reluctant</p>
+                        <div class="score-slider">
+                            <input type="range" name="foodEnjoyment" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Nausea Signs</label>
+                        <p class="metric-hint">5 = none, 0 = lip licking, drooling, vomiting</p>
+                        <div class="score-slider">
+                            <input type="range" name="nauseaSigns" min="0" max="5" value="5">
+                            <span class="score-display">5</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Weight / Body Condition</label>
+                        <p class="metric-hint">Stable vs noticeable loss</p>
+                        <div class="score-slider">
+                            <input type="range" name="weightCondition" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Meals Eaten Today</label>
+                        <div class="meal-checkboxes">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="breakfast" value="1">
+                                <span>Breakfast</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="lunch" value="1">
+                                <span>Lunch</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="dinner" value="1">
+                                <span>Dinner</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="treats" value="1">
+                                <span>Treats</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Energy & Mobility -->
+                <div class="card">
+                    <h2>Energy & Mobility</h2>
+
+                    <div class="metric">
+                        <label>Energy Level</label>
+                        <p class="metric-hint">Normal, slightly tired, lethargic</p>
+                        <div class="score-slider">
+                            <input type="range" name="energyLevel" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Willingness to Move</label>
+                        <p class="metric-hint">Gets up easily vs hesitation</p>
+                        <div class="score-slider">
+                            <input type="range" name="willingnessMove" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Walking Comfort</label>
+                        <p class="metric-hint">Smooth gait vs stiffness/limping</p>
+                        <div class="score-slider">
+                            <input type="range" name="walkingComfort" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Resting Comfort</label>
+                        <p class="metric-hint">Settles easily vs restless</p>
+                        <div class="score-slider">
+                            <input type="range" name="restingComfort" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pain & Physical Comfort -->
+                <div class="card">
+                    <h2>Pain & Physical Comfort</h2>
+
+                    <div class="metric">
+                        <label>Breathing Comfort</label>
+                        <p class="metric-hint">Normal vs labored</p>
+                        <div class="score-slider">
+                            <input type="range" name="breathingComfort" min="0" max="5" value="5">
+                            <span class="score-display">5</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Pain Signs</label>
+                        <p class="metric-hint">5 = none, 0 = panting, whining, guarding</p>
+                        <div class="score-slider">
+                            <input type="range" name="painSigns" min="0" max="5" value="5">
+                            <span class="score-display">5</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Sleep Quality</label>
+                        <p class="metric-hint">Restful vs disrupted</p>
+                        <div class="score-slider">
+                            <input type="range" name="sleepQuality" min="0" max="5" value="3">
+                            <span class="score-display">3</span>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Response to Touch</label>
+                        <p class="metric-hint">Enjoys vs flinches</p>
+                        <div class="score-slider">
+                            <input type="range" name="responseTouch" min="0" max="5" value="5">
+                            <span class="score-display">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="card">
+                    <h2>Notes</h2>
+
+                    <div class="metric">
+                        <label>What made today good?</label>
+                        <textarea name="goodNotes" rows="2" placeholder="Optional..."></textarea>
+                    </div>
+
+                    <div class="metric">
+                        <label>What seemed hardest?</label>
+                        <textarea name="hardNotes" rows="2" placeholder="Optional..."></textarea>
+                    </div>
+
+                    <div class="metric">
+                        <label>Other observations</label>
+                        <textarea name="otherNotes" rows="2" placeholder="Fever, coughing, diarrhea, bad breath changes..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="save-btn">Save Today's Entry</button>
+            </form>
+        </section>
+
+        <!-- Medications Tab -->
+        <section id="meds" class="tab-content">
+            <div class="card">
+                <h2>Medications</h2>
+                <div id="medsList"></div>
+                <button type="button" class="add-btn" id="addMedBtn">+ Add Medication</button>
+            </div>
+
+            <div class="card">
+                <h2>Today's Doses</h2>
+                <div id="todayDoses">
+                    <p class="empty-state">No medications scheduled</p>
+                </div>
+            </div>
+
+            <!-- Add Medication Modal -->
+            <div class="modal" id="medModal">
+                <div class="modal-content">
+                    <h3>Add Medication</h3>
+                    <form id="medForm">
+                        <div class="form-group">
+                            <label>Medication Name</label>
+                            <input type="text" name="medName" required placeholder="e.g., Prednisone">
+                        </div>
+                        <div class="form-group">
+                            <label>Dosage</label>
+                            <input type="text" name="medDose" required placeholder="e.g., 20mg">
+                        </div>
+                        <div class="form-group">
+                            <label>Frequency</label>
+                            <select name="medFrequency">
+                                <option value="once">Once daily</option>
+                                <option value="twice">Twice daily</option>
+                                <option value="three">Three times daily</option>
+                                <option value="asNeeded">As needed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <input type="text" name="medNotes" placeholder="e.g., With food">
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="cancel-btn" id="cancelMed">Cancel</button>
+                            <button type="submit" class="save-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lymph Nodes Tab -->
+        <section id="nodes" class="tab-content">
+            <div class="card">
+                <h2>Lymph Node Measurements</h2>
+                <p class="card-subtitle">Track size changes over time (in cm or mm)</p>
+
+                <form id="nodesForm">
+                    <div class="node-group">
+                        <h3>Mandibular (Jaw)</h3>
+                        <div class="node-row">
+                            <div class="node-input">
+                                <label>Left</label>
+                                <input type="number" name="mandibularLeft" step="0.1" placeholder="cm">
+                            </div>
+                            <div class="node-input">
+                                <label>Right</label>
+                                <input type="number" name="mandibularRight" step="0.1" placeholder="cm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="node-group">
+                        <h3>Popliteal (Knee)</h3>
+                        <div class="node-row">
+                            <div class="node-input">
+                                <label>Left</label>
+                                <input type="number" name="poplitealLeft" step="0.1" placeholder="cm">
+                            </div>
+                            <div class="node-input">
+                                <label>Right</label>
+                                <input type="number" name="poplitealRight" step="0.1" placeholder="cm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="node-group">
+                        <h3>Overall Assessment</h3>
+                        <div class="node-status">
+                            <label class="radio-option">
+                                <input type="radio" name="nodeStatus" value="smaller">
+                                <span>Smaller</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="nodeStatus" value="same">
+                                <span>Same</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="nodeStatus" value="larger">
+                                <span>Larger</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="metric">
+                        <label>Notes</label>
+                        <textarea name="nodeNotes" rows="2" placeholder="Any new nodes, changes noticed..."></textarea>
+                    </div>
+
+                    <button type="submit" class="save-btn">Save Measurements</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Measurement History</h2>
+                <div id="nodeHistory">
+                    <p class="empty-state">No measurements recorded yet</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Tab -->
+        <section id="history" class="tab-content">
+            <div class="card">
+                <h2>Weekly Summary</h2>
+                <div id="weeklySummary">
+                    <div class="summary-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="goodDaysPercent">--</span>
+                            <span class="stat-label">Good Days</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="avgHappiness">--</span>
+                            <span class="stat-label">Avg Happiness</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="weekTrend">--</span>
+                            <span class="stat-label">Trend</span>
+                        </div>
+                    </div>
+                    <div class="guidance">
+                        <p><strong>&gt;70% good days</strong> = treatment justified</p>
+                        <p><strong>~50%</strong> = reassess goals</p>
+                        <p><strong>&lt;30% for 2-3 weeks</strong> = comfort focus</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Recent Entries</h2>
+                <div id="recentEntries">
+                    <p class="empty-state">No entries yet</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Export Data</h2>
+                <p class="card-subtitle">Share with your vet</p>
+                <button type="button" class="export-btn" id="exportBtn">Export to Text</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

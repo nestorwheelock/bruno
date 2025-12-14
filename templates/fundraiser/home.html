@@ -1,0 +1,598 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Help Bruno Fight Cancer{% endblock %}
+
+{% block extra_fonts %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block extra_css %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #e74c3c;
+    --primary-dark: #c0392b;
+    --secondary-color: #3498db;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --background-light: #f9f9f9;
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: var(--text-dark);
+    line-height: 1.7;
+    background-color: var(--white);
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.hero {
+    position: relative;
+    height: 80vh;
+    min-height: 500px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('{% static "images/bruno1.jpg" %}') center/cover no-repeat;
+    opacity: 0.3;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero .tagline {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    opacity: 0.95;
+}
+
+.donate-btn {
+    display: inline-block;
+    padding: 18px 45px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.donate-btn.primary {
+    background: var(--primary-color);
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+
+.donate-btn.primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(231, 76, 60, 0.5);
+}
+
+.donate-btn.secondary {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid var(--white);
+}
+
+.donate-btn.secondary:hover {
+    background: var(--white);
+    color: var(--text-dark);
+}
+
+.donate-btn.large {
+    padding: 22px 60px;
+    font-size: 1.25rem;
+}
+
+.intro {
+    padding: 100px 0;
+    background: var(--white);
+}
+
+.intro .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.intro-image img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+.intro-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.intro-text .highlight {
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.intro-text p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.intro-text strong {
+    color: var(--primary-color);
+}
+
+.story {
+    padding: 100px 0;
+    background: var(--background-light);
+}
+
+.story h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+
+.story-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.story-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.story-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 30px;
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+}
+
+.card-content p {
+    color: var(--text-light);
+    font-size: 1.05rem;
+}
+
+.urgency {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #c0392b 100%);
+    color: var(--white);
+}
+
+.urgency-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.urgency h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+.urgency blockquote {
+    font-size: 1.4rem;
+    font-style: italic;
+    padding: 30px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.urgency p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.needs-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.needs-list li {
+    background: rgba(255,255,255,0.2);
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 1rem;
+}
+
+.gallery {
+    padding: 100px 0;
+    background: var(--white);
+}
+
+.gallery h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.05);
+}
+
+.cta {
+    padding: 100px 0;
+    background: var(--background-light);
+}
+
+.cta-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.cta-image {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+.cta-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 25px;
+}
+
+.cta-text p {
+    font-size: 1.15rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+}
+
+.cta-text .donate-btn {
+    margin-bottom: 30px;
+}
+
+.share-text {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.share-btn.facebook {
+    background: #3b5998;
+    color: var(--white);
+}
+
+.share-btn.facebook:hover {
+    background: #2d4373;
+}
+
+.share-btn.twitter {
+    background: #000000;
+    color: var(--white);
+}
+
+.share-btn.twitter:hover {
+    background: #333333;
+}
+
+footer {
+    padding: 60px 0;
+    background: var(--text-dark);
+    color: var(--white);
+    text-align: center;
+}
+
+footer p {
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+footer .location {
+    opacity: 0.7;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 992px) {
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+
+    .intro .container,
+    .cta-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .intro-image {
+        order: -1;
+    }
+
+    .story-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 70vh;
+        min-height: 450px;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero .tagline {
+        font-size: 1.2rem;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    h2 {
+        font-size: 2rem !important;
+    }
+
+    .donate-btn {
+        padding: 15px 35px;
+    }
+
+    .donate-btn.large {
+        padding: 18px 45px;
+        font-size: 1.1rem;
+    }
+
+    .needs-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .share-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-text {
+        text-align: center;
+    }
+
+    .share-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .share-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Help Bruno Fight Cancer</h1>
+        <p class="tagline">He doesn't know he's sick. He just knows he loves us.</p>
+        <a href="https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a/donate" class="donate-btn primary" target="_blank" rel="noopener">
+            Donate Now
+        </a>
+    </div>
+</header>
+
+<main>
+    <section class="intro">
+        <div class="container">
+            <div class="intro-image">
+                <img src="{% static 'images/bruno1.jpg' %}" alt="Bruno, a loving 6-year-old dog">
+            </div>
+            <div class="intro-text">
+                <h2>Meet Bruno</h2>
+                <p class="highlight">Six years of unconditional love.</p>
+                <p>Bruno and Tatum are inseparable. Where one goes, the other follows. He's not just a dog—he's a best friend, a protector, a constant source of comfort through every hard day and quiet night.</p>
+                <p>Now Bruno has been diagnosed with <strong>lymphoma</strong>. He's still happy, still wagging his tail, still looking at us like nothing is wrong. That's what makes this so hard.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="story">
+        <div class="container">
+            <h2>Bruno's Story</h2>
+            <div class="story-grid">
+                <div class="story-card">
+                    <img src="{% static 'images/bruno2.jpg' %}" alt="Bruno with his family">
+                    <div class="card-content">
+                        <h3>He Still Greets Each Day with Joy</h3>
+                        <p>Bruno doesn't know what lymphoma means. He just knows he wants to be close to us, to play, to rest his head in our laps. His spirit hasn't changed—and we're fighting to keep it that way for as long as we can.</p>
+                    </div>
+                </div>
+                <div class="story-card">
+                    <img src="{% static 'images/bruno3.jpg' %}" alt="Bruno being playful">
+                    <div class="card-content">
+                        <h3>We Can't Do This Alone</h3>
+                        <p>With only one income and no savings to fall back on, the cost of treatment feels impossible. We cancelled Christmas travel to stay by his side. We'd give anything for more time with him—but we need help to make it happen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="urgency">
+        <div class="container">
+            <div class="urgency-content">
+                <h2>Every Day Counts</h2>
+                <blockquote>
+                    "The sooner we start, the more good days we get to keep."
+                </blockquote>
+                <p>Lymphoma moves fast. Early treatment can slow the disease and give Bruno more time—more walks, more naps in the sun, more moments together. Your donation goes directly toward:</p>
+                <ul class="needs-list">
+                    <li>Veterinary oncology visits</li>
+                    <li>Chemotherapy treatments</li>
+                    <li>Medications</li>
+                    <li>Ongoing monitoring</li>
+                    <li>Transportation to frequent appointments</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery">
+        <div class="container">
+            <h2>This Is Who We're Fighting For</h2>
+            <div class="gallery-grid">
+                <img src="{% static 'images/bruno1.jpg' %}" alt="Bruno portrait">
+                <img src="{% static 'images/bruno2.jpg' %}" alt="Bruno relaxing">
+                <img src="{% static 'images/bruno3.jpg' %}" alt="Bruno happy">
+                <img src="{% static 'images/bruno4.jpg' %}" alt="Bruno with family">
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <img src="{% static 'images/bruno4.jpg' %}" alt="Bruno looking hopeful" class="cta-image">
+                <div class="cta-text">
+                    <h2>Help Us Keep Him a Little Longer</h2>
+                    <p>We're not ready to say goodbye. Bruno still has so much love to give, and we want to give him every chance to keep giving it.</p>
+                    <p>Any amount helps. If you can't donate, sharing his story means the world to us.</p>
+                    <a href="https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a/donate" class="donate-btn primary large" target="_blank" rel="noopener">
+                        Donate to Bruno's Treatment
+                    </a>
+                    <p class="share-text">Can't donate? Please share Bruno's story!</p>
+                    <div class="share-buttons">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a" target="_blank" rel="noopener" class="share-btn facebook">Share on Facebook</a>
+                        <a href="https://twitter.com/intent/tweet?text=Help%20Bruno%20fight%20cancer!%20Every%20donation%20counts.&url=https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a" target="_blank" rel="noopener" class="share-btn twitter">Share on X</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <p>Thank you for caring about Bruno. Every donation and share brings us closer to giving him more good days.</p>
+        <p class="location">Puerto Morelos, Mexico</p>
+        <a href="https://www.gofundme.com/f/help-bruno-fight-cancer-hkj8a/donate" class="donate-btn secondary" target="_blank" rel="noopener">
+            Donate on GoFundMe
+        </a>
+    </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'health/base_health.html' %}
+
+{% block main_content %}
+<div class="card">
+    <h2>Weekly Summary</h2>
+    <div class="summary-stats">
+        <div class="stat">
+            <span class="stat-value">{{ good_day_percent }}%</span>
+            <span class="stat-label">Good Days</span>
+        </div>
+        <div class="stat">
+            <span class="stat-value">{{ total_days }}</span>
+            <span class="stat-label">Days Tracked</span>
+        </div>
+        <div class="stat">
+            <span class="stat-value">{{ trend }}</span>
+            <span class="stat-label">Trend</span>
+        </div>
+    </div>
+    <div class="guidance">
+        <p><strong>&gt;70% good days</strong> = treatment justified</p>
+        <p><strong>~50%</strong> = reassess goals</p>
+        <p><strong>&lt;30% for 2-3 weeks</strong> = comfort focus</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Recent Entries</h2>
+    <div id="recentEntries">
+        {% for entry in entries %}
+        <div class="entry-item">
+            <div>
+                <span class="entry-date">{{ entry.date|date:"M j" }}</span>
+                {% if entry.happiness_score %}
+                <span style="font-size: 0.8rem; color: #6b7280; margin-left: 8px;">
+                    Score: {{ entry.happiness_score }}/5
+                </span>
+                {% endif %}
+            </div>
+            <span class="entry-status {% if entry.good_day == 'yes' %}good{% elif entry.good_day == 'no' %}bad{% elif entry.good_day == 'mixed' %}mixed{% endif %}">
+                {% if entry.good_day == 'yes' %}Good{% elif entry.good_day == 'no' %}Bad{% elif entry.good_day == 'mixed' %}Mixed{% else %}--{% endif %}
+            </span>
+        </div>
+        {% empty %}
+        <p class="empty-state">No entries yet</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Node Measurements</h2>
+    <div>
+        {% for m in node_measurements %}
+        <div class="entry-item">
+            <span class="entry-date">{{ m.date|date:"M j" }}</span>
+            <span class="entry-status {% if m.status == 'smaller' %}good{% elif m.status == 'larger' %}bad{% else %}mixed{% endif %}">
+                {{ m.get_status_display|default:"--" }}
+            </span>
+        </div>
+        {% empty %}
+        <p class="empty-state">No measurements yet</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Export Data</h2>
+    <p class="card-subtitle">Share with your vet</p>
+    <button type="button" class="export-btn" id="exportBtn">Export to Text</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('exportBtn').addEventListener('click', () => {
+        let text = "Bruno's Health Report\n";
+        text += "Generated: " + new Date().toLocaleDateString() + "\n\n";
+
+        text += "WEEKLY SUMMARY\n";
+        text += "Good Days: {{ good_day_percent }}%\n";
+        text += "Days Tracked: {{ total_days }}\n";
+        text += "Trend: {{ trend }}\n\n";
+
+        text += "RECENT ENTRIES\n";
+        {% for entry in entries %}
+        text += "{{ entry.date|date:'M j' }}: {{ entry.good_day|default:'Not rated' }}";
+        {% if entry.happiness_score %}
+        text += " (Score: {{ entry.happiness_score }}/5)";
+        {% endif %}
+        text += "\n";
+        {% endfor %}
+
+        text += "\nNODE MEASUREMENTS\n";
+        {% for m in node_measurements %}
+        text += "{{ m.date|date:'M j' }}: {{ m.get_status_display|default:'No status' }}";
+        text += " - ML:{{ m.mandibular_left|default:'-' }} MR:{{ m.mandibular_right|default:'-' }}";
+        text += " PL:{{ m.popliteal_left|default:'-' }} PR:{{ m.popliteal_right|default:'-' }}\n";
+        {% endfor %}
+
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bruno-health-report.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Report downloaded!');
+    });
+</script>
+{% endblock %}

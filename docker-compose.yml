@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: bruno
+      POSTGRES_USER: bruno
+      POSTGRES_PASSWORD: helpbruno
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bruno -d bruno"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    ports:
+      - "3000:8000"
+    environment:
+      DATABASE_URL: postgres://bruno:helpbruno@db:5432/bruno
+      DJANGO_SECRET_KEY: your-production-secret-key-change-this
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - static_volume:/app/staticfiles
+
+volumes:
+  postgres_data:
+  static_volume:

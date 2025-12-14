@@ -1,0 +1,302 @@
+{% extends 'health/base_health.html' %}
+
+{% block main_content %}
+<form id="dailyForm">
+    {% csrf_token %}
+
+    <div class="card summary-card">
+        <h2>Was today a good day?</h2>
+        <div class="day-rating">
+            <label class="rating-option">
+                <input type="radio" name="good_day" value="yes" {% if entry.good_day == 'yes' %}checked{% endif %}>
+                <span class="rating-btn good">Yes</span>
+            </label>
+            <label class="rating-option">
+                <input type="radio" name="good_day" value="mixed" {% if entry.good_day == 'mixed' %}checked{% endif %}>
+                <span class="rating-btn mixed">Mixed</span>
+            </label>
+            <label class="rating-option">
+                <input type="radio" name="good_day" value="no" {% if entry.good_day == 'no' %}checked{% endif %}>
+                <span class="rating-btn bad">No</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Mood & Engagement</h2>
+        <p class="card-subtitle">Happiness indicators</p>
+
+        <div class="metric">
+            <label>Tail / Body Language</label>
+            <p class="metric-hint">Relaxed, wagging, loose vs stiff, withdrawn</p>
+            <div class="score-slider">
+                <input type="range" name="tail_body_language" min="0" max="5" value="{{ entry.tail_body_language|default:3 }}">
+                <span class="score-display">{{ entry.tail_body_language|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Interest in People</label>
+            <p class="metric-hint">Seeks affection, follows you vs disengaged</p>
+            <div class="score-slider">
+                <input type="range" name="interest_people" min="0" max="5" value="{{ entry.interest_people|default:3 }}">
+                <span class="score-display">{{ entry.interest_people|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Interest in Environment</label>
+            <p class="metric-hint">Sniffing, watching, alert vs dull</p>
+            <div class="score-slider">
+                <input type="range" name="interest_environment" min="0" max="5" value="{{ entry.interest_environment|default:3 }}">
+                <span class="score-display">{{ entry.interest_environment|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Enjoyment of Favorites</label>
+            <p class="metric-hint">Toys, walks, treats, sun, car rides</p>
+            <div class="score-slider">
+                <input type="range" name="enjoyment_favorites" min="0" max="5" value="{{ entry.enjoyment_favorites|default:3 }}">
+                <span class="score-display">{{ entry.enjoyment_favorites|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Overall "Spark"</label>
+            <p class="metric-hint">Your gut sense of joy vs flatness</p>
+            <div class="score-slider">
+                <input type="range" name="overall_spark" min="0" max="5" value="{{ entry.overall_spark|default:3 }}">
+                <span class="score-display">{{ entry.overall_spark|default:3 }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Appetite & Eating</h2>
+
+        <div class="metric">
+            <label>Appetite</label>
+            <p class="metric-hint">Eats willingly vs refusal</p>
+            <div class="score-slider">
+                <input type="range" name="appetite" min="0" max="5" value="{{ entry.appetite|default:3 }}">
+                <span class="score-display">{{ entry.appetite|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Food Enjoyment</label>
+            <p class="metric-hint">Excited, slow, or reluctant</p>
+            <div class="score-slider">
+                <input type="range" name="food_enjoyment" min="0" max="5" value="{{ entry.food_enjoyment|default:3 }}">
+                <span class="score-display">{{ entry.food_enjoyment|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Nausea Signs</label>
+            <p class="metric-hint">5 = none, 0 = lip licking, drooling, vomiting</p>
+            <div class="score-slider">
+                <input type="range" name="nausea_signs" min="0" max="5" value="{{ entry.nausea_signs|default:5 }}">
+                <span class="score-display">{{ entry.nausea_signs|default:5 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Weight / Body Condition</label>
+            <p class="metric-hint">Stable vs noticeable loss</p>
+            <div class="score-slider">
+                <input type="range" name="weight_condition" min="0" max="5" value="{{ entry.weight_condition|default:3 }}">
+                <span class="score-display">{{ entry.weight_condition|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Meals Eaten Today</label>
+            <div class="meal-checkboxes">
+                <label class="checkbox-option">
+                    <input type="checkbox" name="breakfast" {% if entry.breakfast %}checked{% endif %}>
+                    <span>Breakfast</span>
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" name="lunch" {% if entry.lunch %}checked{% endif %}>
+                    <span>Lunch</span>
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" name="dinner" {% if entry.dinner %}checked{% endif %}>
+                    <span>Dinner</span>
+                </label>
+                <label class="checkbox-option">
+                    <input type="checkbox" name="treats" {% if entry.treats %}checked{% endif %}>
+                    <span>Treats</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Energy & Mobility</h2>
+
+        <div class="metric">
+            <label>Energy Level</label>
+            <p class="metric-hint">Normal, slightly tired, lethargic</p>
+            <div class="score-slider">
+                <input type="range" name="energy_level" min="0" max="5" value="{{ entry.energy_level|default:3 }}">
+                <span class="score-display">{{ entry.energy_level|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Willingness to Move</label>
+            <p class="metric-hint">Gets up easily vs hesitation</p>
+            <div class="score-slider">
+                <input type="range" name="willingness_move" min="0" max="5" value="{{ entry.willingness_move|default:3 }}">
+                <span class="score-display">{{ entry.willingness_move|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Walking Comfort</label>
+            <p class="metric-hint">Smooth gait vs stiffness/limping</p>
+            <div class="score-slider">
+                <input type="range" name="walking_comfort" min="0" max="5" value="{{ entry.walking_comfort|default:3 }}">
+                <span class="score-display">{{ entry.walking_comfort|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Resting Comfort</label>
+            <p class="metric-hint">Settles easily vs restless</p>
+            <div class="score-slider">
+                <input type="range" name="resting_comfort" min="0" max="5" value="{{ entry.resting_comfort|default:3 }}">
+                <span class="score-display">{{ entry.resting_comfort|default:3 }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Pain & Physical Comfort</h2>
+
+        <div class="metric">
+            <label>Breathing Comfort</label>
+            <p class="metric-hint">Normal vs labored</p>
+            <div class="score-slider">
+                <input type="range" name="breathing_comfort" min="0" max="5" value="{{ entry.breathing_comfort|default:5 }}">
+                <span class="score-display">{{ entry.breathing_comfort|default:5 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Pain Signs</label>
+            <p class="metric-hint">5 = none, 0 = panting, whining, guarding</p>
+            <div class="score-slider">
+                <input type="range" name="pain_signs" min="0" max="5" value="{{ entry.pain_signs|default:5 }}">
+                <span class="score-display">{{ entry.pain_signs|default:5 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Sleep Quality</label>
+            <p class="metric-hint">Restful vs disrupted</p>
+            <div class="score-slider">
+                <input type="range" name="sleep_quality" min="0" max="5" value="{{ entry.sleep_quality|default:3 }}">
+                <span class="score-display">{{ entry.sleep_quality|default:3 }}</span>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Response to Touch</label>
+            <p class="metric-hint">Enjoys vs flinches</p>
+            <div class="score-slider">
+                <input type="range" name="response_touch" min="0" max="5" value="{{ entry.response_touch|default:5 }}">
+                <span class="score-display">{{ entry.response_touch|default:5 }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Notes</h2>
+
+        <div class="metric">
+            <label>What made today good?</label>
+            <textarea name="good_notes" rows="2" placeholder="Optional...">{{ entry.good_notes }}</textarea>
+        </div>
+
+        <div class="metric">
+            <label>What seemed hardest?</label>
+            <textarea name="hard_notes" rows="2" placeholder="Optional...">{{ entry.hard_notes }}</textarea>
+        </div>
+
+        <div class="metric">
+            <label>Other observations</label>
+            <textarea name="other_notes" rows="2" placeholder="Fever, coughing, diarrhea, bad breath changes...">{{ entry.other_notes }}</textarea>
+        </div>
+    </div>
+
+    <button type="submit" class="save-btn">Save Today's Entry</button>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        const display = slider.parentElement.querySelector('.score-display');
+        slider.addEventListener('input', () => {
+            display.textContent = slider.value;
+        });
+    });
+
+    document.getElementById('dailyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const data = {
+            good_day: formData.get('good_day') || '',
+            tail_body_language: parseInt(formData.get('tail_body_language')),
+            interest_people: parseInt(formData.get('interest_people')),
+            interest_environment: parseInt(formData.get('interest_environment')),
+            enjoyment_favorites: parseInt(formData.get('enjoyment_favorites')),
+            overall_spark: parseInt(formData.get('overall_spark')),
+            appetite: parseInt(formData.get('appetite')),
+            food_enjoyment: parseInt(formData.get('food_enjoyment')),
+            nausea_signs: parseInt(formData.get('nausea_signs')),
+            weight_condition: parseInt(formData.get('weight_condition')),
+            breakfast: formData.get('breakfast') === 'on',
+            lunch: formData.get('lunch') === 'on',
+            dinner: formData.get('dinner') === 'on',
+            treats: formData.get('treats') === 'on',
+            energy_level: parseInt(formData.get('energy_level')),
+            willingness_move: parseInt(formData.get('willingness_move')),
+            walking_comfort: parseInt(formData.get('walking_comfort')),
+            resting_comfort: parseInt(formData.get('resting_comfort')),
+            breathing_comfort: parseInt(formData.get('breathing_comfort')),
+            pain_signs: parseInt(formData.get('pain_signs')),
+            sleep_quality: parseInt(formData.get('sleep_quality')),
+            response_touch: parseInt(formData.get('response_touch')),
+            good_notes: formData.get('good_notes'),
+            hard_notes: formData.get('hard_notes'),
+            other_notes: formData.get('other_notes'),
+        };
+
+        try {
+            const response = await fetch('{% url "health:save_entry" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                showToast('Entry saved!');
+            } else {
+                showToast('Error saving entry');
+            }
+        } catch (err) {
+            showToast('Error saving entry');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>{% block title %}Bruno's Tracker{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-900);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        header .date {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        header .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logout-btn {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 76px;
+            z-index: 99;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 8px;
+            border: none;
+            background: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        main {
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+        }
+
+        .metric {
+            margin-bottom: 20px;
+        }
+
+        .metric label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 0.9375rem;
+        }
+
+        .metric-hint {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+        }
+
+        .score-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-slider input[type="range"] {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: var(--gray-200);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .score-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .score-display {
+            min-width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .day-rating {
+            display: flex;
+            gap: 12px;
+        }
+
+        .rating-option {
+            flex: 1;
+        }
+
+        .rating-option input {
+            display: none;
+        }
+
+        .rating-btn {
+            display: block;
+            padding: 16px;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid var(--gray-200);
+        }
+
+        .rating-btn.good {
+            color: var(--success);
+        }
+
+        .rating-btn.mixed {
+            color: var(--warning);
+        }
+
+        .rating-btn.bad {
+            color: var(--danger);
+        }
+
+        .rating-option input:checked + .rating-btn.good {
+            background: var(--success);
+            color: var(--white);
+            border-color: var(--success);
+        }
+
+        .rating-option input:checked + .rating-btn.mixed {
+            background: var(--warning);
+            color: var(--white);
+            border-color: var(--warning);
+        }
+
+        .rating-option input:checked + .rating-btn.bad {
+            background: var(--danger);
+            color: var(--white);
+            border-color: var(--danger);
+        }
+
+        .meal-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: var(--gray-50);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9375rem;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .save-btn, .add-btn, .export-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-btn {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .save-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .add-btn {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            margin-top: 12px;
+        }
+
+        .export-btn {
+            background: var(--gray-700);
+            color: var(--white);
+        }
+
+        .summary-card h2 {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+
+        .guidance {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .guidance p {
+            margin-bottom: 8px;
+        }
+
+        .entry-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .entry-date {
+            font-weight: 500;
+        }
+
+        .entry-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+
+        .entry-status.good {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .entry-status.mixed {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .entry-status.bad {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .med-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            background: var(--gray-50);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .med-info h4 {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .med-info span {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+
+        .dose-btn {
+            padding: 10px 20px;
+            background: var(--success);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dose-btn:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+        }
+
+        .node-group {
+            margin-bottom: 24px;
+        }
+
+        .node-group h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--gray-700);
+        }
+
+        .node-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .node-input {
+            flex: 1;
+        }
+
+        .node-input label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .node-input input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .node-status {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-option {
+            flex: 1;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option span {
+            display: block;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .radio-option input:checked + span {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--gray-500);
+            padding: 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-900);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-actions .save-btn {
+            flex: 1;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="user-info">
+            <div>
+                <h1>Bruno's Tracker</h1>
+                <p class="date" id="currentDate"></p>
+            </div>
+            <a href="{% url 'health:logout' %}" class="logout-btn">{{ user.username }} | Logout</a>
+        </div>
+    </header>
+
+    <nav class="tab-nav">
+        <a href="{% url 'health:tracker' %}" class="tab-btn {% if request.resolver_match.url_name == 'tracker' %}active{% endif %}">Daily</a>
+        <a href="{% url 'health:medications' %}" class="tab-btn {% if request.resolver_match.url_name == 'medications' %}active{% endif %}">Meds</a>
+        <a href="{% url 'health:nodes' %}" class="tab-btn {% if request.resolver_match.url_name == 'nodes' %}active{% endif %}">Nodes</a>
+        <a href="{% url 'health:history' %}" class="tab-btn {% if request.resolver_match.url_name == 'history' %}active{% endif %}">History</a>
+    </nav>
+
+    <main>
+        {% block main_content %}{% endblock %}
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

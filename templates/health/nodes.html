@@ -1,0 +1,124 @@
+{% extends 'health/base_health.html' %}
+
+{% block main_content %}
+<div class="card">
+    <h2>Lymph Node Measurements</h2>
+    <p class="card-subtitle">Track size changes over time (in cm)</p>
+
+    <form id="nodesForm">
+        {% csrf_token %}
+        <div class="node-group">
+            <h3>Mandibular (Jaw)</h3>
+            <div class="node-row">
+                <div class="node-input">
+                    <label>Left</label>
+                    <input type="number" name="mandibular_left" step="0.1" placeholder="cm" value="{{ measurement.mandibular_left|default:'' }}">
+                </div>
+                <div class="node-input">
+                    <label>Right</label>
+                    <input type="number" name="mandibular_right" step="0.1" placeholder="cm" value="{{ measurement.mandibular_right|default:'' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="node-group">
+            <h3>Popliteal (Knee)</h3>
+            <div class="node-row">
+                <div class="node-input">
+                    <label>Left</label>
+                    <input type="number" name="popliteal_left" step="0.1" placeholder="cm" value="{{ measurement.popliteal_left|default:'' }}">
+                </div>
+                <div class="node-input">
+                    <label>Right</label>
+                    <input type="number" name="popliteal_right" step="0.1" placeholder="cm" value="{{ measurement.popliteal_right|default:'' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="node-group">
+            <h3>Overall Assessment</h3>
+            <div class="node-status">
+                <label class="radio-option">
+                    <input type="radio" name="status" value="smaller" {% if measurement.status == 'smaller' %}checked{% endif %}>
+                    <span>Smaller</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="status" value="same" {% if measurement.status == 'same' %}checked{% endif %}>
+                    <span>Same</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="status" value="larger" {% if measurement.status == 'larger' %}checked{% endif %}>
+                    <span>Larger</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>Notes</label>
+            <textarea name="notes" rows="2" placeholder="Any new nodes, changes noticed...">{{ measurement.notes|default:'' }}</textarea>
+        </div>
+
+        <button type="submit" class="save-btn">Save Measurements</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Measurement History</h2>
+    <div id="nodeHistory">
+        {% for m in history %}
+        <div class="entry-item">
+            <div>
+                <span class="entry-date">{{ m.date|date:"M j" }}</span>
+                <span style="font-size: 0.8rem; color: #6b7280; margin-left: 8px;">
+                    ML:{{ m.mandibular_left|default:"-" }} MR:{{ m.mandibular_right|default:"-" }}
+                    PL:{{ m.popliteal_left|default:"-" }} PR:{{ m.popliteal_right|default:"-" }}
+                </span>
+            </div>
+            <span class="entry-status {% if m.status == 'smaller' %}good{% elif m.status == 'larger' %}bad{% else %}mixed{% endif %}">
+                {{ m.get_status_display|default:"--" }}
+            </span>
+        </div>
+        {% empty %}
+        <p class="empty-state">No measurements recorded yet</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('nodesForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const data = {
+            mandibular_left: formData.get('mandibular_left') || null,
+            mandibular_right: formData.get('mandibular_right') || null,
+            popliteal_left: formData.get('popliteal_left') || null,
+            popliteal_right: formData.get('popliteal_right') || null,
+            status: formData.get('status') || '',
+            notes: formData.get('notes') || '',
+        };
+
+        try {
+            const response = await fetch('{% url "health:save_nodes" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                showToast('Measurements saved!');
+            } else {
+                showToast('Error saving measurements');
+            }
+        } catch (err) {
+            showToast('Error saving measurements');
+        }
+    });
+</script>
+{% endblock %}
