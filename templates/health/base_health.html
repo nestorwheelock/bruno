@@ -584,10 +584,15 @@
     </header>
 
     <nav class="tab-nav">
+        <a href="{% url 'health:dashboard' %}" class="tab-btn {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
         <a href="{% url 'health:tracker' %}" class="tab-btn {% if request.resolver_match.url_name == 'tracker' %}active{% endif %}">Daily</a>
-        <a href="{% url 'health:medications' %}" class="tab-btn {% if request.resolver_match.url_name == 'medications' %}active{% endif %}">Meds</a>
-        <a href="{% url 'health:nutrition' %}" class="tab-btn {% if request.resolver_match.url_name == 'nutrition' or request.resolver_match.url_name == 'food_database' %}active{% endif %}">Nutrition</a>
+        <a href="{% url 'health:cbpi' %}" class="tab-btn {% if request.resolver_match.url_name == 'cbpi' %}active{% endif %}">CBPI</a>
+        <a href="{% url 'health:corq' %}" class="tab-btn {% if request.resolver_match.url_name == 'corq' %}active{% endif %}">CORQ</a>
         <a href="{% url 'health:nodes' %}" class="tab-btn {% if request.resolver_match.url_name == 'nodes' %}active{% endif %}">Nodes</a>
+        <a href="{% url 'health:treatments' %}" class="tab-btn {% if request.resolver_match.url_name == 'treatments' %}active{% endif %}">Treatments</a>
+        <a href="{% url 'health:events' %}" class="tab-btn {% if request.resolver_match.url_name == 'events' %}active{% endif %}">Events</a>
+        <a href="{% url 'health:medications' %}" class="tab-btn {% if request.resolver_match.url_name == 'medications' %}active{% endif %}">Meds</a>
+        <a href="{% url 'health:nutrition' %}" class="tab-btn {% if request.resolver_match.url_name == 'nutrition' or request.resolver_match.url_name == 'food_database' or request.resolver_match.url_name == 'meal_planning' %}active{% endif %}">Nutrition</a>
         <a href="{% url 'health:history' %}" class="tab-btn {% if request.resolver_match.url_name == 'history' %}active{% endif %}">History</a>
     </nav>
 
@@ -630,10 +635,15 @@
         // Swipe navigation between tabs
         (function() {
             const tabs = [
+                '{% url "health:dashboard" %}',
                 '{% url "health:tracker" %}',
+                '{% url "health:cbpi" %}',
+                '{% url "health:corq" %}',
+                '{% url "health:nodes" %}',
+                '{% url "health:treatments" %}',
+                '{% url "health:events" %}',
                 '{% url "health:medications" %}',
                 '{% url "health:nutrition" %}',
-                '{% url "health:nodes" %}',
                 '{% url "health:history" %}'
             ];
 
