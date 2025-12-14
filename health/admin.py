@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import (
     DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
     CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession,
-    DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary
+    DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary,
+    SiteSettings, MedicalRecord, LabValue
 )
 
 
@@ -27,19 +28,19 @@ class MedicationDoseAdmin(admin.ModelAdmin):
 
 @admin.register(LymphNodeMeasurement)
 class LymphNodeMeasurementAdmin(admin.ModelAdmin):
-    list_display = ['date', 'status', 'mandibular_left', 'mandibular_right', 'popliteal_left', 'popliteal_right']
-    list_filter = ['status', 'date']
+    list_display = ['date', 'source', 'status', 'mandibular_left', 'mandibular_right', 'popliteal_left', 'popliteal_right']
+    list_filter = ['source', 'status', 'date']
     date_hierarchy = 'date'
 
 
 @admin.register(CBPIAssessment)
 class CBPIAssessmentAdmin(admin.ModelAdmin):
-    list_display = ['date', 'pain_severity_score', 'pain_interference_score', 'overall_quality_of_life', 'user']
-    list_filter = ['overall_quality_of_life', 'date']
+    list_display = ['date', 'source', 'pain_severity_score', 'pain_interference_score', 'overall_quality_of_life', 'user']
+    list_filter = ['source', 'overall_quality_of_life', 'date']
     date_hierarchy = 'date'
     fieldsets = (
         ('Assessment Info', {
-            'fields': ('user', 'date')
+            'fields': ('user', 'date', 'source')
         }),
         ('Pain Severity (0-10, 0=no pain)', {
             'fields': ('worst_pain', 'least_pain', 'average_pain', 'current_pain')
@@ -56,12 +57,12 @@ class CBPIAssessmentAdmin(admin.ModelAdmin):
 
 @admin.register(CORQAssessment)
 class CORQAssessmentAdmin(admin.ModelAdmin):
-    list_display = ['date', 'vitality_score', 'companionship_score', 'pain_score', 'mobility_score', 'total_score', 'global_qol']
-    list_filter = ['date']
+    list_display = ['date', 'source', 'vitality_score', 'companionship_score', 'pain_score', 'mobility_score', 'total_score', 'global_qol']
+    list_filter = ['source', 'date']
     date_hierarchy = 'date'
     fieldsets = (
         ('Assessment Info', {
-            'fields': ('user', 'date')
+            'fields': ('user', 'date', 'source')
         }),
         ('Vitality (1-5, higher=better)', {
             'fields': ('energy_level', 'playfulness', 'interest_in_surroundings', 'appetite')
@@ -83,12 +84,12 @@ class CORQAssessmentAdmin(admin.ModelAdmin):
 
 @admin.register(VCOGCTCAEEvent)
 class VCOGCTCAEEventAdmin(admin.ModelAdmin):
-    list_display = ['date', 'category', 'event', 'grade', 'resolved', 'user']
-    list_filter = ['category', 'grade', 'resolved', 'date']
+    list_display = ['date', 'source', 'category', 'event', 'grade', 'resolved', 'user']
+    list_filter = ['source', 'category', 'grade', 'resolved', 'date']
     date_hierarchy = 'date'
     fieldsets = (
         ('Event Info', {
-            'fields': ('user', 'date', 'category', 'event', 'grade')
+            'fields': ('user', 'date', 'source', 'category', 'event', 'grade')
         }),
         ('Treatment Context', {
             'fields': ('treatment',)
@@ -101,8 +102,8 @@ class VCOGCTCAEEventAdmin(admin.ModelAdmin):
 
 @admin.register(TreatmentSession)
 class TreatmentSessionAdmin(admin.ModelAdmin):
-    list_display = ['date', 'treatment_type', 'protocol', 'agent', 'cycle_number', 'user']
-    list_filter = ['treatment_type', 'protocol', 'date']
+    list_display = ['date', 'source', 'treatment_type', 'protocol', 'agent', 'cycle_number', 'user']
+    list_filter = ['source', 'treatment_type', 'protocol', 'date']
     date_hierarchy = 'date'
 
 
@@ -187,6 +188,75 @@ class DailyNutritionSummaryAdmin(admin.ModelAdmin):
         }),
         ('Warnings', {
             'fields': ('carbs_warning', 'calcium_low', 'omega3_low', 'food_low', 'eggs_warning', 'tuna_warning')
+        }),
+        ('Notes', {
+            'fields': ('notes',)
+        }),
+    )
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'enable_ai_parsing', 'updated_at']
+
+    def has_add_permission(self, request):
+        # Only allow one instance
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+class LabValueInline(admin.TabularInline):
+    model = LabValue
+    extra = 1
+    fields = ['test_name', 'value', 'unit', 'reference_low', 'reference_high', 'is_abnormal']
+
+
+@admin.register(MedicalRecord)
+class MedicalRecordAdmin(admin.ModelAdmin):
+    list_display = ['date', 'record_type', 'source', 'title', 'clinic_name', 'ai_parsed', 'user']
+    list_filter = ['record_type', 'source', 'ai_parsed', 'date']
+    date_hierarchy = 'date'
+    search_fields = ['title', 'clinic_name', 'veterinarian']
+    inlines = [LabValueInline]
+    fieldsets = (
+        ('Record Info', {
+            'fields': ('user', 'date', 'record_type', 'title', 'file')
+        }),
+        ('Source', {
+            'fields': ('source', 'clinic_name', 'veterinarian')
+        }),
+        ('AI Parsing', {
+            'fields': ('ai_parsed', 'ai_extracted_text', 'ai_parsed_at'),
+            'classes': ('collapse',)
+        }),
+        ('Notes', {
+            'fields': ('notes',)
+        }),
+    )
+    readonly_fields = ['ai_parsed_at', 'file_type']
+
+
+@admin.register(LabValue)
+class LabValueAdmin(admin.ModelAdmin):
+    list_display = ['date', 'test_name', 'value', 'unit', 'is_abnormal', 'is_critical', 'source', 'user']
+    list_filter = ['test_name', 'is_abnormal', 'is_critical', 'source', 'date']
+    date_hierarchy = 'date'
+    search_fields = ['test_name', 'custom_test_name']
+    fieldsets = (
+        ('Basic Info', {
+            'fields': ('user', 'medical_record', 'date', 'source')
+        }),
+        ('Test Results', {
+            'fields': ('test_name', 'custom_test_name', 'value', 'unit')
+        }),
+        ('Reference Range', {
+            'fields': ('reference_low', 'reference_high', 'is_abnormal', 'is_critical')
+        }),
+        ('AI', {
+            'fields': ('ai_extracted',),
+            'classes': ('collapse',)
         }),
         ('Notes', {
             'fields': ('notes',)

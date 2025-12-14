@@ -1,0 +1,232 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{{ record.title|default:record.get_record_type_display }} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+    .record-header {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .record-header h2 {
+        margin-bottom: 8px;
+    }
+    .record-meta {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+    .record-meta span {
+        margin-right: 16px;
+    }
+
+    .record-type-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        display: inline-block;
+        margin-top: 8px;
+    }
+    .record-type-badge.bloodwork { background: #fee2e2; color: #991b1b; }
+    .record-type-badge.chemistry { background: #fef3c7; color: #92400e; }
+    .record-type-badge.cytology { background: #dbeafe; color: #1e40af; }
+    .record-type-badge.histopath { background: #f3e8ff; color: #6b21a8; }
+    .record-type-badge.imaging { background: #d1fae5; color: #065f46; }
+    .record-type-badge.urinalysis { background: #e0e7ff; color: #3730a3; }
+    .record-type-badge.other { background: var(--gray-100); color: var(--gray-700); }
+
+    .source-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        display: inline-block;
+        margin-left: 8px;
+    }
+    .source-badge.clinic { background: #dbeafe; color: #1e40af; }
+    .source-badge.home { background: #d1fae5; color: #065f46; }
+
+    .ai-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        display: inline-block;
+        margin-left: 8px;
+    }
+
+    .file-preview {
+        background: var(--gray-100);
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+        margin: 16px 0;
+    }
+    .file-preview a {
+        display: inline-block;
+        padding: 12px 24px;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .lab-values-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .lab-values-table th,
+    .lab-values-table td {
+        padding: 12px 8px;
+        text-align: left;
+        border-bottom: 1px solid var(--gray-100);
+    }
+    .lab-values-table th {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+    .lab-values-table tr.abnormal {
+        background: #fef3c7;
+    }
+    .lab-values-table tr.critical {
+        background: #fee2e2;
+    }
+
+    .value-status {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+    .value-status.normal { background: var(--success); }
+    .value-status.abnormal { background: var(--warning); }
+    .value-status.critical { background: var(--danger); }
+
+    .reference-range {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 16px;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    .extracted-text {
+        background: var(--gray-50);
+        padding: 16px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 0.8125rem;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<a href="{% url 'health:records' %}" class="back-link">&larr; {% trans "Back to Records" %}</a>
+
+<div class="record-header">
+    <h2>{{ record.title|default:record.get_record_type_display }}</h2>
+    <div class="record-meta">
+        <span>{{ record.date|date:"F d, Y" }}</span>
+        {% if record.clinic_name %}<span>{{ record.clinic_name }}</span>{% endif %}
+        {% if record.veterinarian %}<span>Dr. {{ record.veterinarian }}</span>{% endif %}
+    </div>
+    <span class="record-type-badge {{ record.record_type }}">{{ record.get_record_type_display }}</span>
+    <span class="source-badge {{ record.source }}">{{ record.get_source_display }}</span>
+    {% if record.ai_parsed %}<span class="ai-badge">AI Parsed</span>{% endif %}
+</div>
+
+{% if record.file %}
+<div class="card">
+    <h2>{% trans "Document" %}</h2>
+    <div class="file-preview">
+        {% if record.file_type == 'image' %}
+        <img src="{{ record.file.url }}" alt="{{ record.title }}" style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">
+        {% endif %}
+        <a href="{{ record.file.url }}" target="_blank">{% trans "Open Document" %}</a>
+    </div>
+</div>
+{% endif %}
+
+{% if lab_values %}
+<div class="card">
+    <h2>{% trans "Lab Values" %}</h2>
+    <p class="card-subtitle">{{ lab_values|length }} {% trans "values extracted" %}</p>
+
+    <table class="lab-values-table">
+        <thead>
+            <tr>
+                <th>{% trans "Test" %}</th>
+                <th>{% trans "Value" %}</th>
+                <th>{% trans "Reference" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lv in lab_values %}
+            <tr class="{% if lv.is_critical %}critical{% elif lv.is_abnormal %}abnormal{% endif %}">
+                <td>
+                    <span class="value-status {% if lv.is_critical %}critical{% elif lv.is_abnormal %}abnormal{% else %}normal{% endif %}"></span>
+                    {{ lv.get_test_name_display }}
+                    {% if lv.ai_extracted %}<small style="color: var(--gray-400);">(AI)</small>{% endif %}
+                </td>
+                <td>
+                    <strong>{{ lv.value }}</strong> {{ lv.unit }}
+                </td>
+                <td class="reference-range">
+                    {% if lv.reference_low and lv.reference_high %}
+                    {{ lv.reference_low }} - {{ lv.reference_high }} {{ lv.unit }}
+                    {% elif lv.reference_low %}
+                    &ge; {{ lv.reference_low }} {{ lv.unit }}
+                    {% elif lv.reference_high %}
+                    &le; {{ lv.reference_high }} {{ lv.unit }}
+                    {% else %}
+                    --
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card">
+    <h2>{% trans "Lab Values" %}</h2>
+    <p class="card-subtitle">{% trans "No lab values extracted yet." %}</p>
+    <p style="color: var(--gray-500); font-size: 0.875rem;">{% trans "Lab values can be added manually via the admin interface or automatically extracted using AI parsing." %}</p>
+</div>
+{% endif %}
+
+{% if record.ai_extracted_text %}
+<div class="card">
+    <h2>{% trans "AI Extracted Text" %}</h2>
+    <div class="extracted-text">{{ record.ai_extracted_text }}</div>
+</div>
+{% endif %}
+
+{% if record.notes %}
+<div class="card">
+    <h2>{% trans "Notes" %}</h2>
+    <p>{{ record.notes }}</p>
+</div>
+{% endif %}
+{% endblock %}

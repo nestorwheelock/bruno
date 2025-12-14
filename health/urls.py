@@ -47,4 +47,10 @@ urlpatterns = [
     path('nutrition/planning/', views.meal_planning_view, name='meal_planning'),
     path('api/foods/', views.api_foods, name='api_foods'),
     path('api/nutrition/', views.api_nutrition_summary, name='api_nutrition_summary'),
+
+    # Medical Records
+    path('records/', views.records_view, name='records'),
+    path('records/upload/', views.upload_record, name='upload_record'),
+    path('records/<int:record_id>/', views.record_detail, name='record_detail'),
+    path('api/lab-values/', views.api_lab_values, name='api_lab_values'),
 ]

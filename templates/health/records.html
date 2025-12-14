@@ -1,0 +1,335 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Medical Records" %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+    .record-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .record-info h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+    .record-info .meta {
+        font-size: 0.8125rem;
+        color: var(--gray-500);
+    }
+    .record-type-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    .record-type-badge.bloodwork { background: #fee2e2; color: #991b1b; }
+    .record-type-badge.chemistry { background: #fef3c7; color: #92400e; }
+    .record-type-badge.cytology { background: #dbeafe; color: #1e40af; }
+    .record-type-badge.histopath { background: #f3e8ff; color: #6b21a8; }
+    .record-type-badge.imaging { background: #d1fae5; color: #065f46; }
+    .record-type-badge.urinalysis { background: #e0e7ff; color: #3730a3; }
+    .record-type-badge.other { background: var(--gray-100); color: var(--gray-700); }
+
+    .source-badge {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        margin-left: 8px;
+    }
+    .source-badge.clinic { background: #dbeafe; color: #1e40af; }
+    .source-badge.home { background: #d1fae5; color: #065f46; }
+
+    .upload-area {
+        border: 2px dashed var(--gray-300);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .upload-area:hover {
+        border-color: var(--primary);
+        background: var(--gray-50);
+    }
+    .upload-area.dragover {
+        border-color: var(--primary);
+        background: rgba(79, 70, 229, 0.1);
+    }
+    .upload-icon {
+        font-size: 2rem;
+        color: var(--gray-400);
+        margin-bottom: 8px;
+    }
+
+    .lab-trend {
+        background: var(--white);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    .lab-trend h5 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .lab-value-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8125rem;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--gray-100);
+    }
+    .lab-value-row:last-child {
+        border-bottom: none;
+    }
+    .lab-value-row.abnormal {
+        color: var(--warning);
+    }
+    .lab-value-row.critical {
+        color: var(--danger);
+        font-weight: 600;
+    }
+
+    .ai-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.6875rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <h2>{% trans "Upload Medical Record" %}</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="upload-area" id="dropZone">
+            <div class="upload-icon">+</div>
+            <p>{% trans "Tap to select or drop file here" %}</p>
+            <p style="font-size: 0.8125rem; color: var(--gray-500);">{% trans "PDF, JPG, PNG supported" %}</p>
+            <input type="file" name="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+        </div>
+        <div id="selectedFile" style="display: none; margin-top: 12px; padding: 12px; background: var(--gray-50); border-radius: 8px;"></div>
+
+        <div class="metric" style="margin-top: 16px;">
+            <label>{% trans "Record Type" %}</label>
+            <select name="record_type" class="form-control" style="width: 100%; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px;">
+                {% for code, name in record_types %}
+                <option value="{{ code }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Date" %}</label>
+            <input type="date" name="date" value="{{ today }}" style="width: 100%; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px;">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Title / Description" %}</label>
+            <input type="text" name="title" placeholder="{% trans 'e.g., Pre-chemo CBC, Follow-up cytology' %}" style="width: 100%; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px;">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Source" %}</label>
+            <div class="day-rating" style="display: flex; gap: 12px;">
+                <label class="rating-option" style="flex: 1;">
+                    <input type="radio" name="source" value="clinic" checked>
+                    <span class="rating-btn" style="padding: 12px; text-align: center; border: 2px solid var(--gray-200); border-radius: 8px; display: block; cursor: pointer;">{% trans "Vet Clinic" %}</span>
+                </label>
+                <label class="rating-option" style="flex: 1;">
+                    <input type="radio" name="source" value="home">
+                    <span class="rating-btn" style="padding: 12px; text-align: center; border: 2px solid var(--gray-200); border-radius: 8px; display: block; cursor: pointer;">{% trans "At Home" %}</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Clinic Name" %}</label>
+            <input type="text" name="clinic_name" placeholder="{% trans 'Veterinary clinic name' %}" style="width: 100%; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px;">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Veterinarian" %}</label>
+            <input type="text" name="veterinarian" placeholder="{% trans 'Dr. name' %}" style="width: 100%; padding: 12px; border: 1px solid var(--gray-200); border-radius: 8px;">
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Notes" %}</label>
+            <textarea name="notes" rows="2" placeholder="{% trans 'Additional notes...' %}"></textarea>
+        </div>
+
+        <button type="submit" class="save-btn" id="uploadBtn" disabled>{% trans "Upload Record" %}</button>
+    </form>
+</div>
+
+{% if records %}
+<div class="card">
+    <h2>{% trans "Records Gallery" %}</h2>
+    <p class="card-subtitle">{{ records|length }} {% trans "records on file" %}</p>
+
+    {% for record in records %}
+    <a href="{% url 'health:record_detail' record.id %}" class="record-card" style="text-decoration: none; color: inherit;">
+        <div class="record-info">
+            <h4>
+                {{ record.title|default:record.get_record_type_display }}
+                {% if record.ai_parsed %}<span class="ai-badge">AI Parsed</span>{% endif %}
+            </h4>
+            <div class="meta">
+                {{ record.date|date:"M d, Y" }}
+                {% if record.clinic_name %} &bull; {{ record.clinic_name }}{% endif %}
+                <span class="source-badge {{ record.source }}">{{ record.get_source_display }}</span>
+            </div>
+        </div>
+        <span class="record-type-badge {{ record.record_type }}">{{ record.get_record_type_display }}</span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if lab_trends %}
+<div class="card">
+    <h2>{% trans "Lab Value Trends" %}</h2>
+    <p class="card-subtitle">{% trans "Recent results at a glance" %}</p>
+
+    {% for test_name, values in lab_trends.items %}
+    <div class="lab-trend">
+        <h5>{{ test_name }}</h5>
+        {% for v in values|slice:":5" %}
+        <div class="lab-value-row {% if v.is_critical %}critical{% elif v.is_abnormal %}abnormal{% endif %}">
+            <span>{{ v.date|date:"M d" }}</span>
+            <span>{{ v.value }} {{ v.unit }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if ai_enabled %}
+<div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <h2 style="color: white;">{% trans "AI Parsing Enabled" %}</h2>
+    <p style="opacity: 0.9;">{% trans "Uploaded records will be automatically analyzed to extract lab values." %}</p>
+</div>
+{% else %}
+<div class="card" style="background: var(--gray-50);">
+    <h2>{% trans "AI Parsing" %}</h2>
+    <p class="card-subtitle">{% trans "Enable AI parsing in Site Settings to automatically extract lab values from uploaded documents." %}</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const selectedFile = document.getElementById('selectedFile');
+const uploadBtn = document.getElementById('uploadBtn');
+const uploadForm = document.getElementById('uploadForm');
+
+// Click to select file
+dropZone.addEventListener('click', () => fileInput.click());
+
+// Handle file selection
+fileInput.addEventListener('change', handleFileSelect);
+
+// Drag and drop
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        fileInput.files = files;
+        handleFileSelect();
+    }
+});
+
+function handleFileSelect() {
+    const file = fileInput.files[0];
+    if (file) {
+        selectedFile.innerHTML = `<strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)`;
+        selectedFile.style.display = 'block';
+        uploadBtn.disabled = false;
+    }
+}
+
+// Source radio button styling
+document.querySelectorAll('input[name="source"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        document.querySelectorAll('input[name="source"]').forEach(r => {
+            r.nextElementSibling.style.background = '';
+            r.nextElementSibling.style.color = '';
+            r.nextElementSibling.style.borderColor = 'var(--gray-200)';
+        });
+        if (this.checked) {
+            this.nextElementSibling.style.background = 'var(--primary)';
+            this.nextElementSibling.style.color = 'white';
+            this.nextElementSibling.style.borderColor = 'var(--primary)';
+        }
+    });
+    // Initialize
+    if (radio.checked) {
+        radio.nextElementSibling.style.background = 'var(--primary)';
+        radio.nextElementSibling.style.color = 'white';
+        radio.nextElementSibling.style.borderColor = 'var(--primary)';
+    }
+});
+
+// Form submission
+uploadForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = '{% trans "Uploading..." %}';
+
+    try {
+        const response = await fetch('{% url "health:upload_record" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+            showToast('{% trans "Record uploaded successfully!" %}');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showToast(result.message || '{% trans "Error uploading record" %}');
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = '{% trans "Upload Record" %}';
+        }
+    } catch (error) {
+        showToast('{% trans "Error uploading record" %}');
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = '{% trans "Upload Record" %}';
+    }
+});
+</script>
+{% endblock %}

@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
+# Common choices for assessment source
+SOURCE_CHOICES = [
+    ('home', 'At Home'),
+    ('clinic', 'Vet Clinic'),
+]
+
+
 class DailyEntry(models.Model):
     GOOD_DAY_CHOICES = [
         ('yes', 'Yes'),
@@ -158,6 +165,10 @@ class LymphNodeMeasurement(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='home',
+        help_text="Where this measurement was taken"
+    )
 
     mandibular_left = models.DecimalField(
         max_digits=4, decimal_places=1, null=True, blank=True,
@@ -212,6 +223,10 @@ class CBPIAssessment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='home',
+        help_text="Where this assessment was completed"
+    )
 
     # Pain Severity Items (0-10, 0=no pain, 10=extreme pain)
     worst_pain = models.IntegerField(
@@ -319,6 +334,10 @@ class CORQAssessment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='home',
+        help_text="Where this assessment was completed"
+    )
 
     # Vitality Factor
     energy_level = models.IntegerField(
@@ -511,6 +530,10 @@ class VCOGCTCAEEvent(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='home',
+        help_text="Where this event was observed/reported"
+    )
 
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     event = models.CharField(max_length=30, choices=EVENT_CHOICES)
@@ -860,6 +883,10 @@ class TreatmentSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='clinic',
+        help_text="Where this treatment was administered"
+    )
 
     treatment_type = models.CharField(max_length=20, choices=TREATMENT_TYPE_CHOICES)
     protocol = models.CharField(max_length=30, choices=PROTOCOL_CHOICES, blank=True)
@@ -884,3 +911,185 @@ class TreatmentSession(models.Model):
 
     def __str__(self):
         return f"{self.get_treatment_type_display()} - {self.agent or self.protocol} on {self.date}"
+
+
+class SiteSettings(models.Model):
+    """
+    Site-wide settings stored in database, including API keys.
+    Singleton pattern - only one instance should exist.
+    """
+    claude_api_key = models.CharField(
+        max_length=200, blank=True,
+        help_text="Anthropic Claude API key for document parsing"
+    )
+    openai_api_key = models.CharField(
+        max_length=200, blank=True,
+        help_text="OpenAI API key (alternative for document parsing)"
+    )
+    enable_ai_parsing = models.BooleanField(
+        default=False,
+        help_text="Enable AI-powered parsing of medical documents"
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Site Settings'
+        verbose_name_plural = 'Site Settings'
+
+    def __str__(self):
+        return "Site Settings"
+
+    @classmethod
+    def get_settings(cls):
+        """Get or create the singleton settings instance."""
+        settings, created = cls.objects.get_or_create(pk=1)
+        return settings
+
+
+class MedicalRecord(models.Model):
+    """
+    Uploaded medical records (blood work, cytology, imaging reports, etc.)
+    with optional AI parsing to extract lab values.
+    """
+    RECORD_TYPE_CHOICES = [
+        ('bloodwork', 'Blood Work / CBC'),
+        ('chemistry', 'Chemistry Panel'),
+        ('cytology', 'Cytology Report'),
+        ('histopath', 'Histopathology'),
+        ('imaging', 'Imaging (X-ray, Ultrasound, CT)'),
+        ('urinalysis', 'Urinalysis'),
+        ('other', 'Other'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(help_text="Date of the test/report")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    record_type = models.CharField(max_length=20, choices=RECORD_TYPE_CHOICES)
+    title = models.CharField(max_length=200, blank=True,
+        help_text="Brief description of this record")
+    file = models.FileField(upload_to='medical_records/%Y/%m/')
+    file_type = models.CharField(max_length=10, blank=True,
+        help_text="File extension (pdf, jpg, png)")
+
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='clinic',
+        help_text="Where this record came from"
+    )
+    clinic_name = models.CharField(max_length=200, blank=True)
+    veterinarian = models.CharField(max_length=200, blank=True)
+
+    # AI parsing fields
+    ai_parsed = models.BooleanField(default=False,
+        help_text="Whether AI has attempted to parse this document")
+    ai_extracted_text = models.TextField(blank=True,
+        help_text="Raw text extracted by AI from the document")
+    ai_parsed_at = models.DateTimeField(null=True, blank=True)
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-date', '-uploaded_at']
+        verbose_name = 'Medical Record'
+        verbose_name_plural = 'Medical Records'
+
+    def __str__(self):
+        return f"{self.get_record_type_display()} - {self.date}"
+
+    def save(self, *args, **kwargs):
+        if self.file and not self.file_type:
+            self.file_type = self.file.name.split('.')[-1].lower()
+        super().save(*args, **kwargs)
+
+
+class LabValue(models.Model):
+    """
+    Individual lab values extracted from medical records.
+    Allows tracking of specific values over time.
+    """
+    LAB_TEST_CHOICES = [
+        # Complete Blood Count (CBC)
+        ('wbc', 'WBC (White Blood Cells)'),
+        ('rbc', 'RBC (Red Blood Cells)'),
+        ('hgb', 'Hemoglobin'),
+        ('hct', 'Hematocrit'),
+        ('plt', 'Platelets'),
+        ('neutrophils', 'Neutrophils'),
+        ('lymphocytes', 'Lymphocytes'),
+        ('monocytes', 'Monocytes'),
+        ('eosinophils', 'Eosinophils'),
+        ('basophils', 'Basophils'),
+        # Chemistry Panel
+        ('bun', 'BUN (Blood Urea Nitrogen)'),
+        ('creatinine', 'Creatinine'),
+        ('glucose', 'Glucose'),
+        ('alt', 'ALT (Liver enzyme)'),
+        ('alp', 'ALP (Alkaline Phosphatase)'),
+        ('ast', 'AST'),
+        ('albumin', 'Albumin'),
+        ('total_protein', 'Total Protein'),
+        ('globulin', 'Globulin'),
+        ('bilirubin', 'Bilirubin'),
+        ('cholesterol', 'Cholesterol'),
+        ('calcium', 'Calcium'),
+        ('phosphorus', 'Phosphorus'),
+        ('sodium', 'Sodium'),
+        ('potassium', 'Potassium'),
+        ('chloride', 'Chloride'),
+        # Other
+        ('other', 'Other'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    medical_record = models.ForeignKey(
+        MedicalRecord, on_delete=models.CASCADE,
+        related_name='lab_values', null=True, blank=True
+    )
+    date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    test_name = models.CharField(max_length=30, choices=LAB_TEST_CHOICES)
+    custom_test_name = models.CharField(max_length=100, blank=True,
+        help_text="Custom test name if 'Other' selected")
+    value = models.DecimalField(max_digits=10, decimal_places=3)
+    unit = models.CharField(max_length=30, blank=True,
+        help_text="Unit of measurement (e.g., K/uL, g/dL, mg/dL)")
+
+    reference_low = models.DecimalField(
+        max_digits=10, decimal_places=3, null=True, blank=True,
+        help_text="Low end of normal reference range"
+    )
+    reference_high = models.DecimalField(
+        max_digits=10, decimal_places=3, null=True, blank=True,
+        help_text="High end of normal reference range"
+    )
+
+    is_abnormal = models.BooleanField(default=False)
+    is_critical = models.BooleanField(default=False,
+        help_text="Critically high or low value")
+
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default='clinic'
+    )
+    ai_extracted = models.BooleanField(default=False,
+        help_text="Whether this value was extracted by AI"
+    )
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-date', 'test_name']
+        verbose_name = 'Lab Value'
+        verbose_name_plural = 'Lab Values'
+
+    def __str__(self):
+        return f"{self.get_test_name_display()}: {self.value} {self.unit} ({self.date})"
+
+    def save(self, *args, **kwargs):
+        # Auto-detect abnormal values
+        if self.reference_low and self.reference_high:
+            self.is_abnormal = (
+                self.value < self.reference_low or
+                self.value > self.reference_high
+            )
+        super().save(*args, **kwargs)

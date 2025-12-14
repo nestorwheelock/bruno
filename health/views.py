@@ -13,7 +13,8 @@ import json
 from .models import (
     DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
     CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession,
-    DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary
+    DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary,
+    MedicalRecord, LabValue, SiteSettings
 )
 
 
@@ -957,3 +958,133 @@ def meal_planning_view(request):
         'omega3_daily': omega3_daily,
     }
     return render(request, 'health/meal_planning.html', context)
+
+
+# ==================== MEDICAL RECORDS ====================
+
+@login_required(login_url='health:login')
+def records_view(request):
+    """
+    Medical records gallery and upload.
+
+    Allows users to upload and view blood work, cytology reports,
+    and other medical documents. Records can be parsed by AI to
+    extract lab values automatically.
+    """
+    records = MedicalRecord.objects.filter(user=request.user).order_by('-date')
+
+    # Get recent lab values with trends
+    recent_lab_values = LabValue.objects.filter(user=request.user).order_by('-date')[:50]
+
+    # Group lab values by test name for trend display
+    lab_trends = {}
+    for lv in recent_lab_values:
+        test_name = lv.get_test_name_display()
+        if test_name not in lab_trends:
+            lab_trends[test_name] = []
+        lab_trends[test_name].append({
+            'date': lv.date,
+            'value': float(lv.value),
+            'unit': lv.unit,
+            'is_abnormal': lv.is_abnormal,
+            'is_critical': lv.is_critical,
+        })
+
+    # Check if AI parsing is enabled
+    settings = SiteSettings.get_settings()
+    ai_enabled = settings.enable_ai_parsing and (settings.claude_api_key or settings.openai_api_key)
+
+    context = {
+        'records': records,
+        'lab_trends': lab_trends,
+        'ai_enabled': ai_enabled,
+        'record_types': MedicalRecord.RECORD_TYPE_CHOICES,
+    }
+    return render(request, 'health/records.html', context)
+
+
+@login_required(login_url='health:login')
+@require_POST
+def upload_record(request):
+    """Upload a medical record file."""
+    record_type = request.POST.get('record_type')
+    record_date = request.POST.get('date', date.today())
+    title = request.POST.get('title', '')
+    clinic_name = request.POST.get('clinic_name', '')
+    veterinarian = request.POST.get('veterinarian', '')
+    source = request.POST.get('source', 'clinic')
+    notes = request.POST.get('notes', '')
+    uploaded_file = request.FILES.get('file')
+
+    if not uploaded_file:
+        return JsonResponse({'status': 'error', 'message': 'No file uploaded'}, status=400)
+
+    record = MedicalRecord.objects.create(
+        user=request.user,
+        date=record_date,
+        record_type=record_type,
+        title=title,
+        file=uploaded_file,
+        source=source,
+        clinic_name=clinic_name,
+        veterinarian=veterinarian,
+        notes=notes,
+    )
+
+    return JsonResponse({
+        'status': 'success',
+        'id': record.id,
+        'message': _('Record uploaded successfully'),
+    })
+
+
+@login_required(login_url='health:login')
+def record_detail(request, record_id):
+    """View a single medical record with its lab values."""
+    record = get_object_or_404(MedicalRecord, id=record_id, user=request.user)
+    lab_values = record.lab_values.all().order_by('test_name')
+
+    context = {
+        'record': record,
+        'lab_values': lab_values,
+    }
+    return render(request, 'health/record_detail.html', context)
+
+
+@login_required(login_url='health:login')
+def api_lab_values(request):
+    """API endpoint for lab value trends over time."""
+    test_name = request.GET.get('test')
+    days = int(request.GET.get('days', 365))
+    end_date = date.today()
+    start_date = end_date - timedelta(days=days)
+
+    lab_values = LabValue.objects.filter(
+        user=request.user,
+        date__gte=start_date,
+        date__lte=end_date
+    ).order_by('date')
+
+    if test_name:
+        lab_values = lab_values.filter(test_name=test_name)
+
+    # Group by test type
+    data = {}
+    for lv in lab_values:
+        test = lv.test_name
+        if test not in data:
+            data[test] = {
+                'labels': [],
+                'values': [],
+                'reference_low': None,
+                'reference_high': None,
+                'unit': lv.unit,
+            }
+        data[test]['labels'].append(lv.date.strftime('%Y-%m-%d'))
+        data[test]['values'].append(float(lv.value))
+        if lv.reference_low and not data[test]['reference_low']:
+            data[test]['reference_low'] = float(lv.reference_low)
+        if lv.reference_high and not data[test]['reference_high']:
+            data[test]['reference_high'] = float(lv.reference_high)
+
+    return JsonResponse(data)
