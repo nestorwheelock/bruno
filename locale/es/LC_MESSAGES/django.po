@@ -842,3 +842,85 @@ msgstr "Cada dolar, cada compartida, cada pensamiento amable ayuda a Bruno a luc
 
 msgid "Give Bruno More Time"
 msgstr "Dale a Bruno Mas Tiempo"
+
+# Additional Fundraiser Page Translations
+msgid "Bruno, a loving 6-year-old dog"
+msgstr "Bruno, un amoroso perro de 6 anos"
+
+msgid "Six years of unconditional love."
+msgstr "Seis anos de amor incondicional."
+
+msgid "Bruno and Tatum are inseparable. Where one goes, the other follows. He's not just a dog—he's a best friend, a protector, a constant source of comfort through every hard day and quiet night."
+msgstr "Bruno y Tatum son inseparables. Donde va uno, el otro lo sigue. No es solo un perro—es un mejor amigo, un protector, una fuente constante de consuelo en cada dia dificil y cada noche tranquila."
+
+msgid "Now Bruno has been diagnosed with"
+msgstr "Ahora a Bruno le han diagnosticado"
+
+msgid "lymphoma"
+msgstr "linfoma"
+
+msgid "He's still happy, still wagging his tail, still looking at us like nothing is wrong. That's what makes this so hard."
+msgstr "Sigue feliz, sigue meneando la cola, sigue mirandonos como si nada estuviera mal. Eso es lo que hace esto tan dificil."
+
+msgid "Bruno with his family"
+msgstr "Bruno con su familia"
+
+msgid "He Still Greets Each Day with Joy"
+msgstr "Aun Recibe Cada Dia con Alegria"
+
+msgid "Bruno doesn't know what lymphoma means. He just knows he wants to be close to us, to play, to rest his head in our laps. His spirit hasn't changed—and we're fighting to keep it that way for as long as we can."
+msgstr "Bruno no sabe que significa el linfoma. Solo sabe que quiere estar cerca de nosotros, jugar, descansar su cabeza en nuestro regazo. Su espiritu no ha cambiado—y estamos luchando para mantenerlo asi el mayor tiempo posible."
+
+msgid "Bruno being playful"
+msgstr "Bruno jugando"
+
+msgid "It's been two weeks since we discovered Bruno's swollen lymph nodes—and they've tripled in size since then. The diagnostic testing had to be sent to Mexico City, which delayed the diagnosis. Every day without treatment, the cancer spreads."
+msgstr "Han pasado dos semanas desde que descubrimos los ganglios linfaticos inflamados de Bruno—y se han triplicado de tamano desde entonces. Las pruebas diagnosticas tuvieron que enviarse a la Ciudad de Mexico, lo que retraso el diagnostico. Cada dia sin tratamiento, el cancer se propaga."
+
+msgid "2-4 weeks"
+msgstr "2-4 semanas"
+
+msgid "12-18 months"
+msgstr "12-18 meses"
+
+msgid "Statistics from veterinary oncology research. Individual outcomes vary based on lymphoma type, stage, and timing of treatment."
+msgstr "Estadisticas de investigacion en oncologia veterinaria. Los resultados individuales varian segun el tipo de linfoma, la etapa y el momento del tratamiento."
+
+msgid "This Is Who We're Fighting For"
+msgstr "Por Quien Estamos Luchando"
+
+msgid "Bruno portrait"
+msgstr "Retrato de Bruno"
+
+msgid "Bruno relaxing"
+msgstr "Bruno descansando"
+
+msgid "Bruno happy"
+msgstr "Bruno feliz"
+
+msgid "Bruno looking hopeful"
+msgstr "Bruno con esperanza"
+
+msgid "Help Us Keep Him a Little Longer"
+msgstr "Ayudanos a Mantenerlo un Poco Mas"
+
+msgid "We're not ready to say goodbye. Bruno still has so much love to give, and we want to give him every chance to keep giving it."
+msgstr "No estamos listos para decir adios. Bruno todavia tiene mucho amor que dar, y queremos darle todas las oportunidades para seguir dandolo."
+
+msgid "Any amount helps. If you can't donate, sharing his story means the world to us."
+msgstr "Cualquier cantidad ayuda. Si no puedes donar, compartir su historia significa mucho para nosotros."
+
+msgid "Donate to Bruno's Treatment"
+msgstr "Donar al Tratamiento de Bruno"
+
+msgid "Can't donate? Please share Bruno's story!"
+msgstr "No puedes donar? Por favor comparte la historia de Bruno!"
+
+msgid "Share on X"
+msgstr "Compartir en X"
+
+msgid "Thank you for caring about Bruno. Every donation and share brings us closer to giving him more good days."
+msgstr "Gracias por preocuparte por Bruno. Cada donacion y cada compartida nos acerca a darle mas dias buenos."
+
+msgid "Donate on GoFundMe"
+msgstr "Donar en GoFundMe"
