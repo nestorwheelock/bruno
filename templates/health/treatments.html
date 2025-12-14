@@ -1,0 +1,236 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Treatment Sessions" %} - Bruno Health{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h2>{% trans "Treatment Sessions" %}</h2>
+    <p class="text-muted">{% trans "Track chemotherapy, radiation, and other cancer treatments" %}</p>
+
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">{% trans "Record New Treatment" %}</div>
+        <div class="card-body">
+            <form id="treatmentForm">
+                {% csrf_token %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Date" %}</label>
+                        <input type="date" name="date" class="form-control" value="{{ today }}" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Treatment Type" %}</label>
+                        <select name="treatment_type" class="form-select" required id="treatmentType">
+                            <option value="">{% trans "Select type..." %}</option>
+                            <option value="CHEMO">{% trans "Chemotherapy" %}</option>
+                            <option value="RADIATION">{% trans "Radiation Therapy" %}</option>
+                            <option value="SURGERY">{% trans "Surgery" %}</option>
+                            <option value="IMMUNOTHERAPY">{% trans "Immunotherapy" %}</option>
+                            <option value="PALLIATIVE">{% trans "Palliative Care" %}</option>
+                            <option value="OTHER">{% trans "Other" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3" id="chemoFields" style="display: none;">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">{% trans "Chemotherapy Agent" %}</label>
+                        <select name="agent" class="form-select">
+                            <option value="">{% trans "Select agent..." %}</option>
+                            <optgroup label="{% trans 'Common Lymphoma Protocols' %}">
+                                <option value="Doxorubicin">Doxorubicin (Adriamycin)</option>
+                                <option value="Vincristine">Vincristine (Oncovin)</option>
+                                <option value="Cyclophosphamide">Cyclophosphamide (Cytoxan)</option>
+                                <option value="L-Asparaginase">L-Asparaginase (Elspar)</option>
+                                <option value="Prednisone">Prednisone</option>
+                                <option value="Lomustine">Lomustine (CCNU)</option>
+                                <option value="Chlorambucil">Chlorambucil (Leukeran)</option>
+                                <option value="Mitoxantrone">Mitoxantrone</option>
+                            </optgroup>
+                            <optgroup label="{% trans 'Combination Protocols' %}">
+                                <option value="CHOP">CHOP Protocol</option>
+                                <option value="UW-Madison">UW-Madison Protocol</option>
+                                <option value="COP">COP Protocol</option>
+                            </optgroup>
+                            <option value="Other">{% trans "Other (specify in notes)" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">{% trans "Dose" %}</label>
+                        <input type="text" name="dose" class="form-control" placeholder="e.g., 30 mg/m²">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">{% trans "Cycle Number" %}</label>
+                        <input type="number" name="cycle_number" class="form-control" min="1" placeholder="e.g., 1">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Location/Clinic" %}</label>
+                        <input type="text" name="location" class="form-control" placeholder="{% trans 'Veterinary clinic name' %}">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Administering Veterinarian" %}</label>
+                        <input type="text" name="veterinarian" class="form-control" placeholder="{% trans 'Dr. Name' %}">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Pre-treatment Weight (kg)" %}</label>
+                        <input type="number" name="weight_kg" class="form-control" step="0.1" min="0" placeholder="e.g., 25.5">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Response Assessment" %}</label>
+                        <select name="response" class="form-select">
+                            <option value="">{% trans "Not assessed" %}</option>
+                            <option value="CR">{% trans "CR - Complete Response" %}</option>
+                            <option value="PR">{% trans "PR - Partial Response" %}</option>
+                            <option value="SD">{% trans "SD - Stable Disease" %}</option>
+                            <option value="PD">{% trans "PD - Progressive Disease" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="alert alert-secondary mb-3">
+                    <strong>{% trans "VCOG Response Evaluation Criteria:" %}</strong>
+                    <ul class="mb-0 small">
+                        <li><strong>CR (Complete Response):</strong> {% trans "Disappearance of all target lesions" %}</li>
+                        <li><strong>PR (Partial Response):</strong> {% trans "≥30% decrease in sum of target lesion diameters" %}</li>
+                        <li><strong>SD (Stable Disease):</strong> {% trans "Neither PR nor PD criteria met" %}</li>
+                        <li><strong>PD (Progressive Disease):</strong> {% trans "≥20% increase in sum of target lesion diameters or new lesions" %}</li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Notes" %}</label>
+                    <textarea name="notes" class="form-control" rows="2" placeholder="{% trans 'Pre-medications, reactions, observations...' %}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-secondary w-100">{% trans "Record Treatment Session" %}</button>
+            </form>
+        </div>
+    </div>
+
+    {% if treatments %}
+    <div class="card">
+        <div class="card-header">{% trans "Treatment History" %}</div>
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Type" %}</th>
+                        <th>{% trans "Agent/Details" %}</th>
+                        <th>{% trans "Cycle" %}</th>
+                        <th>{% trans "Response" %}</th>
+                        <th>{% trans "Weight" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in treatments %}
+                    <tr>
+                        <td>{{ tx.date }}</td>
+                        <td>
+                            <span class="badge bg-{% if tx.treatment_type == 'CHEMO' %}danger{% elif tx.treatment_type == 'RADIATION' %}warning text-dark{% elif tx.treatment_type == 'SURGERY' %}info{% else %}secondary{% endif %}">
+                                {{ tx.get_treatment_type_display }}
+                            </span>
+                        </td>
+                        <td>{% if tx.agent %}{{ tx.agent }}{% if tx.dose %} ({{ tx.dose }}){% endif %}{% else %}-{% endif %}</td>
+                        <td>{% if tx.cycle_number %}{{ tx.cycle_number }}{% else %}-{% endif %}</td>
+                        <td>
+                            {% if tx.response %}
+                            <span class="badge bg-{% if tx.response == 'CR' %}success{% elif tx.response == 'PR' %}info{% elif tx.response == 'SD' %}warning text-dark{% else %}danger{% endif %}">
+                                {{ tx.get_response_display }}
+                            </span>
+                            {% else %}-{% endif %}
+                        </td>
+                        <td>{% if tx.weight_kg %}{{ tx.weight_kg }} kg{% else %}-{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Treatment Summary Stats -->
+    {% if treatments %}
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="card-title">{{ treatments|length }}</h3>
+                    <p class="card-text text-muted">{% trans "Total Treatments" %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="card-title">{{ chemo_count|default:0 }}</h3>
+                    <p class="card-text text-muted">{% trans "Chemo Sessions" %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="card-title">{{ latest_weight|default:"-" }}{% if latest_weight %} kg{% endif %}</h3>
+                    <p class="card-text text-muted">{% trans "Latest Weight" %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Show/hide chemo-specific fields
+document.getElementById('treatmentType').addEventListener('change', function() {
+    const chemoFields = document.getElementById('chemoFields');
+    if (this.value === 'CHEMO') {
+        chemoFields.style.display = 'flex';
+    } else {
+        chemoFields.style.display = 'none';
+    }
+});
+
+document.getElementById('treatmentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+        if (key !== 'csrfmiddlewaretoken') {
+            if (key === 'cycle_number') {
+                data[key] = value ? parseInt(value) : null;
+            } else if (key === 'weight_kg') {
+                data[key] = value ? parseFloat(value) : null;
+            } else {
+                data[key] = value || null;
+            }
+        }
+    });
+
+    const response = await fetch('{% url "health:save_treatment" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('{% trans "Treatment session recorded!" %}');
+        location.reload();
+    } else {
+        alert('{% trans "Error saving treatment" %}');
+    }
+});
+</script>
+{% endblock %}

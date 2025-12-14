@@ -1,0 +1,362 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Dashboard" %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-indicator {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    .status-green { background: linear-gradient(135deg, #28a745, #20c997); }
+    .status-yellow { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+    .status-orange { background: linear-gradient(135deg, #fd7e14, #dc3545); }
+    .status-red { background: linear-gradient(135deg, #dc3545, #721c24); }
+    .status-gray { background: linear-gradient(135deg, #6c757d, #495057); }
+
+    .card { margin-bottom: 1rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card-header { font-weight: bold; }
+    .score-display { font-size: 2rem; font-weight: bold; }
+    .chart-container { height: 250px; }
+    .stat-box { text-align: center; padding: 1rem; }
+    .stat-value { font-size: 2rem; font-weight: bold; }
+    .stat-label { color: #6c757d; font-size: 0.85rem; }
+    .event-grade-1 { border-left: 4px solid #28a745; }
+    .event-grade-2 { border-left: 4px solid #ffc107; }
+    .event-grade-3 { border-left: 4px solid #fd7e14; }
+    .event-grade-4 { border-left: 4px solid #dc3545; }
+    .event-grade-5 { border-left: 4px solid #721c24; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <!-- Language Switcher -->
+    <div class="text-end mb-3">
+        <form method="post" action="{% url 'health:set_language' %}" class="d-inline">
+            {% csrf_token %}
+            <select name="language" onchange="this.form.submit()" class="form-select form-select-sm d-inline-block w-auto">
+                <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+                <option value="es" {% if LANGUAGE_CODE == 'es' %}selected{% endif %}>Español</option>
+            </select>
+        </form>
+    </div>
+
+    <h2 class="mb-4">{% trans "Quality of Life Dashboard" %}</h2>
+
+    <!-- QoL Status Banner -->
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <div class="status-indicator status-{{ qol_status }}">
+                {% if qol_status == 'green' %}✓
+                {% elif qol_status == 'yellow' %}!
+                {% elif qol_status == 'orange' %}⚠
+                {% elif qol_status == 'red' %}✕
+                {% else %}?{% endif %}
+            </div>
+            <h3>{{ qol_message }}</h3>
+            {% if latest_corq %}
+            <p class="mb-0">{% trans "CORQ Total Score" %}: <span class="score-display">{{ latest_corq.total_score }}/80</span></p>
+            <small class="text-muted">{% trans "Last assessment" %}: {{ latest_corq.date }}</small>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- CBPI Summary -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    {% trans "Pain Assessment (CBPI)" %}
+                </div>
+                <div class="card-body">
+                    {% if latest_cbpi %}
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="stat-value">{{ latest_cbpi.pain_severity_score }}</div>
+                            <div class="stat-label">{% trans "Pain Severity" %}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-value">{{ latest_cbpi.pain_interference_score }}</div>
+                            <div class="stat-label">{% trans "Interference" %}</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="text-center mb-0">
+                        {% trans "QoL Rating" %}: {{ latest_cbpi.get_overall_quality_of_life_display }}
+                    </p>
+                    <small class="text-muted d-block text-center">{{ latest_cbpi.date }}</small>
+                    {% else %}
+                    <p class="text-muted text-center">{% trans "No CBPI assessments yet" %}</p>
+                    {% endif %}
+                    <a href="{% url 'health:cbpi' %}" class="btn btn-outline-info btn-sm w-100 mt-2">{% trans "New CBPI Assessment" %}</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORQ Summary -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    {% trans "Quality of Life (CORQ)" %}
+                </div>
+                <div class="card-body">
+                    {% if latest_corq %}
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.vitality_score }}</div>
+                            <div class="stat-label">{% trans "Vitality" %}</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.companionship_score }}</div>
+                            <div class="stat-label">{% trans "Social" %}</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.pain_score }}</div>
+                            <div class="stat-label">{% trans "Comfort" %}</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.mobility_score }}</div>
+                            <div class="stat-label">{% trans "Mobility" %}</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="text-center mb-0">
+                        {% trans "Global QoL" %}: {{ latest_corq.global_qol }}/100
+                    </p>
+                    <small class="text-muted d-block text-center">{{ latest_corq.date }}</small>
+                    {% else %}
+                    <p class="text-muted text-center">{% trans "No CORQ assessments yet" %}</p>
+                    {% endif %}
+                    <a href="{% url 'health:corq' %}" class="btn btn-outline-success btn-sm w-100 mt-2">{% trans "New CORQ Assessment" %}</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Good Days Summary -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    {% trans "Last 30 Days" %}
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat-value text-success">{{ good_days }}</div>
+                            <div class="stat-label">{% trans "Good" %}</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-value text-warning">{{ mixed_days }}</div>
+                            <div class="stat-label">{% trans "Mixed" %}</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-value text-danger">{{ bad_days }}</div>
+                            <div class="stat-label">{% trans "Bad" %}</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <p class="text-center mb-0">{% trans "Total days tracked" %}: {{ total_days }}</p>
+                    <a href="{% url 'health:tracker' %}" class="btn btn-outline-primary btn-sm w-100 mt-2">{% trans "Daily Tracker" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">{% trans "Daily Scores Trend" %}</div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="dailyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">{% trans "Lymph Node Measurements" %}</div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="nodesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adverse Events & Treatments -->
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    {% trans "Active Adverse Events (VCOG-CTCAE)" %}
+                </div>
+                <div class="card-body">
+                    {% if recent_events %}
+                    <ul class="list-group list-group-flush">
+                        {% for event in recent_events %}
+                        <li class="list-group-item event-grade-{{ event.grade }}">
+                            <strong>{{ event.get_event_display }}</strong>
+                            <span class="badge bg-{% if event.grade >= 3 %}danger{% elif event.grade == 2 %}warning{% else %}secondary{% endif %} float-end">
+                                Grade {{ event.grade }}
+                            </span>
+                            <br><small class="text-muted">{{ event.date }} - {{ event.get_category_display }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted text-center mb-0">{% trans "No active adverse events" %}</p>
+                    {% endif %}
+                    <a href="{% url 'health:events' %}" class="btn btn-outline-warning btn-sm w-100 mt-2">{% trans "Manage Events" %}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    {% trans "Recent Treatments" %}
+                </div>
+                <div class="card-body">
+                    {% if recent_treatments %}
+                    <ul class="list-group list-group-flush">
+                        {% for tx in recent_treatments %}
+                        <li class="list-group-item">
+                            <strong>{{ tx.get_treatment_type_display }}</strong>
+                            {% if tx.agent %}- {{ tx.agent }}{% endif %}
+                            {% if tx.cycle_number %}<span class="badge bg-info float-end">Cycle {{ tx.cycle_number }}</span>{% endif %}
+                            <br><small class="text-muted">{{ tx.date }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted text-center mb-0">{% trans "No recent treatments" %}</p>
+                    {% endif %}
+                    <a href="{% url 'health:treatments' %}" class="btn btn-outline-secondary btn-sm w-100 mt-2">{% trans "Manage Treatments" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">{% trans "Quick Actions" %}</div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 col-md-3 mb-2">
+                            <a href="{% url 'health:tracker' %}" class="btn btn-primary w-100">{% trans "Daily Entry" %}</a>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <a href="{% url 'health:cbpi' %}" class="btn btn-info w-100">{% trans "CBPI" %}</a>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <a href="{% url 'health:corq' %}" class="btn btn-success w-100">{% trans "CORQ" %}</a>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <a href="{% url 'health:nodes' %}" class="btn btn-secondary w-100">{% trans "Lymph Nodes" %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Scores Chart
+    fetch('{% url "health:api_chart_data" %}?type=daily&days=30')
+        .then(response => response.json())
+        .then(data => {
+            if (data.labels && data.labels.length > 0) {
+                new Chart(document.getElementById('dailyChart'), {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: '{% trans "Happiness Score" %}',
+                            data: data.happiness,
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: '{% trans "Overall Score" %}',
+                            data: data.overall,
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 5 }
+                        }
+                    }
+                });
+            }
+        });
+
+    // Lymph Nodes Chart
+    fetch('{% url "health:api_chart_data" %}?type=nodes&days=60')
+        .then(response => response.json())
+        .then(data => {
+            if (data.labels && data.labels.length > 0) {
+                new Chart(document.getElementById('nodesChart'), {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: '{% trans "Mandibular L" %}',
+                            data: data.mandibular_left,
+                            borderColor: '#dc3545',
+                            tension: 0.3
+                        }, {
+                            label: '{% trans "Mandibular R" %}',
+                            data: data.mandibular_right,
+                            borderColor: '#fd7e14',
+                            tension: 0.3
+                        }, {
+                            label: '{% trans "Popliteal L" %}',
+                            data: data.popliteal_left,
+                            borderColor: '#20c997',
+                            tension: 0.3
+                        }, {
+                            label: '{% trans "Popliteal R" %}',
+                            data: data.popliteal_right,
+                            borderColor: '#6f42c1',
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'cm' } }
+                        }
+                    }
+                });
+            }
+        });
+});
+</script>
+{% endblock %}

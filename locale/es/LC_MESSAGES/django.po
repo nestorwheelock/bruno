@@ -1,0 +1,720 @@
+# Spanish translations for Bruno Health Tracker
+# Copyright (C) 2024
+# This file is distributed under the same license as the Bruno package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Bruno Health 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Dashboard
+msgid "Dashboard"
+msgstr "Panel de Control"
+
+msgid "Quality of Life Dashboard"
+msgstr "Panel de Calidad de Vida"
+
+msgid "CORQ Total Score"
+msgstr "Puntuacion Total CORQ"
+
+msgid "Last assessment"
+msgstr "Ultima evaluacion"
+
+msgid "Pain Assessment (CBPI)"
+msgstr "Evaluacion del Dolor (CBPI)"
+
+msgid "Pain Severity"
+msgstr "Severidad del Dolor"
+
+msgid "Interference"
+msgstr "Interferencia"
+
+msgid "QoL Rating"
+msgstr "Calificacion de Calidad de Vida"
+
+msgid "No CBPI assessments yet"
+msgstr "Aun no hay evaluaciones CBPI"
+
+msgid "New CBPI Assessment"
+msgstr "Nueva Evaluacion CBPI"
+
+msgid "Quality of Life (CORQ)"
+msgstr "Calidad de Vida (CORQ)"
+
+msgid "Vitality"
+msgstr "Vitalidad"
+
+msgid "Social"
+msgstr "Social"
+
+msgid "Comfort"
+msgstr "Comodidad"
+
+msgid "Mobility"
+msgstr "Movilidad"
+
+msgid "Global QoL"
+msgstr "Calidad de Vida Global"
+
+msgid "No CORQ assessments yet"
+msgstr "Aun no hay evaluaciones CORQ"
+
+msgid "New CORQ Assessment"
+msgstr "Nueva Evaluacion CORQ"
+
+msgid "Last 30 Days"
+msgstr "Ultimos 30 Dias"
+
+msgid "Good"
+msgstr "Bueno"
+
+msgid "Mixed"
+msgstr "Mixto"
+
+msgid "Bad"
+msgstr "Malo"
+
+msgid "Total days tracked"
+msgstr "Total de dias registrados"
+
+msgid "Daily Tracker"
+msgstr "Registro Diario"
+
+msgid "Daily Scores Trend"
+msgstr "Tendencia de Puntuaciones Diarias"
+
+msgid "Lymph Node Measurements"
+msgstr "Mediciones de Ganglios Linfaticos"
+
+msgid "Happiness Score"
+msgstr "Puntuacion de Felicidad"
+
+msgid "Overall Score"
+msgstr "Puntuacion General"
+
+msgid "Mandibular L"
+msgstr "Mandibular Izq"
+
+msgid "Mandibular R"
+msgstr "Mandibular Der"
+
+msgid "Popliteal L"
+msgstr "Popliteo Izq"
+
+msgid "Popliteal R"
+msgstr "Popliteo Der"
+
+msgid "Active Adverse Events (VCOG-CTCAE)"
+msgstr "Eventos Adversos Activos (VCOG-CTCAE)"
+
+msgid "No active adverse events"
+msgstr "Sin eventos adversos activos"
+
+msgid "Manage Events"
+msgstr "Gestionar Eventos"
+
+msgid "Recent Treatments"
+msgstr "Tratamientos Recientes"
+
+msgid "No recent treatments"
+msgstr "Sin tratamientos recientes"
+
+msgid "Manage Treatments"
+msgstr "Gestionar Tratamientos"
+
+msgid "Quick Actions"
+msgstr "Acciones Rapidas"
+
+msgid "Daily Entry"
+msgstr "Entrada Diaria"
+
+msgid "CBPI"
+msgstr "CBPI"
+
+msgid "CORQ"
+msgstr "CORQ"
+
+msgid "Lymph Nodes"
+msgstr "Ganglios Linfaticos"
+
+# CBPI Assessment
+msgid "CBPI Pain Assessment"
+msgstr "Evaluacion de Dolor CBPI"
+
+msgid "Canine Brief Pain Inventory (CBPI)"
+msgstr "Inventario Breve de Dolor Canino (CBPI)"
+
+msgid "Validated pain assessment for dogs with cancer"
+msgstr "Evaluacion validada de dolor para perros con cancer"
+
+msgid "New Assessment"
+msgstr "Nueva Evaluacion"
+
+msgid "no pain"
+msgstr "sin dolor"
+
+msgid "extreme pain"
+msgstr "dolor extremo"
+
+msgid "Worst pain in last 7 days"
+msgstr "Peor dolor en los ultimos 7 dias"
+
+msgid "Least pain in last 7 days"
+msgstr "Menor dolor en los ultimos 7 dias"
+
+msgid "Average pain"
+msgstr "Dolor promedio"
+
+msgid "Pain right now"
+msgstr "Dolor en este momento"
+
+msgid "Pain Interference"
+msgstr "Interferencia del Dolor"
+
+msgid "no interference"
+msgstr "sin interferencia"
+
+msgid "completely interferes"
+msgstr "interfiere completamente"
+
+msgid "General activity"
+msgstr "Actividad general"
+
+msgid "Enjoyment of life"
+msgstr "Disfrute de la vida"
+
+msgid "Ability to rise"
+msgstr "Capacidad para levantarse"
+
+msgid "Ability to walk"
+msgstr "Capacidad para caminar"
+
+msgid "Ability to run"
+msgstr "Capacidad para correr"
+
+msgid "Ability to climb"
+msgstr "Capacidad para subir"
+
+msgid "Overall Quality of Life"
+msgstr "Calidad de Vida General"
+
+msgid "Select..."
+msgstr "Seleccionar..."
+
+msgid "Poor"
+msgstr "Pobre"
+
+msgid "Fair"
+msgstr "Regular"
+
+msgid "Very Good"
+msgstr "Muy Bueno"
+
+msgid "Excellent"
+msgstr "Excelente"
+
+msgid "Notes"
+msgstr "Notas"
+
+msgid "Save CBPI Assessment"
+msgstr "Guardar Evaluacion CBPI"
+
+msgid "Assessment History"
+msgstr "Historial de Evaluaciones"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Severity"
+msgstr "Severidad"
+
+msgid "QoL"
+msgstr "CdV"
+
+msgid "Saved!"
+msgstr "Guardado!"
+
+# CORQ Assessment
+msgid "CORQ Assessment"
+msgstr "Evaluacion CORQ"
+
+msgid "Canine Owner-Reported Quality of Life (CORQ)"
+msgstr "Calidad de Vida Reportada por el Dueno (CORQ)"
+
+msgid "Validated quality of life questionnaire for dogs with cancer"
+msgstr "Cuestionario validado de calidad de vida para perros con cancer"
+
+msgid "Never"
+msgstr "Nunca"
+
+msgid "Rarely"
+msgstr "Raramente"
+
+msgid "Sometimes"
+msgstr "A veces"
+
+msgid "Often"
+msgstr "Frecuentemente"
+
+msgid "Always"
+msgstr "Siempre"
+
+msgid "Energy level"
+msgstr "Nivel de energia"
+
+msgid "Playfulness"
+msgstr "Jugueton"
+
+msgid "Interest in surroundings"
+msgstr "Interes en el entorno"
+
+msgid "Appetite"
+msgstr "Apetito"
+
+msgid "Companionship"
+msgstr "Compania"
+
+msgid "Seeks attention"
+msgstr "Busca atencion"
+
+msgid "Enjoys interaction"
+msgstr "Disfruta la interaccion"
+
+msgid "Greets family"
+msgstr "Saluda a la familia"
+
+msgid "Tail wagging"
+msgstr "Movimiento de cola"
+
+msgid "Pain Signs"
+msgstr "Signos de Dolor"
+
+msgid "lower = better"
+msgstr "menor = mejor"
+
+msgid "Shows pain"
+msgstr "Muestra dolor"
+
+msgid "Vocalizes pain"
+msgstr "Vocaliza dolor"
+
+msgid "Avoids touch"
+msgstr "Evita el contacto"
+
+msgid "Pants/restless"
+msgstr "Jadea/inquieto"
+
+msgid "Walks normally"
+msgstr "Camina normalmente"
+
+msgid "Rises easily"
+msgstr "Se levanta facilmente"
+
+msgid "Climbs stairs"
+msgstr "Sube escaleras"
+
+msgid "Jumps"
+msgstr "Salta"
+
+msgid "Global Quality of Life"
+msgstr "Calidad de Vida Global"
+
+msgid "Overall QoL (0-100)"
+msgstr "CdV General (0-100)"
+
+msgid "Save CORQ Assessment"
+msgstr "Guardar Evaluacion CORQ"
+
+msgid "Total"
+msgstr "Total"
+
+# Adverse Events
+msgid "Adverse Events"
+msgstr "Eventos Adversos"
+
+msgid "VCOG-CTCAE Adverse Events"
+msgstr "Eventos Adversos VCOG-CTCAE"
+
+msgid "Veterinary Cooperative Oncology Group - Common Terminology Criteria for Adverse Events v2"
+msgstr "Grupo de Oncologia Veterinaria Cooperativa - Criterios de Terminologia Comun para Eventos Adversos v2"
+
+msgid "Record New Adverse Event"
+msgstr "Registrar Nuevo Evento Adverso"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Select category..."
+msgstr "Seleccionar categoria..."
+
+msgid "Gastrointestinal"
+msgstr "Gastrointestinal"
+
+msgid "Hematologic"
+msgstr "Hematologico"
+
+msgid "Dermatologic"
+msgstr "Dermatologico"
+
+msgid "Neurologic"
+msgstr "Neurologico"
+
+msgid "Respiratory"
+msgstr "Respiratorio"
+
+msgid "Cardiovascular"
+msgstr "Cardiovascular"
+
+msgid "Renal/Urinary"
+msgstr "Renal/Urinario"
+
+msgid "Hepatobiliary"
+msgstr "Hepatobiliar"
+
+msgid "Constitutional"
+msgstr "Constitucional"
+
+msgid "Other"
+msgstr "Otro"
+
+msgid "Event"
+msgstr "Evento"
+
+msgid "Select event..."
+msgstr "Seleccionar evento..."
+
+msgid "Anorexia"
+msgstr "Anorexia"
+
+msgid "Vomiting"
+msgstr "Vomito"
+
+msgid "Diarrhea"
+msgstr "Diarrea"
+
+msgid "Constipation"
+msgstr "Estrenimiento"
+
+msgid "Nausea"
+msgstr "Nauseas"
+
+msgid "Neutropenia"
+msgstr "Neutropenia"
+
+msgid "Thrombocytopenia"
+msgstr "Trombocitopenia"
+
+msgid "Anemia"
+msgstr "Anemia"
+
+msgid "Alopecia"
+msgstr "Alopecia"
+
+msgid "Dermatitis"
+msgstr "Dermatitis"
+
+msgid "Peripheral Neuropathy"
+msgstr "Neuropatia Periferica"
+
+msgid "Seizure"
+msgstr "Convulsion"
+
+msgid "Fatigue/Lethargy"
+msgstr "Fatiga/Letargo"
+
+msgid "Fever"
+msgstr "Fiebre"
+
+msgid "Weight Loss"
+msgstr "Perdida de Peso"
+
+msgid "Other (specify in notes)"
+msgstr "Otro (especificar en notas)"
+
+msgid "Grade (1-5)"
+msgstr "Grado (1-5)"
+
+msgid "Grade 1 - Mild"
+msgstr "Grado 1 - Leve"
+
+msgid "Grade 2 - Moderate"
+msgstr "Grado 2 - Moderado"
+
+msgid "Grade 3 - Severe"
+msgstr "Grado 3 - Severo"
+
+msgid "Grade 4 - Life-threatening"
+msgstr "Grado 4 - Potencialmente mortal"
+
+msgid "Grade 5 - Death"
+msgstr "Grado 5 - Muerte"
+
+msgid "VCOG-CTCAE Grade Definitions:"
+msgstr "Definiciones de Grado VCOG-CTCAE:"
+
+msgid "Grade 1"
+msgstr "Grado 1"
+
+msgid "Grade 2"
+msgstr "Grado 2"
+
+msgid "Grade 3"
+msgstr "Grado 3"
+
+msgid "Grade 4"
+msgstr "Grado 4"
+
+msgid "Grade 5"
+msgstr "Grado 5"
+
+msgid "Mild; asymptomatic or mild symptoms; clinical or diagnostic observations only; intervention not indicated"
+msgstr "Leve; asintomatico o sintomas leves; solo observaciones clinicas o diagnosticas; intervencion no indicada"
+
+msgid "Moderate; minimal, local or noninvasive intervention indicated; limiting age-appropriate instrumental ADL"
+msgstr "Moderado; intervencion minima, local o no invasiva indicada; limitando AVD instrumentales apropiadas para la edad"
+
+msgid "Severe or medically significant but not immediately life-threatening; hospitalization or prolongation of hospitalization indicated"
+msgstr "Severo o medicamente significativo pero no inmediatamente mortal; hospitalizacion o prolongacion de hospitalizacion indicada"
+
+msgid "Life-threatening consequences; urgent intervention indicated"
+msgstr "Consecuencias potencialmente mortales; intervencion urgente indicada"
+
+msgid "Death related to adverse event"
+msgstr "Muerte relacionada con evento adverso"
+
+msgid "Related Treatment"
+msgstr "Tratamiento Relacionado"
+
+msgid "None / Unknown"
+msgstr "Ninguno / Desconocido"
+
+msgid "Event has resolved"
+msgstr "El evento se ha resuelto"
+
+msgid "Additional observations, interventions taken..."
+msgstr "Observaciones adicionales, intervenciones tomadas..."
+
+msgid "Record Adverse Event"
+msgstr "Registrar Evento Adverso"
+
+msgid "Event History"
+msgstr "Historial de Eventos"
+
+msgid "Grade"
+msgstr "Grado"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Resolved"
+msgstr "Resuelto"
+
+msgid "Active"
+msgstr "Activo"
+
+msgid "Reference"
+msgstr "Referencia"
+
+msgid "Adverse event recorded!"
+msgstr "Evento adverso registrado!"
+
+msgid "Error saving event"
+msgstr "Error al guardar evento"
+
+# Treatments
+msgid "Treatment Sessions"
+msgstr "Sesiones de Tratamiento"
+
+msgid "Track chemotherapy, radiation, and other cancer treatments"
+msgstr "Registrar quimioterapia, radiacion y otros tratamientos contra el cancer"
+
+msgid "Record New Treatment"
+msgstr "Registrar Nuevo Tratamiento"
+
+msgid "Treatment Type"
+msgstr "Tipo de Tratamiento"
+
+msgid "Select type..."
+msgstr "Seleccionar tipo..."
+
+msgid "Chemotherapy"
+msgstr "Quimioterapia"
+
+msgid "Radiation Therapy"
+msgstr "Radioterapia"
+
+msgid "Surgery"
+msgstr "Cirugia"
+
+msgid "Immunotherapy"
+msgstr "Inmunoterapia"
+
+msgid "Palliative Care"
+msgstr "Cuidados Paliativos"
+
+msgid "Chemotherapy Agent"
+msgstr "Agente de Quimioterapia"
+
+msgid "Select agent..."
+msgstr "Seleccionar agente..."
+
+msgid "Common Lymphoma Protocols"
+msgstr "Protocolos Comunes de Linfoma"
+
+msgid "Combination Protocols"
+msgstr "Protocolos Combinados"
+
+msgid "Dose"
+msgstr "Dosis"
+
+msgid "Cycle Number"
+msgstr "Numero de Ciclo"
+
+msgid "Location/Clinic"
+msgstr "Ubicacion/Clinica"
+
+msgid "Veterinary clinic name"
+msgstr "Nombre de la clinica veterinaria"
+
+msgid "Administering Veterinarian"
+msgstr "Veterinario que Administra"
+
+msgid "Dr. Name"
+msgstr "Dr. Nombre"
+
+msgid "Pre-treatment Weight (kg)"
+msgstr "Peso Pre-tratamiento (kg)"
+
+msgid "Response Assessment"
+msgstr "Evaluacion de Respuesta"
+
+msgid "Not assessed"
+msgstr "No evaluado"
+
+msgid "CR - Complete Response"
+msgstr "RC - Respuesta Completa"
+
+msgid "PR - Partial Response"
+msgstr "RP - Respuesta Parcial"
+
+msgid "SD - Stable Disease"
+msgstr "EE - Enfermedad Estable"
+
+msgid "PD - Progressive Disease"
+msgstr "EP - Enfermedad Progresiva"
+
+msgid "VCOG Response Evaluation Criteria:"
+msgstr "Criterios de Evaluacion de Respuesta VCOG:"
+
+msgid "Disappearance of all target lesions"
+msgstr "Desaparicion de todas las lesiones objetivo"
+
+msgid ">=30% decrease in sum of target lesion diameters"
+msgstr ">=30% de disminucion en la suma de diametros de lesiones objetivo"
+
+msgid "Neither PR nor PD criteria met"
+msgstr "Ni criterios de RP ni EP cumplidos"
+
+msgid ">=20% increase in sum of target lesion diameters or new lesions"
+msgstr ">=20% de aumento en la suma de diametros de lesiones objetivo o nuevas lesiones"
+
+msgid "Pre-medications, reactions, observations..."
+msgstr "Pre-medicaciones, reacciones, observaciones..."
+
+msgid "Record Treatment Session"
+msgstr "Registrar Sesion de Tratamiento"
+
+msgid "Treatment History"
+msgstr "Historial de Tratamientos"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Agent/Details"
+msgstr "Agente/Detalles"
+
+msgid "Cycle"
+msgstr "Ciclo"
+
+msgid "Response"
+msgstr "Respuesta"
+
+msgid "Weight"
+msgstr "Peso"
+
+msgid "Total Treatments"
+msgstr "Total de Tratamientos"
+
+msgid "Chemo Sessions"
+msgstr "Sesiones de Quimio"
+
+msgid "Latest Weight"
+msgstr "Peso mas Reciente"
+
+msgid "Treatment session recorded!"
+msgstr "Sesion de tratamiento registrada!"
+
+msgid "Error saving treatment"
+msgstr "Error al guardar tratamiento"
+
+# General/Common
+msgid "Home"
+msgstr "Inicio"
+
+msgid "History"
+msgstr "Historial"
+
+msgid "Medications"
+msgstr "Medicamentos"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Yes"
+msgstr "Si"
+
+msgid "No"
+msgstr "No"
+
+msgid "Loading..."
+msgstr "Cargando..."
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Success"
+msgstr "Exito"
+
+# QoL Status Messages
+msgid "Excellent quality of life"
+msgstr "Excelente calidad de vida"
+
+msgid "Good quality of life"
+msgstr "Buena calidad de vida"
+
+msgid "Quality of life needs monitoring"
+msgstr "La calidad de vida necesita monitoreo"
+
+msgid "Quality of life concerns - consult veterinarian"
+msgstr "Preocupaciones de calidad de vida - consultar veterinario"
+
+msgid "No assessment data available"
+msgstr "No hay datos de evaluacion disponibles"

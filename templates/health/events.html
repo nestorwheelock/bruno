@@ -1,0 +1,233 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Adverse Events" %} - Bruno Health{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h2>{% trans "VCOG-CTCAE Adverse Events" %}</h2>
+    <p class="text-muted">{% trans "Veterinary Cooperative Oncology Group - Common Terminology Criteria for Adverse Events v2" %}</p>
+
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">{% trans "Record New Adverse Event" %}</div>
+        <div class="card-body">
+            <form id="eventForm">
+                {% csrf_token %}
+
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Date" %}</label>
+                        <input type="date" name="date" class="form-control" value="{{ today }}" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Category" %}</label>
+                        <select name="category" class="form-select" required id="categorySelect">
+                            <option value="">{% trans "Select category..." %}</option>
+                            <option value="GI">{% trans "Gastrointestinal" %}</option>
+                            <option value="HEME">{% trans "Hematologic" %}</option>
+                            <option value="DERM">{% trans "Dermatologic" %}</option>
+                            <option value="NEURO">{% trans "Neurologic" %}</option>
+                            <option value="RESP">{% trans "Respiratory" %}</option>
+                            <option value="CARD">{% trans "Cardiovascular" %}</option>
+                            <option value="RENAL">{% trans "Renal/Urinary" %}</option>
+                            <option value="HEPAT">{% trans "Hepatobiliary" %}</option>
+                            <option value="CONST">{% trans "Constitutional" %}</option>
+                            <option value="OTHER">{% trans "Other" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Event" %}</label>
+                        <select name="event" class="form-select" required id="eventSelect">
+                            <option value="">{% trans "Select event..." %}</option>
+                            <!-- GI Events -->
+                            <option value="ANOREXIA" data-category="GI">{% trans "Anorexia" %}</option>
+                            <option value="VOMITING" data-category="GI">{% trans "Vomiting" %}</option>
+                            <option value="DIARRHEA" data-category="GI">{% trans "Diarrhea" %}</option>
+                            <option value="CONSTIPATION" data-category="GI">{% trans "Constipation" %}</option>
+                            <option value="NAUSEA" data-category="GI">{% trans "Nausea" %}</option>
+                            <!-- HEME Events -->
+                            <option value="NEUTROPENIA" data-category="HEME">{% trans "Neutropenia" %}</option>
+                            <option value="THROMBOCYTOPENIA" data-category="HEME">{% trans "Thrombocytopenia" %}</option>
+                            <option value="ANEMIA" data-category="HEME">{% trans "Anemia" %}</option>
+                            <!-- DERM Events -->
+                            <option value="ALOPECIA" data-category="DERM">{% trans "Alopecia" %}</option>
+                            <option value="DERMATITIS" data-category="DERM">{% trans "Dermatitis" %}</option>
+                            <!-- NEURO Events -->
+                            <option value="NEUROPATHY" data-category="NEURO">{% trans "Peripheral Neuropathy" %}</option>
+                            <option value="SEIZURE" data-category="NEURO">{% trans "Seizure" %}</option>
+                            <!-- CONST Events -->
+                            <option value="FATIGUE" data-category="CONST">{% trans "Fatigue/Lethargy" %}</option>
+                            <option value="FEVER" data-category="CONST">{% trans "Fever" %}</option>
+                            <option value="WEIGHT_LOSS" data-category="CONST">{% trans "Weight Loss" %}</option>
+                            <!-- OTHER -->
+                            <option value="OTHER" data-category="OTHER">{% trans "Other (specify in notes)" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Grade (1-5)" %}</label>
+                        <select name="grade" class="form-select" required>
+                            <option value="1">{% trans "Grade 1 - Mild" %}</option>
+                            <option value="2">{% trans "Grade 2 - Moderate" %}</option>
+                            <option value="3">{% trans "Grade 3 - Severe" %}</option>
+                            <option value="4">{% trans "Grade 4 - Life-threatening" %}</option>
+                            <option value="5">{% trans "Grade 5 - Death" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mb-3">
+                    <strong>{% trans "VCOG-CTCAE Grade Definitions:" %}</strong>
+                    <ul class="mb-0 small">
+                        <li><strong>{% trans "Grade 1" %}:</strong> {% trans "Mild; asymptomatic or mild symptoms; clinical or diagnostic observations only; intervention not indicated" %}</li>
+                        <li><strong>{% trans "Grade 2" %}:</strong> {% trans "Moderate; minimal, local or noninvasive intervention indicated; limiting age-appropriate instrumental ADL" %}</li>
+                        <li><strong>{% trans "Grade 3" %}:</strong> {% trans "Severe or medically significant but not immediately life-threatening; hospitalization or prolongation of hospitalization indicated" %}</li>
+                        <li><strong>{% trans "Grade 4" %}:</strong> {% trans "Life-threatening consequences; urgent intervention indicated" %}</li>
+                        <li><strong>{% trans "Grade 5" %}:</strong> {% trans "Death related to adverse event" %}</li>
+                    </ul>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Related Treatment" %}</label>
+                        <select name="related_treatment" class="form-select">
+                            <option value="">{% trans "None / Unknown" %}</option>
+                            {% for tx in treatments %}
+                            <option value="{{ tx.id }}">{{ tx.date }} - {{ tx.get_treatment_type_display }} {% if tx.agent %}({{ tx.agent }}){% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check mt-4">
+                            <input type="checkbox" class="form-check-input" name="resolved" id="resolved">
+                            <label class="form-check-label" for="resolved">{% trans "Event has resolved" %}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Notes" %}</label>
+                    <textarea name="notes" class="form-control" rows="2" placeholder="{% trans 'Additional observations, interventions taken...' %}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-100">{% trans "Record Adverse Event" %}</button>
+            </form>
+        </div>
+    </div>
+
+    {% if events %}
+    <div class="card">
+        <div class="card-header">{% trans "Event History" %}</div>
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Event" %}</th>
+                        <th>{% trans "Category" %}</th>
+                        <th>{% trans "Grade" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in events %}
+                    <tr class="{% if e.grade >= 3 %}table-danger{% elif e.grade == 2 %}table-warning{% endif %}">
+                        <td>{{ e.date }}</td>
+                        <td>{{ e.get_event_display }}</td>
+                        <td>{{ e.get_category_display }}</td>
+                        <td>
+                            <span class="badge bg-{% if e.grade >= 4 %}danger{% elif e.grade == 3 %}warning text-dark{% elif e.grade == 2 %}info{% else %}secondary{% endif %}">
+                                {% trans "Grade" %} {{ e.grade }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if e.resolved %}
+                            <span class="badge bg-success">{% trans "Resolved" %}</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">{% trans "Active" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card mt-4">
+        <div class="card-header bg-light">{% trans "Reference" %}</div>
+        <div class="card-body small">
+            <p class="mb-1"><strong>VCOG-CTCAE v2 Citation:</strong></p>
+            <p class="text-muted mb-0">
+                LeBlanc AK, et al. Veterinary Cooperative Oncology Group-Common Terminology Criteria for Adverse Events
+                (VCOG-CTCAE v2) following investigational therapy in dogs and cats.
+                <em>Vet Comp Oncol.</em> 2021;19(2):311-352.
+                <a href="https://doi.org/10.1111/vco.12677" target="_blank">doi:10.1111/vco.12677</a> |
+                PMID: <a href="https://pubmed.ncbi.nlm.nih.gov/33427378/" target="_blank">33427378</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter events by category
+document.getElementById('categorySelect').addEventListener('change', function() {
+    const category = this.value;
+    const eventSelect = document.getElementById('eventSelect');
+    const options = eventSelect.querySelectorAll('option[data-category]');
+
+    options.forEach(option => {
+        if (!category || option.dataset.category === category) {
+            option.style.display = '';
+        } else {
+            option.style.display = 'none';
+        }
+    });
+
+    // Reset event selection
+    eventSelect.value = '';
+});
+
+document.getElementById('eventForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+        if (key !== 'csrfmiddlewaretoken') {
+            if (key === 'resolved') {
+                data[key] = true;
+            } else if (key === 'grade' || key === 'related_treatment') {
+                data[key] = value ? parseInt(value) : null;
+            } else {
+                data[key] = value;
+            }
+        }
+    });
+
+    if (!data.hasOwnProperty('resolved')) {
+        data['resolved'] = false;
+    }
+
+    const response = await fetch('{% url "health:save_event" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('{% trans "Adverse event recorded!" %}');
+        location.reload();
+    } else {
+        alert('{% trans "Error saving event" %}');
+    }
+});
+</script>
+{% endblock %}

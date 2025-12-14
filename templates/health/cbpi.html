@@ -1,0 +1,155 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "CBPI Pain Assessment" %} - Bruno Health{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h2>{% trans "Canine Brief Pain Inventory (CBPI)" %}</h2>
+    <p class="text-muted">{% trans "Validated pain assessment for dogs with cancer" %}</p>
+
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">{% trans "New Assessment" %}</div>
+        <div class="card-body">
+            <form id="cbpiForm">
+                {% csrf_token %}
+
+                <h5>{% trans "Pain Severity" %} <small class="text-muted">(0 = {% trans "no pain" %}, 10 = {% trans "extreme pain" %})</small></h5>
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Worst pain in last 7 days" %}</label>
+                        <input type="range" class="form-range" name="worst_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Least pain in last 7 days" %}</label>
+                        <input type="range" class="form-range" name="least_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Average pain" %}</label>
+                        <input type="range" class="form-range" name="average_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Pain right now" %}</label>
+                        <input type="range" class="form-range" name="current_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                </div>
+
+                <h5>{% trans "Pain Interference" %} <small class="text-muted">(0 = {% trans "no interference" %}, 10 = {% trans "completely interferes" %})</small></h5>
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "General activity" %}</label>
+                        <input type="range" class="form-range" name="general_activity" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Enjoyment of life" %}</label>
+                        <input type="range" class="form-range" name="enjoyment_of_life" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Ability to rise" %}</label>
+                        <input type="range" class="form-range" name="ability_to_rise" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Ability to walk" %}</label>
+                        <input type="range" class="form-range" name="ability_to_walk" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Ability to run" %}</label>
+                        <input type="range" class="form-range" name="ability_to_run" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Ability to climb" %}</label>
+                        <input type="range" class="form-range" name="ability_to_climb" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
+                        <output>0</output>
+                    </div>
+                </div>
+
+                <h5>{% trans "Overall Quality of Life" %}</h5>
+                <div class="mb-3">
+                    <select name="overall_quality_of_life" class="form-select" required>
+                        <option value="">{% trans "Select..." %}</option>
+                        <option value="1">{% trans "Poor" %}</option>
+                        <option value="2">{% trans "Fair" %}</option>
+                        <option value="3">{% trans "Good" %}</option>
+                        <option value="4">{% trans "Very Good" %}</option>
+                        <option value="5">{% trans "Excellent" %}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Notes" %}</label>
+                    <textarea name="notes" class="form-control" rows="2"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-info w-100">{% trans "Save CBPI Assessment" %}</button>
+            </form>
+        </div>
+    </div>
+
+    {% if assessments %}
+    <div class="card">
+        <div class="card-header">{% trans "Assessment History" %}</div>
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Severity" %}</th>
+                        <th>{% trans "Interference" %}</th>
+                        <th>{% trans "QoL" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in assessments %}
+                    <tr>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.pain_severity_score }}</td>
+                        <td>{{ a.pain_interference_score }}</td>
+                        <td>{{ a.get_overall_quality_of_life_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('cbpiForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+        if (key !== 'csrfmiddlewaretoken') {
+            data[key] = key === 'notes' ? value : parseInt(value);
+        }
+    });
+
+    const response = await fetch('{% url "health:save_cbpi" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        const result = await response.json();
+        alert('{% trans "Saved!" %} PSS: ' + result.pain_severity_score + ', PIS: ' + result.pain_interference_score);
+        location.reload();
+    }
+});
+</script>
+{% endblock %}

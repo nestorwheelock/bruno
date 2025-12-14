@@ -1,0 +1,285 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "CORQ Assessment" %} - Bruno Health{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h2>{% trans "Canine Owner-Reported Quality of Life (CORQ)" %}</h2>
+    <p class="text-muted">{% trans "Validated quality of life questionnaire for dogs with cancer" %}</p>
+
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">{% trans "New Assessment" %}</div>
+        <div class="card-body">
+            <form id="corqForm">
+                {% csrf_token %}
+
+                <h5>{% trans "Vitality" %}</h5>
+                <div class="row mb-3">
+                    {% for field, label in vitality_fields %}
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{{ label }}</label>
+                        <select name="{{ field }}" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    {% empty %}
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Energy level" %}</label>
+                        <select name="energy_level" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Playfulness" %}</label>
+                        <select name="playfulness" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Interest in surroundings" %}</label>
+                        <select name="interest_in_surroundings" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Appetite" %}</label>
+                        <select name="appetite" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <h5>{% trans "Companionship" %}</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Seeks attention" %}</label>
+                        <select name="seeks_attention" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Enjoys interaction" %}</label>
+                        <select name="enjoys_interaction" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Greets family" %}</label>
+                        <select name="greets_family" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Tail wagging" %}</label>
+                        <select name="tail_wagging" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h5>{% trans "Pain Signs" %} <small class="text-muted">({% trans "lower = better" %})</small></h5>
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Shows pain" %}</label>
+                        <select name="shows_pain" class="form-select" required>
+                            <option value="1" selected>{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3">{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Vocalizes pain" %}</label>
+                        <select name="vocalizes_pain" class="form-select" required>
+                            <option value="1" selected>{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3">{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Avoids touch" %}</label>
+                        <select name="avoids_touch" class="form-select" required>
+                            <option value="1" selected>{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3">{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Pants/restless" %}</label>
+                        <select name="pants_restless" class="form-select" required>
+                            <option value="1" selected>{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3">{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h5>{% trans "Mobility" %}</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Walks normally" %}</label>
+                        <select name="walks_normally" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Rises easily" %}</label>
+                        <select name="rises_easily" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Climbs stairs" %}</label>
+                        <select name="climbs_stairs" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">{% trans "Jumps" %}</label>
+                        <select name="jumps" class="form-select" required>
+                            <option value="1">{% trans "Never" %}</option>
+                            <option value="2">{% trans "Rarely" %}</option>
+                            <option value="3" selected>{% trans "Sometimes" %}</option>
+                            <option value="4">{% trans "Often" %}</option>
+                            <option value="5">{% trans "Always" %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h5>{% trans "Global Quality of Life" %}</h5>
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Overall QoL (0-100)" %}</label>
+                    <input type="range" class="form-range" name="global_qol" min="0" max="100" value="50" oninput="this.nextElementSibling.value=this.value">
+                    <output>50</output>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{% trans "Notes" %}</label>
+                    <textarea name="notes" class="form-control" rows="2"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">{% trans "Save CORQ Assessment" %}</button>
+            </form>
+        </div>
+    </div>
+
+    {% if assessments %}
+    <div class="card">
+        <div class="card-header">{% trans "Assessment History" %}</div>
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Total" %}</th>
+                        <th>{% trans "Vitality" %}</th>
+                        <th>{% trans "Social" %}</th>
+                        <th>{% trans "Comfort" %}</th>
+                        <th>{% trans "Mobility" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in assessments %}
+                    <tr>
+                        <td>{{ a.date }}</td>
+                        <td><strong>{{ a.total_score }}</strong></td>
+                        <td>{{ a.vitality_score }}</td>
+                        <td>{{ a.companionship_score }}</td>
+                        <td>{{ a.pain_score }}</td>
+                        <td>{{ a.mobility_score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('corqForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+        if (key !== 'csrfmiddlewaretoken') {
+            data[key] = key === 'notes' ? value : parseInt(value);
+        }
+    });
+
+    const response = await fetch('{% url "health:save_corq" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        const result = await response.json();
+        alert('{% trans "Saved!" %} Total: ' + result.total_score + '/80');
+        location.reload();
+    }
+});
+</script>
+{% endblock %}
