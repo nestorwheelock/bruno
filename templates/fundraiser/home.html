@@ -515,6 +515,137 @@ h1, h2, h3 {
     transform: scale(1.05);
 }
 
+.accordion-container {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.accordion-toggle {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    border: none;
+    padding: 18px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.accordion-toggle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4);
+}
+
+.accordion-toggle.active {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #2980b9 100%);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.accordion-toggle.active:hover {
+    box-shadow: 0 6px 25px rgba(52, 152, 219, 0.4);
+}
+
+.accordion-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.accordion-toggle.active .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, padding 0.3s ease;
+    padding: 0;
+}
+
+.accordion-content.open {
+    max-height: 3000px;
+    padding-top: 40px;
+}
+
+.accordion-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+}
+
+.gallery-grid.expanded {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+}
+
+.gallery-grid.expanded img {
+    height: 200px;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.video-container {
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.video-caption {
+    padding: 15px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+@media (max-width: 992px) {
+    .gallery-grid.expanded {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-grid.expanded {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .accordion-toggle {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid.expanded {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid.expanded img {
+        height: 250px;
+    }
+}
+
 .cta {
     padding: 100px 0;
     background: var(--background-light);
@@ -724,6 +855,21 @@ function switchLanguage(lang) {
 
     window.location.href = newPath;
 }
+
+function toggleGallery() {
+    var content = document.getElementById('galleryAccordion');
+    var button = document.querySelector('.accordion-toggle');
+    var textSpan = button.querySelector('.accordion-text');
+
+    content.classList.toggle('open');
+    button.classList.toggle('active');
+
+    if (content.classList.contains('open')) {
+        textSpan.textContent = '{% trans "Show Less" %}';
+    } else {
+        textSpan.textContent = '{% trans "See More Photos & Videos" %}';
+    }
+}
 </script>
 
 <header class="hero">
@@ -864,6 +1010,47 @@ function switchLanguage(lang) {
                 <img src="{% static 'images/bruno2.jpg' %}" alt="{% trans 'Bruno relaxing' %}">
                 <img src="{% static 'images/bruno3.jpg' %}" alt="{% trans 'Bruno happy' %}">
                 <img src="{% static 'images/bruno4.jpg' %}" alt="{% trans 'Bruno with family' %}">
+            </div>
+
+            <div class="accordion-container">
+                <button class="accordion-toggle" onclick="toggleGallery()">
+                    <span class="accordion-text">{% trans "See More Photos & Videos" %}</span>
+                    <span class="accordion-icon">▼</span>
+                </button>
+
+                <div class="accordion-content" id="galleryAccordion">
+                    <h3>{% trans "More Moments with Bruno" %}</h3>
+                    <div class="gallery-grid expanded">
+                        <img src="{% static 'images/bruno7.jpg' %}" alt="{% trans 'Bruno cuddling with family' %}">
+                        <img src="{% static 'images/bruno11.jpg' %}" alt="{% trans 'Bruno and Tatum together' %}">
+                        <img src="{% static 'images/bruno9.jpg' %}" alt="{% trans 'Bruno and Tatum relaxing' %}">
+                        <img src="{% static 'images/bruno13.jpg' %}" alt="{% trans 'Bruno in the park' %}">
+                        <img src="{% static 'images/bruno5.jpg' %}" alt="{% trans 'Bruno in his house' %}">
+                        <img src="{% static 'images/bruno6.jpg' %}" alt="{% trans 'Bruno and Tatum on couch' %}">
+                        <img src="{% static 'images/bruno12.jpg' %}" alt="{% trans 'Bruno and Tatum recent' %}">
+                        <img src="{% static 'images/bruno14.jpg' %}" alt="{% trans 'Bruno napping' %}">
+                        <img src="{% static 'images/bruno8.jpg' %}" alt="{% trans 'Bruno resting peacefully' %}">
+                        <img src="{% static 'images/bruno10.jpg' %}" alt="{% trans 'Bruno and Tatum close' %}">
+                    </div>
+
+                    <h3>{% trans "Videos of Bruno" %}</h3>
+                    <div class="video-grid">
+                        <div class="video-container">
+                            <video controls playsinline poster="{% static 'images/bruno11.jpg' %}">
+                                <source src="{% static 'videos/bruno_play.mp4' %}" type="video/mp4">
+                                {% trans "Your browser does not support the video tag." %}
+                            </video>
+                            <p class="video-caption">{% trans "Bruno playing" %}</p>
+                        </div>
+                        <div class="video-container">
+                            <video controls playsinline poster="{% static 'images/bruno9.jpg' %}">
+                                <source src="{% static 'videos/bruno_tatum.mp4' %}" type="video/mp4">
+                                {% trans "Your browser does not support the video tag." %}
+                            </video>
+                            <p class="video-caption">{% trans "Bruno and Tatum" %}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

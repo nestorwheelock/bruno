@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Bruno Health 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"POT-Creation-Date: 2025-12-15 08:41-0500\n"
 "PO-Revision-Date: 2024-01-01 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
@@ -16,911 +16,2634 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Dashboard
-msgid "Dashboard"
-msgstr "Panel de Control"
-
-msgid "Quality of Life Dashboard"
-msgstr "Panel de Calidad de Vida"
-
-msgid "CORQ Total Score"
-msgstr "Puntuación Total CORQ"
-
-msgid "Last assessment"
-msgstr "Última evaluación"
-
-msgid "Pain Assessment (CBPI)"
-msgstr "Evaluación del Dolor (CBPI)"
-
-msgid "Pain Severity"
-msgstr "Severidad del Dolor"
-
-msgid "Interference"
-msgstr "Interferencia"
-
-msgid "QoL Rating"
-msgstr "Calificación de Calidad de Vida"
-
-msgid "No CBPI assessments yet"
+#: health/views.py:274
+#, fuzzy
+#| msgid "No CBPI assessments yet"
+msgid "No assessments yet"
 msgstr "Aún no hay evaluaciones CBPI"
 
-msgid "New CBPI Assessment"
-msgstr "Nueva Evaluación CBPI"
+#: health/views.py:279
+msgid "Good quality of life"
+msgstr "Buena calidad de vida"
 
-msgid "Quality of Life (CORQ)"
-msgstr "Calidad de Vida (CORQ)"
+#: health/views.py:282
+msgid "Fair - monitor closely"
+msgstr ""
 
-msgid "Vitality"
-msgstr "Vitalidad"
+#: health/views.py:285
+msgid "Declining - consult vet"
+msgstr ""
 
-msgid "Social"
-msgstr "Social"
+#: health/views.py:288
+msgid "Poor - urgent consultation needed"
+msgstr ""
 
-msgid "Comfort"
-msgstr "Comodidad"
+#: health/views.py:597
+msgid "Carbohydrate intake detected! Zero-carb target exceeded."
+msgstr ""
 
-msgid "Mobility"
-msgstr "Movilidad"
+#: health/views.py:599
+msgid "Calcium supplementation below target."
+msgstr ""
 
-msgid "Global QoL"
-msgstr "Calidad de Vida Global"
+#: health/views.py:601
+msgid "Omega-3 (EPA/DHA) supplementation below target."
+msgstr ""
 
-msgid "No CORQ assessments yet"
-msgstr "Aún no hay evaluaciones CORQ"
+#: health/views.py:603
+msgid "Daily multivitamin not logged yet."
+msgstr ""
 
-msgid "New CORQ Assessment"
-msgstr "Nueva Evaluación CORQ"
+#: health/views.py:873
+msgid "Scrambled Eggs + Chicken"
+msgstr ""
 
-msgid "Last 30 Days"
-msgstr "Últimos 30 Días"
+#: health/views.py:879
+msgid "Scramble eggs without oil. Chop pre-cooked chicken."
+msgstr ""
 
-msgid "Good"
-msgstr "Bueno"
+#: health/views.py:882
+msgid "Sardine Bowl"
+msgstr ""
 
-msgid "Mixed"
-msgstr "Mixto"
+#: health/views.py:889
+msgid "Mash sardines, chop egg, mix with warm broth."
+msgstr ""
 
-msgid "Bad"
-msgstr "Malo"
+#: health/views.py:894
+msgid "Ground Beef Mix"
+msgstr ""
 
-msgid "Total days tracked"
-msgstr "Total de días registrados"
+#: health/views.py:900
+msgid "Pan-cook beef until no pink. Add small amount of liver for nutrients."
+msgstr ""
 
-msgid "Daily Tracker"
-msgstr "Registro Diario"
+#: health/views.py:903
+msgid "Turkey & Egg"
+msgstr ""
 
-msgid "Daily Scores Trend"
-msgstr "Tendencia de Puntuaciones Diarias"
+#: health/views.py:909
+msgid "Cook turkey thoroughly. Mix with scrambled egg."
+msgstr ""
 
-msgid "Lymph Node Measurements"
-msgstr "Mediciones de Ganglios Linfáticos"
+#: health/views.py:914
+msgid "Salmon Dinner"
+msgstr ""
 
-msgid "Happiness Score"
-msgstr "Puntuación de Felicidad"
+#: health/views.py:920
+msgid "Excellent omega-3 source. Remove skin if watching fat."
+msgstr ""
 
-msgid "Overall Score"
-msgstr "Puntuación General"
+#: health/views.py:923
+msgid "Lamb & Chicken"
+msgstr ""
 
-msgid "Mandibular L"
-msgstr "Mandibular Izq"
+#: health/views.py:929
+msgid "Higher fat option good for maintaining weight."
+msgstr ""
 
-msgid "Mandibular R"
-msgstr "Mandibular Der"
+#: health/views.py:937
+msgid "Chicken breast/thigh"
+msgstr ""
 
-msgid "Popliteal L"
-msgstr "Poplíteo Izq"
+#: health/views.py:938
+msgid "Ground beef (lean)"
+msgstr ""
 
-msgid "Popliteal R"
-msgstr "Poplíteo Der"
+#: health/views.py:939 templates/health/food_database.html:312
+msgid "Eggs"
+msgstr ""
 
-msgid "Active Adverse Events (VCOG-CTCAE)"
-msgstr "Eventos Adversos Activos (VCOG-CTCAE)"
+#: health/views.py:940
+msgid "Sardines (canned)"
+msgstr ""
 
-msgid "No active adverse events"
-msgstr "Sin eventos adversos activos"
+#: health/views.py:941
+msgid "Salmon (fresh or canned)"
+msgstr ""
 
-msgid "Manage Events"
-msgstr "Gestionar Eventos"
+#: health/views.py:942
+msgid "Turkey (ground)"
+msgstr ""
 
-msgid "Recent Treatments"
-msgstr "Tratamientos Recientes"
+#: health/views.py:1037
+msgid "Record uploaded successfully"
+msgstr ""
 
-msgid "No recent treatments"
-msgstr "Sin tratamientos recientes"
+# Fundraiser Page
+#: templates/fundraiser/home.html:5 templates/fundraiser/home.html:878
+msgid "Help Bruno Fight Cancer"
+msgstr "Ayuda a Bruno a Luchar Contra él Cáncer"
 
-msgid "Manage Treatments"
-msgstr "Gestionar Tratamientos"
+#: templates/fundraiser/home.html:868
+msgid "Show Less"
+msgstr "Ver Menos"
 
-msgid "Quick Actions"
-msgstr "Acciones Rápidas"
+#: templates/fundraiser/home.html:870 templates/fundraiser/home.html:1017
+msgid "See More Photos & Videos"
+msgstr "Ver Más Fotos y Videos"
 
-msgid "Daily Entry"
-msgstr "Entrada Diaria"
+#: templates/fundraiser/home.html:879
+msgid "He doesn't know he's sick. He just knows he loves us."
+msgstr "El no sabe que está enfermo. Solo sabe que nos ama."
 
-msgid "CBPI"
-msgstr "CBPI"
+#: templates/fundraiser/home.html:881
+msgid "Donate Now"
+msgstr "Donar Ahora"
 
-msgid "CORQ"
-msgstr "CORQ"
+# Additional Fundraiser Page Translations
+#: templates/fundraiser/home.html:890
+msgid "Bruno, a loving 6-year-old dog"
+msgstr "Bruno, un amoroso perro de 6 años"
 
-msgid "Lymph Nodes"
-msgstr "Ganglios Linfáticos"
+#: templates/fundraiser/home.html:893
+msgid "Meet Bruno"
+msgstr "Conoce a Bruno"
+
+#: templates/fundraiser/home.html:894
+msgid "Six years of unconditional love."
+msgstr "Seis años de amor incondicional."
+
+#: templates/fundraiser/home.html:895
+msgid ""
+"Bruno and Tatum are inseparable. Where one goes, the other follows. He's not "
+"just a dog—he's a best friend, a protector, a constant source of comfort "
+"through every hard day and quiet night."
+msgstr ""
+"Bruno y Tatum son inseparables. Donde va uno, el otro lo sigue. No es sólo "
+"un perro—es un mejor amigo, un protector, una fuente constante de consuelo "
+"en cada día difícil y cada noche tranquila."
+
+#: templates/fundraiser/home.html:896
+msgid "Now Bruno has been diagnosed with"
+msgstr "Ahora a Bruno le han diagnosticado"
+
+#: templates/fundraiser/home.html:896
+msgid "lymphoma"
+msgstr "linfoma"
+
+#: templates/fundraiser/home.html:896
+msgid ""
+"He's still happy, still wagging his tail, still looking at us like nothing "
+"is wrong. That's what makes this so hard."
+msgstr ""
+"Sigue feliz, sigue meneando la cola, sigue mirándonos como si nada estuviera "
+"mal. Eso es lo que hace esto tan difícil."
+
+#: templates/fundraiser/home.html:903
+msgid "Bruno's Story"
+msgstr "La Historia de Bruno"
+
+#: templates/fundraiser/home.html:906
+msgid "Bruno with his family"
+msgstr "Bruno con su familia"
+
+#: templates/fundraiser/home.html:908
+msgid "He Still Greets Each Day with Joy"
+msgstr "Aún Recibe Cada Día con Alegría"
+
+#: templates/fundraiser/home.html:909
+msgid ""
+"Bruno doesn't know what lymphoma means. He just knows he wants to be close "
+"to us, to play, to rest his head in our laps. His spirit hasn't changed—and "
+"we're fighting to keep it that way for as long as we can."
+msgstr ""
+"Bruno no sabe que significa el linfoma. Solo sabe que quiere estar cerca de "
+"nosotros, jugar, descansar su cabeza en nuestro regazo. Su espíritu no ha "
+"cambiado—y estamos luchando para mantenerlo así el mayor tiempo posible."
+
+#: templates/fundraiser/home.html:913
+msgid "Bruno being playful"
+msgstr "Bruno jugando"
+
+#: templates/fundraiser/home.html:915
+msgid "We Can't Do This Alone"
+msgstr "No Podemos Hacerlo Solos"
+
+#: templates/fundraiser/home.html:916
+msgid ""
+"With only one income and no savings to fall back on, the cost of treatment "
+"feels impossible. We cancelled Christmas travel to stay by his side. We'd "
+"give anything for more time with him—but we need help to make it happen."
+msgstr ""
+"Con un sólo ingreso y sin ahorros en que apoyarnos, el costo del tratamiento "
+"parece imposible. Cancelamos nuestro viaje de Navidad para quedarnos a su "
+"lado. Daríamos cualquier cosa por más tiempo con el—pero necesitamos ayuda "
+"para que suceda."
+
+#: templates/fundraiser/home.html:926
+msgid "Every Day Counts"
+msgstr "Cada Día Cuenta"
+
+#: templates/fundraiser/home.html:928
+msgid "The sooner we start, the more good days we get to keep."
+msgstr "Cuanto antes comencemos, más días buenos podremos conservar."
+
+#: templates/fundraiser/home.html:930
+msgid ""
+"Lymphoma moves fast. Early treatment can slow the disease and give Bruno "
+"more time—more walks, more naps in the sun, more moments together. Your "
+"donation goes directly toward:"
+msgstr ""
+"El linfoma avanza rápido. El tratamiento temprano puede frenar la enfermedad "
+"y darle a Bruno más tiempo—mas paseos, más siestas al sol, más momentos "
+"juntos. Tu donación va directamente a:"
+
+#: templates/fundraiser/home.html:932
+msgid "Veterinary oncology visits"
+msgstr "Consultas de oncología veterinaria"
+
+#: templates/fundraiser/home.html:933
+msgid "Chemotherapy treatments"
+msgstr "Tratamientos de quimioterapia"
+
+#: templates/fundraiser/home.html:934
+msgid "Medications"
+msgstr "Medicamentos"
+
+#: templates/fundraiser/home.html:935
+msgid "Ongoing monitoring"
+msgstr "Monitoreo continuo"
+
+#: templates/fundraiser/home.html:936
+msgid "Transportation to frequent appointments"
+msgstr "Transporte a citas frecuentes"
+
+#: templates/fundraiser/home.html:944
+msgid "Why We Need to Act Now"
+msgstr "Por Que Necesitamos Actuar Ahora"
+
+#: templates/fundraiser/home.html:945
+msgid ""
+"Canine lymphoma is treatable, but time is critical. With chemotherapy, dogs "
+"can live significantly longer with a good quality of life."
+msgstr ""
+"El linfoma canino es tratable, pero el tiempo es crítico. Con quimioterapia, "
+"los perros pueden vivir significativamente más con buena calidad de vida."
+
+#: templates/fundraiser/home.html:948
+msgid "We've already lost precious time."
+msgstr "Ya hemos perdido tiempo valioso."
+
+#: templates/fundraiser/home.html:948
+msgid ""
+"It's been two weeks since we discovered Bruno's swollen lymph nodes—and "
+"they've tripled in size since then. The diagnostic testing had to be sent to "
+"Mexico City, which delayed the diagnosis. Every day without treatment, the "
+"cancer spreads."
+msgstr ""
+"Han pasado dos semanas desde que descubrimos los ganglios linfáticos "
+"inflamados de Bruno—y se han triplicado de tamaño desde entonces. Las "
+"pruebas diagnósticas tuvieron que enviarse a la Ciudad de México, lo que "
+"retrasó el diagnóstico. Cada día sin tratamiento, el cáncer se propaga."
+
+#: templates/fundraiser/home.html:953
+msgid "Without Treatment"
+msgstr "Sin Tratamiento"
+
+#: templates/fundraiser/home.html:954
+msgid "2-4 weeks"
+msgstr "2-4 semanas"
+
+#: templates/fundraiser/home.html:955
+msgid "Bruno could have as little as 2 weeks left without treatment"
+msgstr "A Bruno podrían quedarle tan sólo 2 semanas sin tratamiento"
+
+#: templates/fundraiser/home.html:958
+msgid "With CHOP Chemotherapy"
+msgstr "Con Quimioterapia CHOP"
+
+#: templates/fundraiser/home.html:959
+msgid "12-18 months"
+msgstr "12-18 meses"
+
+#: templates/fundraiser/home.html:960
+msgid "Expected survival for B-cell Stage IIIa lymphoma"
+msgstr "Supervivencia esperada para linfoma de células B etapa IIIa"
+
+#: templates/fundraiser/home.html:984
+msgid "of dogs respond positively to chemotherapy"
+msgstr "de los perros responden positivamente a la quimioterapia"
+
+#: templates/fundraiser/home.html:988
+msgid "achieve complete remission"
+msgstr "logran remisión completa"
+
+#: templates/fundraiser/home.html:992
+msgid "survive 2 years or longer"
+msgstr "sobreviven 2 años o más"
+
+#: templates/fundraiser/home.html:997
+msgid ""
+"Statistics from veterinary oncology research. Individual outcomes vary based "
+"on lymphoma type, stage, and timing of treatment."
+msgstr ""
+"Estadísticas de investigación en oncología veterinaria. Los resultados "
+"individuales varían según el tipo de linfoma, la etapa y el momento del "
+"tratamiento."
+
+#: templates/fundraiser/home.html:1007
+msgid "This Is Who We're Fighting For"
+msgstr "Por Quien Estamos Luchando"
+
+#: templates/fundraiser/home.html:1009
+msgid "Bruno portrait"
+msgstr "Retrato de Bruno"
+
+#: templates/fundraiser/home.html:1010
+msgid "Bruno relaxing"
+msgstr "Bruno descansando"
+
+#: templates/fundraiser/home.html:1011
+msgid "Bruno happy"
+msgstr "Bruno feliz"
+
+#: templates/fundraiser/home.html:1012
+#, fuzzy
+#| msgid "Bruno with his family"
+msgid "Bruno with family"
+msgstr "Bruno con su familia"
+
+#: templates/fundraiser/home.html:1022
+#, fuzzy
+#| msgid "Meet Bruno"
+msgid "More Moments with Bruno"
+msgstr "Conoce a Bruno"
+
+#: templates/fundraiser/home.html:1024
+#, fuzzy
+#| msgid "Bruno with his family"
+msgid "Bruno cuddling with family"
+msgstr "Bruno con su familia"
+
+#: templates/fundraiser/home.html:1025
+msgid "Bruno and Tatum together"
+msgstr ""
+
+#: templates/fundraiser/home.html:1026
+#, fuzzy
+#| msgid "Bruno relaxing"
+msgid "Bruno and Tatum relaxing"
+msgstr "Bruno descansando"
+
+#: templates/fundraiser/home.html:1027
+#, fuzzy
+#| msgid "Bruno being playful"
+msgid "Bruno in the park"
+msgstr "Bruno jugando"
+
+#: templates/fundraiser/home.html:1028
+#, fuzzy
+#| msgid "Bruno with his family"
+msgid "Bruno in his house"
+msgstr "Bruno con su familia"
+
+#: templates/fundraiser/home.html:1029
+msgid "Bruno and Tatum on couch"
+msgstr ""
+
+#: templates/fundraiser/home.html:1030
+msgid "Bruno and Tatum recent"
+msgstr ""
+
+#: templates/fundraiser/home.html:1031
+#, fuzzy
+#| msgid "Bruno happy"
+msgid "Bruno napping"
+msgstr "Bruno feliz"
+
+#: templates/fundraiser/home.html:1032
+#, fuzzy
+#| msgid "Bruno being playful"
+msgid "Bruno resting peacefully"
+msgstr "Bruno jugando"
+
+#: templates/fundraiser/home.html:1033
+msgid "Bruno and Tatum close"
+msgstr ""
+
+#: templates/fundraiser/home.html:1036
+msgid "Videos of Bruno"
+msgstr "Videos de Bruno"
+
+#: templates/fundraiser/home.html:1041 templates/fundraiser/home.html:1048
+msgid "Your browser does not support the video tag."
+msgstr ""
+
+#: templates/fundraiser/home.html:1043
+#, fuzzy
+#| msgid "Bruno relaxing"
+msgid "Bruno playing"
+msgstr "Bruno descansando"
+
+#: templates/fundraiser/home.html:1050
+msgid "Bruno and Tatum"
+msgstr "Bruno y Tatum"
+
+#: templates/fundraiser/home.html:1061
+msgid "Bruno looking hopeful"
+msgstr "Bruno con esperanza"
+
+#: templates/fundraiser/home.html:1063
+msgid "Help Us Keep Him a Little Longer"
+msgstr "Ayudanos a Mantenerlo un Poco Mas"
+
+#: templates/fundraiser/home.html:1064
+msgid ""
+"We're not ready to say goodbye. Bruno still has so much love to give, and we "
+"want to give him every chance to keep giving it."
+msgstr ""
+"No estamos listos para decir adios. Bruno todavia tiene mucho amor que dar, "
+"y queremos darle todas las oportunidades para seguir dandolo."
+
+#: templates/fundraiser/home.html:1065
+msgid ""
+"Any amount helps. If you can't donate, sharing his story means the world to "
+"us."
+msgstr ""
+"Cualquier cantidad ayuda. Si no puedes donar, compartir su historia "
+"significa mucho para nosotros."
+
+#: templates/fundraiser/home.html:1067
+msgid "Donate to Bruno's Treatment"
+msgstr "Donar al Tratamiento de Bruno"
+
+#: templates/fundraiser/home.html:1069
+msgid "Can't donate? Please share Bruno's story!"
+msgstr "No puedes donar? Por favor comparte la historia de Bruno!"
+
+#: templates/fundraiser/home.html:1071
+msgid "Share on Facebook"
+msgstr "Compartir en Facebook"
+
+#: templates/fundraiser/home.html:1072
+msgid "Share on X"
+msgstr "Compartir en X"
+
+#: templates/fundraiser/home.html:1082
+msgid ""
+"Thank you for caring about Bruno. Every donation and share brings us closer "
+"to giving him more good days."
+msgstr ""
+"Gracias por preocuparte por Bruno. Cada donación y cada compartida nos "
+"acerca a darle más días buenos."
+
+#: templates/fundraiser/home.html:1085
+msgid "Donate on GoFundMe"
+msgstr "Donar en GoFundMe"
 
 # CBPI Assessment
+#: templates/health/cbpi.html:4
 msgid "CBPI Pain Assessment"
 msgstr "Evaluación de Dolor CBPI"
 
+#: templates/health/cbpi.html:62
 msgid "Canine Brief Pain Inventory (CBPI)"
 msgstr "Inventario Breve de Dolor Canino (CBPI)"
 
+#: templates/health/cbpi.html:63
 msgid "Validated pain assessment for dogs with cancer"
 msgstr "Evaluación validada de dolor para perros con cáncer"
 
+#: templates/health/cbpi.html:66 templates/health/corq.html:62
 msgid "New Assessment"
 msgstr "Nueva Evaluación"
 
+#: templates/health/cbpi.html:71 templates/health/dashboard.html:87
+msgid "Pain Severity"
+msgstr "Severidad del Dolor"
+
+#: templates/health/cbpi.html:73
 msgid "no pain"
 msgstr "sin dolor"
 
+#: templates/health/cbpi.html:74
 msgid "extreme pain"
 msgstr "dolor extremo"
 
+#: templates/health/cbpi.html:86
 msgid "Worst pain in last 7 days"
 msgstr "Peor dolor en los últimos 7 días"
 
+#: templates/health/cbpi.html:90
 msgid "Least pain in last 7 days"
 msgstr "Menor dolor en los últimos 7 días"
 
+#: templates/health/cbpi.html:94
 msgid "Average pain"
 msgstr "Dolor promedio"
 
+#: templates/health/cbpi.html:98
 msgid "Pain right now"
 msgstr "Dolor en este momento"
 
+#: templates/health/cbpi.html:105
 msgid "Pain Interference"
 msgstr "Interferencia del Dolor"
 
+#: templates/health/cbpi.html:107
 msgid "no interference"
 msgstr "sin interferencia"
 
+#: templates/health/cbpi.html:108
 msgid "completely interferes"
 msgstr "interfiere completamente"
 
+#: templates/health/cbpi.html:120
 msgid "General activity"
 msgstr "Actividad general"
 
+#: templates/health/cbpi.html:124
 msgid "Enjoyment of life"
 msgstr "Disfrute de la vida"
 
+#: templates/health/cbpi.html:128
 msgid "Ability to rise"
 msgstr "Capacidad para levantarse"
 
+#: templates/health/cbpi.html:132
 msgid "Ability to walk"
 msgstr "Capacidad para caminar"
 
+#: templates/health/cbpi.html:136
 msgid "Ability to run"
 msgstr "Capacidad para correr"
 
+#: templates/health/cbpi.html:140
 msgid "Ability to climb"
 msgstr "Capacidad para subir"
 
+#: templates/health/cbpi.html:147
 msgid "Overall Quality of Life"
 msgstr "Calidad de Vida General"
 
-msgid "Select..."
-msgstr "Seleccionar..."
-
+#: templates/health/cbpi.html:153 templates/health/nutrition.html:503
 msgid "Poor"
 msgstr "Pobre"
 
+#: templates/health/cbpi.html:154 templates/health/nutrition.html:502
 msgid "Fair"
 msgstr "Regular"
 
+#: templates/health/cbpi.html:155 templates/health/dashboard.html:156
+#: templates/health/nutrition.html:501
+msgid "Good"
+msgstr "Bueno"
+
+#: templates/health/cbpi.html:156
 msgid "Very Good"
 msgstr "Muy Bueno"
 
+#: templates/health/cbpi.html:157 templates/health/nutrition.html:500
 msgid "Excellent"
 msgstr "Excelente"
 
+#: templates/health/cbpi.html:162
+#, fuzzy
+#| msgid "Quality of Life (CORQ)"
+msgid "Quality of Life"
+msgstr "Calidad de Vida (CORQ)"
+
+#: templates/health/cbpi.html:174 templates/health/corq.html:235
+#: templates/health/events.html:186 templates/health/nutrition.html:537
+#: templates/health/record_detail.html:264
+#: templates/health/record_edit.html:127 templates/health/records.html:190
+#: templates/health/tracker.html:350 templates/health/treatments.html:108
 msgid "Notes"
 msgstr "Notas"
 
+#: templates/health/cbpi.html:178
 msgid "Save CBPI Assessment"
 msgstr "Guardar Evaluación CBPI"
 
+#: templates/health/cbpi.html:185 templates/health/corq.html:246
 msgid "Assessment History"
 msgstr "Historial de Evaluaciones"
 
+#: templates/health/cbpi.html:190 templates/health/corq.html:251
+#: templates/health/events.html:79 templates/health/events.html:202
+#: templates/health/record_edit.html:87 templates/health/records.html:156
+#: templates/health/treatments.html:19 templates/health/treatments.html:124
 msgid "Date"
 msgstr "Fecha"
 
+#: templates/health/cbpi.html:191
 msgid "Severity"
 msgstr "Severidad"
 
+#: templates/health/cbpi.html:192 templates/health/dashboard.html:91
+msgid "Interference"
+msgstr "Interferencia"
+
+#: templates/health/cbpi.html:193
 msgid "QoL"
 msgstr "CdV"
 
+#: templates/health/cbpi.html:236 templates/health/corq.html:301
 msgid "Saved!"
 msgstr "Guardado!"
 
 # CORQ Assessment
+#: templates/health/corq.html:4
 msgid "CORQ Assessment"
 msgstr "Evaluación CORQ"
 
+#: templates/health/corq.html:58
 msgid "Canine Owner-Reported Quality of Life (CORQ)"
 msgstr "Calidad de Vida Reportada por el Dueño (CORQ)"
 
+#: templates/health/corq.html:59
 msgid "Validated quality of life questionnaire for dogs with cancer"
 msgstr "Cuestionario validado de calidad de vida para perros con cáncer"
 
+#: templates/health/corq.html:72
 msgid "Never"
 msgstr "Nunca"
 
+#: templates/health/corq.html:73
 msgid "Rarely"
 msgstr "Raramente"
 
+#: templates/health/corq.html:74
 msgid "Sometimes"
 msgstr "A veces"
 
+#: templates/health/corq.html:75
 msgid "Often"
 msgstr "Frecuentemente"
 
+#: templates/health/corq.html:76
 msgid "Always"
 msgstr "Siempre"
 
+#: templates/health/corq.html:81 templates/health/corq.html:253
+#: templates/health/dashboard.html:118
+msgid "Vitality"
+msgstr "Vitalidad"
+
+#: templates/health/corq.html:84
 msgid "Energy level"
 msgstr "Nivel de energía"
 
+#: templates/health/corq.html:92
 msgid "Playfulness"
 msgstr "Juguetón"
 
+#: templates/health/corq.html:100
 msgid "Interest in surroundings"
 msgstr "Interes en el entorno"
 
+#: templates/health/corq.html:108 templates/health/nutrition.html:441
+#: templates/health/nutrition.html:497 templates/health/tracker.html:172
 msgid "Appetite"
 msgstr "Apetito"
 
+#: templates/health/corq.html:117
 msgid "Companionship"
 msgstr "Compañía"
 
+#: templates/health/corq.html:120
 msgid "Seeks attention"
 msgstr "Busca atención"
 
+#: templates/health/corq.html:128
 msgid "Enjoys interaction"
 msgstr "Disfruta la interacción"
 
+#: templates/health/corq.html:136
 msgid "Greets family"
 msgstr "Saluda a la familia"
 
+#: templates/health/corq.html:144
 msgid "Tail wagging"
 msgstr "Movimiento de cola"
 
+#: templates/health/corq.html:153 templates/health/tracker.html:319
 msgid "Pain Signs"
 msgstr "Signos de Dolor"
 
+#: templates/health/corq.html:153
 msgid "lower = better"
 msgstr "menor = mejor"
 
+#: templates/health/corq.html:156
 msgid "Shows pain"
 msgstr "Muestra dolor"
 
+#: templates/health/corq.html:164
 msgid "Vocalizes pain"
 msgstr "Vocaliza dolor"
 
+#: templates/health/corq.html:172
 msgid "Avoids touch"
 msgstr "Evita el contacto"
 
+#: templates/health/corq.html:180
 msgid "Pants/restless"
 msgstr "Jadea/inquieto"
 
+#: templates/health/corq.html:189 templates/health/corq.html:256
+#: templates/health/dashboard.html:130
+msgid "Mobility"
+msgstr "Movilidad"
+
+#: templates/health/corq.html:192
 msgid "Walks normally"
 msgstr "Camina normalmente"
 
+#: templates/health/corq.html:200
 msgid "Rises easily"
 msgstr "Se levanta fácilmente"
 
+#: templates/health/corq.html:208
 msgid "Climbs stairs"
 msgstr "Sube escaleras"
 
+#: templates/health/corq.html:216
 msgid "Jumps"
 msgstr "Salta"
 
+#: templates/health/corq.html:227
 msgid "Global Quality of Life"
 msgstr "Calidad de Vida Global"
 
+#: templates/health/corq.html:229
 msgid "Overall QoL (0-100)"
 msgstr "CdV General (0-100)"
 
+#: templates/health/corq.html:239
 msgid "Save CORQ Assessment"
 msgstr "Guardar Evaluación CORQ"
 
+#: templates/health/corq.html:252
 msgid "Total"
 msgstr "Total"
 
+#: templates/health/corq.html:254 templates/health/dashboard.html:122
+msgid "Social"
+msgstr "Social"
+
+#: templates/health/corq.html:255 templates/health/dashboard.html:126
+msgid "Comfort"
+msgstr "Comodidad"
+
+# Dashboard
+#: templates/health/dashboard.html:4
+msgid "Dashboard"
+msgstr "Panel de Control"
+
+#: templates/health/dashboard.html:55
+msgid "Quality of Life Dashboard"
+msgstr "Panel de Calidad de Vida"
+
+#: templates/health/dashboard.html:69
+msgid "CORQ Total Score"
+msgstr "Puntuación Total CORQ"
+
+#: templates/health/dashboard.html:70
+msgid "Last assessment"
+msgstr "Última evaluación"
+
+#: templates/health/dashboard.html:80
+msgid "Pain Assessment (CBPI)"
+msgstr "Evaluación del Dolor (CBPI)"
+
+#: templates/health/dashboard.html:96
+msgid "QoL Rating"
+msgstr "Calificación de Calidad de Vida"
+
+#: templates/health/dashboard.html:100
+msgid "No CBPI assessments yet"
+msgstr "Aún no hay evaluaciones CBPI"
+
+#: templates/health/dashboard.html:102
+msgid "New CBPI Assessment"
+msgstr "Nueva Evaluación CBPI"
+
+#: templates/health/dashboard.html:111
+msgid "Quality of Life (CORQ)"
+msgstr "Calidad de Vida (CORQ)"
+
+#: templates/health/dashboard.html:135
+msgid "Global QoL"
+msgstr "Calidad de Vida Global"
+
+#: templates/health/dashboard.html:139
+msgid "No CORQ assessments yet"
+msgstr "Aún no hay evaluaciones CORQ"
+
+#: templates/health/dashboard.html:141
+msgid "New CORQ Assessment"
+msgstr "Nueva Evaluación CORQ"
+
+#: templates/health/dashboard.html:150
+msgid "Last 30 Days"
+msgstr "Últimos 30 Días"
+
+#: templates/health/dashboard.html:160 templates/health/tracker.html:76
+msgid "Mixed"
+msgstr "Mixto"
+
+#: templates/health/dashboard.html:164
+msgid "Bad"
+msgstr "Malo"
+
+#: templates/health/dashboard.html:168
+msgid "Total days tracked"
+msgstr "Total de días registrados"
+
+#: templates/health/dashboard.html:169
+msgid "Daily Tracker"
+msgstr "Registro Diario"
+
+#: templates/health/dashboard.html:179
+msgid "Daily Scores Trend"
+msgstr "Tendencia de Puntuaciones Diarias"
+
+#: templates/health/dashboard.html:189
+msgid "Lymph Node Measurements"
+msgstr "Mediciones de Ganglios Linfáticos"
+
+#: templates/health/dashboard.html:204
+msgid "Active Adverse Events (VCOG-CTCAE)"
+msgstr "Eventos Adversos Activos (VCOG-CTCAE)"
+
+#: templates/health/dashboard.html:220
+msgid "No active adverse events"
+msgstr "Sin eventos adversos activos"
+
+#: templates/health/dashboard.html:222
+msgid "Manage Events"
+msgstr "Gestionar Eventos"
+
+#: templates/health/dashboard.html:229
+msgid "Recent Treatments"
+msgstr "Tratamientos Recientes"
+
+#: templates/health/dashboard.html:244
+msgid "No recent treatments"
+msgstr "Sin tratamientos recientes"
+
+#: templates/health/dashboard.html:246
+msgid "Manage Treatments"
+msgstr "Gestionar Tratamientos"
+
+#: templates/health/dashboard.html:256
+msgid "Quick Actions"
+msgstr "Acciones Rápidas"
+
+#: templates/health/dashboard.html:260
+msgid "Daily Entry"
+msgstr "Entrada Diaria"
+
+#: templates/health/dashboard.html:263
+msgid "CBPI"
+msgstr "CBPI"
+
+#: templates/health/dashboard.html:266
+msgid "CORQ"
+msgstr "CORQ"
+
+#: templates/health/dashboard.html:269
+msgid "Lymph Nodes"
+msgstr "Ganglios Linfáticos"
+
+#: templates/health/dashboard.html:293
+msgid "Happiness Score"
+msgstr "Puntuación de Felicidad"
+
+#: templates/health/dashboard.html:300
+msgid "Overall Score"
+msgstr "Puntuación General"
+
+#: templates/health/dashboard.html:329
+msgid "Mandibular L"
+msgstr "Mandibular Izq"
+
+#: templates/health/dashboard.html:334
+msgid "Mandibular R"
+msgstr "Mandibular Der"
+
+#: templates/health/dashboard.html:339
+msgid "Popliteal L"
+msgstr "Poplíteo Izq"
+
+#: templates/health/dashboard.html:344
+msgid "Popliteal R"
+msgstr "Poplíteo Der"
+
 # Adverse Events
+#: templates/health/events.html:4
 msgid "Adverse Events"
 msgstr "Eventos Adversos"
 
+#: templates/health/events.html:68
 msgid "VCOG-CTCAE Adverse Events"
 msgstr "Eventos Adversos VCOG-CTCAE"
 
-msgid "Veterinary Cooperative Oncology Group - Common Terminology Criteria for Adverse Events v2"
-msgstr "Grupo de Oncología Veterinaria Cooperativa - Criterios de Terminología Común para Eventos Adversos v2"
+#: templates/health/events.html:69
+msgid ""
+"Veterinary Cooperative Oncology Group - Common Terminology Criteria for "
+"Adverse Events v2"
+msgstr ""
+"Grupo de Oncología Veterinaria Cooperativa - Criterios de Terminología Común "
+"para Eventos Adversos v2"
 
+#: templates/health/events.html:72
 msgid "Record New Adverse Event"
 msgstr "Registrar Nuevo Evento Adverso"
 
+#: templates/health/events.html:83 templates/health/events.html:204
 msgid "Category"
 msgstr "Categoría"
 
+#: templates/health/events.html:85
 msgid "Select category..."
 msgstr "Seleccionar categoría..."
 
+#: templates/health/events.html:86
 msgid "Gastrointestinal"
 msgstr "Gastrointestinal"
 
+#: templates/health/events.html:87
 msgid "Hematologic"
 msgstr "Hematológico"
 
+#: templates/health/events.html:88
 msgid "Dermatologic"
 msgstr "Dermatológico"
 
+#: templates/health/events.html:89
 msgid "Neurologic"
 msgstr "Neurológico"
 
+#: templates/health/events.html:90
 msgid "Respiratory"
 msgstr "Respiratorio"
 
+#: templates/health/events.html:91
 msgid "Cardiovascular"
 msgstr "Cardiovascular"
 
+#: templates/health/events.html:92
 msgid "Renal/Urinary"
 msgstr "Renal/Urinario"
 
+#: templates/health/events.html:93
 msgid "Hepatobiliary"
 msgstr "Hepatobiliar"
 
+#: templates/health/events.html:94
 msgid "Constitutional"
 msgstr "Constitucional"
 
+#: templates/health/events.html:95 templates/health/treatments.html:31
 msgid "Other"
 msgstr "Otro"
 
+#: templates/health/events.html:102 templates/health/events.html:203
 msgid "Event"
 msgstr "Evento"
 
+#: templates/health/events.html:104
 msgid "Select event..."
 msgstr "Seleccionar evento..."
 
+#: templates/health/events.html:106
 msgid "Anorexia"
 msgstr "Anorexia"
 
+#: templates/health/events.html:107
 msgid "Vomiting"
 msgstr "Vómito"
 
+#: templates/health/events.html:108
 msgid "Diarrhea"
 msgstr "Diarrea"
 
+#: templates/health/events.html:109
 msgid "Constipation"
 msgstr "Estreñimiento"
 
+#: templates/health/events.html:110
 msgid "Nausea"
 msgstr "Náuseas"
 
+#: templates/health/events.html:112
 msgid "Neutropenia"
 msgstr "Neutropenia"
 
+#: templates/health/events.html:113
 msgid "Thrombocytopenia"
 msgstr "Trombocitopenia"
 
+#: templates/health/events.html:114
 msgid "Anemia"
 msgstr "Anemia"
 
+#: templates/health/events.html:116
 msgid "Alopecia"
 msgstr "Alopecia"
 
+#: templates/health/events.html:117
 msgid "Dermatitis"
 msgstr "Dermatitis"
 
+#: templates/health/events.html:119
 msgid "Peripheral Neuropathy"
 msgstr "Neuropatía Periférica"
 
+#: templates/health/events.html:120
 msgid "Seizure"
 msgstr "Convulsión"
 
+#: templates/health/events.html:122
 msgid "Fatigue/Lethargy"
 msgstr "Fatiga/Letargo"
 
+#: templates/health/events.html:123
 msgid "Fever"
 msgstr "Fiebre"
 
+#: templates/health/events.html:124
 msgid "Weight Loss"
 msgstr "Pérdida de Peso"
 
+#: templates/health/events.html:126 templates/health/treatments.html:56
 msgid "Other (specify in notes)"
 msgstr "Otro (especificar en notas)"
 
+#: templates/health/events.html:130
 msgid "Grade (1-5)"
 msgstr "Grado (1-5)"
 
-msgid "Grade 1 - Mild"
-msgstr "Grado 1 - Leve"
+#: templates/health/events.html:134
+msgid "Mild"
+msgstr ""
 
-msgid "Grade 2 - Moderate"
+#: templates/health/events.html:138
+#, fuzzy
+#| msgid "Grade 2 - Moderate"
+msgid "Moderate"
 msgstr "Grado 2 - Moderado"
 
-msgid "Grade 3 - Severe"
-msgstr "Grado 3 - Severo"
+#: templates/health/events.html:142
+#, fuzzy
+#| msgid "Never"
+msgid "Severe"
+msgstr "Nunca"
 
-msgid "Grade 4 - Life-threatening"
-msgstr "Grado 4 - Potencialmente mortal"
+#: templates/health/events.html:146
+msgid "Life-threat"
+msgstr ""
 
-msgid "Grade 5 - Death"
-msgstr "Grado 5 - Muerte"
+#: templates/health/events.html:150
+msgid "Death"
+msgstr ""
 
+#: templates/health/events.html:157
 msgid "VCOG-CTCAE Grade Definitions:"
 msgstr "Definiciones de Grado VCOG-CTCAE:"
 
+#: templates/health/events.html:159
 msgid "Grade 1"
 msgstr "Grado 1"
 
+#: templates/health/events.html:159
+msgid ""
+"Mild; asymptomatic or mild symptoms; clinical or diagnostic observations "
+"only; intervention not indicated"
+msgstr ""
+"Leve; asintomático o síntomas leves; sólo observaciones clínicas o "
+"diagnósticas; intervención no indicada"
+
+#: templates/health/events.html:160
 msgid "Grade 2"
 msgstr "Grado 2"
 
+#: templates/health/events.html:160
+msgid ""
+"Moderate; minimal, local or noninvasive intervention indicated; limiting age-"
+"appropriate instrumental ADL"
+msgstr ""
+"Moderado; intervención mínima, local o no invasiva indicada; limitando AVD "
+"instrumentales apropiadas para la edad"
+
+#: templates/health/events.html:161
 msgid "Grade 3"
 msgstr "Grado 3"
 
+#: templates/health/events.html:161
+msgid ""
+"Severe or medically significant but not immediately life-threatening; "
+"hospitalization or prolongation of hospitalization indicated"
+msgstr ""
+"Severo o médicamente significativo pero no inmediatamente mortal; "
+"hospitalización o prolongación de hospitalización indicada"
+
+#: templates/health/events.html:162
 msgid "Grade 4"
 msgstr "Grado 4"
 
-msgid "Grade 5"
-msgstr "Grado 5"
-
-msgid "Mild; asymptomatic or mild symptoms; clinical or diagnostic observations only; intervention not indicated"
-msgstr "Leve; asintomático o síntomas leves; sólo observaciones clínicas o diagnósticas; intervención no indicada"
-
-msgid "Moderate; minimal, local or noninvasive intervention indicated; limiting age-appropriate instrumental ADL"
-msgstr "Moderado; intervención mínima, local o no invasiva indicada; limitando AVD instrumentales apropiadas para la edad"
-
-msgid "Severe or medically significant but not immediately life-threatening; hospitalization or prolongation of hospitalization indicated"
-msgstr "Severo o médicamente significativo pero no inmediatamente mortal; hospitalización o prolongación de hospitalización indicada"
-
+#: templates/health/events.html:162
 msgid "Life-threatening consequences; urgent intervention indicated"
 msgstr "Consecuencias potencialmente mortales; intervención urgente indicada"
 
+#: templates/health/events.html:163
+msgid "Grade 5"
+msgstr "Grado 5"
+
+#: templates/health/events.html:163
 msgid "Death related to adverse event"
 msgstr "Muerte relacionada con evento adverso"
 
+#: templates/health/events.html:169
 msgid "Related Treatment"
 msgstr "Tratamiento Relacionado"
 
+#: templates/health/events.html:171
 msgid "None / Unknown"
 msgstr "Ninguno / Desconocido"
 
+#: templates/health/events.html:180
 msgid "Event has resolved"
 msgstr "El evento se ha resuelto"
 
+#: templates/health/events.html:187
 msgid "Additional observations, interventions taken..."
 msgstr "Observaciones adicionales, intervenciones tomadas..."
 
+#: templates/health/events.html:190
 msgid "Record Adverse Event"
 msgstr "Registrar Evento Adverso"
 
+#: templates/health/events.html:197
 msgid "Event History"
 msgstr "Historial de Eventos"
 
+#: templates/health/events.html:205 templates/health/events.html:217
 msgid "Grade"
 msgstr "Grado"
 
+#: templates/health/events.html:206
 msgid "Status"
 msgstr "Estado"
 
+#: templates/health/events.html:222
 msgid "Resolved"
 msgstr "Resuelto"
 
+#: templates/health/events.html:224
 msgid "Active"
 msgstr "Activo"
 
+#: templates/health/events.html:236 templates/health/record_detail.html:217
 msgid "Reference"
 msgstr "Referencia"
 
+#: templates/health/events.html:301
 msgid "Adverse event recorded!"
 msgstr "Evento adverso registrado!"
 
+#: templates/health/events.html:304
 msgid "Error saving event"
 msgstr "Error al guardar evento"
 
-# Treatments
-msgid "Treatment Sessions"
-msgstr "Sesiones de Tratamiento"
+#: templates/health/food_database.html:4
+#: templates/health/food_database.html:243
+#: templates/health/meal_planning.html:349 templates/health/nutrition.html:321
+msgid "Food Database"
+msgstr ""
 
-msgid "Track chemotherapy, radiation, and other cancer treatments"
-msgstr "Registrar quimioterapia, radiación y otros tratamientos contra el cáncer"
+#: templates/health/food_database.html:242
+#: templates/health/meal_planning.html:348 templates/health/nutrition.html:320
+#, fuzzy
+#| msgid "Daily Entry"
+msgid "Daily Log"
+msgstr "Entrada Diaria"
 
-msgid "Record New Treatment"
-msgstr "Registrar Nuevo Tratamiento"
+#: templates/health/food_database.html:244
+#: templates/health/meal_planning.html:4
+#: templates/health/meal_planning.html:350 templates/health/nutrition.html:322
+msgid "Meal Planning"
+msgstr ""
 
-msgid "Treatment Type"
-msgstr "Tipo de Tratamiento"
+#: templates/health/food_database.html:248
+msgid "Cancer-Supportive Food Database"
+msgstr ""
 
-msgid "Select type..."
-msgstr "Seleccionar tipo..."
+#: templates/health/food_database.html:249
+msgid "Zero-carbohydrate nutrition protocol for canine lymphoma"
+msgstr ""
 
-msgid "Chemotherapy"
-msgstr "Quimioterapia"
+#: templates/health/food_database.html:252
+msgid "All"
+msgstr ""
 
-msgid "Radiation Therapy"
-msgstr "Radioterapia"
+#: templates/health/food_database.html:253
+#: templates/health/food_database.html:332
+msgid "Approved"
+msgstr ""
 
-msgid "Surgery"
-msgstr "Cirugía"
+#: templates/health/food_database.html:254
+#: templates/health/food_database.html:338
+msgid "Limited"
+msgstr ""
 
-msgid "Immunotherapy"
-msgstr "Inmunoterapia"
+#: templates/health/food_database.html:255
+#: templates/health/food_database.html:344
+msgid "Avoid"
+msgstr ""
 
-msgid "Palliative Care"
-msgstr "Cuidados Paliativos"
+#: templates/health/food_database.html:256
+#: templates/health/food_database.html:350
+msgid "Blocked"
+msgstr ""
 
-msgid "Chemotherapy Agent"
-msgstr "Agente de Quimioterapia"
+#: templates/health/food_database.html:273
+msgid "kcal"
+msgstr ""
 
-msgid "Select agent..."
-msgstr "Seleccionar agente..."
+#: templates/health/food_database.html:277 templates/health/nutrition.html:366
+msgid "Protein"
+msgstr ""
 
-msgid "Common Lymphoma Protocols"
-msgstr "Protocolos Comunes de Linfoma"
+#: templates/health/food_database.html:281 templates/health/nutrition.html:376
+msgid "Fat"
+msgstr ""
 
-msgid "Combination Protocols"
-msgstr "Protocolos Combinados"
+#: templates/health/food_database.html:285
+msgid "Carbs"
+msgstr ""
 
-msgid "Dose"
-msgstr "Dosis"
+#: templates/health/food_database.html:292
+msgid "Omega-3"
+msgstr ""
 
-msgid "Cycle Number"
-msgstr "Número de Ciclo"
+#: templates/health/food_database.html:292
+msgid "per 100g"
+msgstr ""
 
-msgid "Location/Clinic"
-msgstr "Ubicación/Clínica"
+#: templates/health/food_database.html:308
+msgid "Food Preparation Guidelines"
+msgstr ""
 
-msgid "Veterinary clinic name"
-msgstr "Nombre de la clínica veterinaria"
+#: templates/health/food_database.html:310
+msgid "Chicken/Turkey"
+msgstr ""
 
-msgid "Administering Veterinarian"
-msgstr "Veterinario que Administra"
+#: templates/health/food_database.html:310
+msgid ""
+"Boil boneless parts until fully cooked. Save broth (no salt) as appetite "
+"enhancer. Remove skin if dog has pancreatitis history."
+msgstr ""
 
-msgid "Dr. Name"
-msgstr "Dr. Nombre"
+#: templates/health/food_database.html:311
+msgid "Ground Beef/Lamb"
+msgstr ""
 
-msgid "Pre-treatment Weight (kg)"
-msgstr "Peso Pre-tratamiento (kg)"
+#: templates/health/food_database.html:311
+msgid ""
+"Pan-cook until no pink remains. Drain excess fat for leaner dogs, keep fat "
+"for underweight dogs."
+msgstr ""
 
-msgid "Response Assessment"
-msgstr "Evaluación de Respuesta"
+#: templates/health/food_database.html:312
+msgid ""
+"Scramble without oil/butter, or hard-boil. Limit 2-3 per day max. Save "
+"shells for calcium."
+msgstr ""
 
-msgid "Not assessed"
-msgstr "No evaluado"
+#: templates/health/food_database.html:313
+msgid "Sardines/Salmon"
+msgstr ""
 
-msgid "CR - Complete Response"
-msgstr "RC - Respuesta Completa"
+#: templates/health/food_database.html:313
+msgid ""
+"Use water-packed canned without added salt. Fresh fish should be fully "
+"cooked."
+msgstr ""
 
-msgid "PR - Partial Response"
-msgstr "RP - Respuesta Parcial"
+#: templates/health/food_database.html:314
+msgid "Liver"
+msgstr ""
 
-msgid "SD - Stable Disease"
-msgstr "EE - Enfermedad Estable"
+#: templates/health/food_database.html:314
+msgid "Boil or pan-cook. Limit to 1-2 servings/week due to vitamin A content."
+msgstr ""
 
-msgid "PD - Progressive Disease"
-msgstr "EP - Enfermedad Progresiva"
+#: templates/health/food_database.html:319
+msgid "Homemade Supplement Preparation"
+msgstr ""
 
-msgid "VCOG Response Evaluation Criteria:"
-msgstr "Criterios de Evaluación de Respuesta VCOG:"
+#: templates/health/food_database.html:321
+#: templates/health/meal_planning.html:585
+msgid "Eggshell Calcium"
+msgstr ""
 
-msgid "Disappearance of all target lesions"
-msgstr "Desaparición de todas las lesiones objetivo"
+#: templates/health/food_database.html:321
+msgid ""
+"Save eggshells, boil 10 minutes, dry completely, grind to fine powder. 1/2 "
+"tsp = ~400mg calcium. Store in airtight container."
+msgstr ""
 
-msgid ">=30% decrease in sum of target lesion diameters"
-msgstr ">=30% de disminución en la suma de diámetros de lesiones objetivo"
+#: templates/health/food_database.html:322
+#: templates/health/meal_planning.html:523
+msgid "Fish Oil Dosing"
+msgstr ""
 
-msgid "Neither PR nor PD criteria met"
-msgstr "Ni criterios de RP ni EP cumplidos"
+#: templates/health/food_database.html:322
+msgid ""
+"Target 50-100mg EPA+DHA per kg body weight. Check capsule label for EPA/DHA "
+"content (not just 'fish oil')."
+msgstr ""
 
-msgid ">=20% increase in sum of target lesion diameters or new lesions"
-msgstr ">=20% de aumento en la suma de diámetros de lesiones objetivo o nuevas lesiones"
+#: templates/health/food_database.html:323 templates/health/nutrition.html:454
+msgid "Multivitamin"
+msgstr ""
 
-msgid "Pre-medications, reactions, observations..."
-msgstr "Pre-medicaciones, reacciones, observaciones..."
+#: templates/health/food_database.html:323
+msgid ""
+"Use canine-specific multivitamin daily to cover micronutrient gaps from home-"
+"cooked diet."
+msgstr ""
 
-msgid "Record Treatment Session"
-msgstr "Registrar Sesión de Tratamiento"
+#: templates/health/food_database.html:328
+#, fuzzy
+#| msgid "Status"
+msgid "Status Guide"
+msgstr "Estado"
 
-msgid "Treatment History"
-msgstr "Historial de Tratamientos"
+#: templates/health/food_database.html:332
+msgid ""
+"Safe for daily use in cancer diet. Zero or minimal carbs, high protein/fat."
+msgstr ""
 
-msgid "Type"
-msgstr "Tipo"
+#: templates/health/food_database.html:338
+msgid "Use occasionally with portion control. May have specific weekly limits."
+msgstr ""
 
-msgid "Agent/Details"
-msgstr "Agente/Detalles"
+#: templates/health/food_database.html:344
+msgid "Contains carbohydrates or other concerns. Use only if necessary."
+msgstr ""
 
-msgid "Cycle"
-msgstr "Ciclo"
+#: templates/health/food_database.html:350
+msgid ""
+"DO NOT USE. High carbohydrates feed cancer cells. Will trigger warning if "
+"logged."
+msgstr ""
 
-msgid "Response"
-msgstr "Respuesta"
+#: templates/health/food_database.html:356
+#: templates/health/meal_planning.html:604
+msgid "Scientific Basis"
+msgstr ""
 
+#: templates/health/food_database.html:358
+msgid ""
+"This protocol is based on the Warburg effect: cancer cells preferentially "
+"metabolize glucose for energy."
+msgstr ""
+
+#: templates/health/food_database.html:361
+msgid ""
+"References: Ogilvie GK et al. (1990, 1994, 2000). Carbohydrate restriction "
+"and omega-3 supplementation have been shown to improve outcomes in dogs with "
+"lymphoma."
+msgstr ""
+
+#: templates/health/meal_planning.html:354
+msgid "Personalized Meal Plan"
+msgstr ""
+
+#: templates/health/meal_planning.html:355
+msgid "Based on"
+msgstr ""
+
+#: templates/health/meal_planning.html:360
+msgid "Daily Food"
+msgstr ""
+
+#: templates/health/meal_planning.html:364
+msgid "Per Meal"
+msgstr ""
+
+#: templates/health/meal_planning.html:368
+msgid "Meals/Day"
+msgstr ""
+
+#: templates/health/meal_planning.html:373
+msgid "Zero-Carb Protocol"
+msgstr ""
+
+#: templates/health/meal_planning.html:374
+msgid ""
+"All meals below are designed to have ZERO carbohydrates. Cancer cells depend "
+"on glucose - by eliminating carbs, we reduce their energy supply."
+msgstr ""
+
+#: templates/health/meal_planning.html:379
+msgid "Sample Meal Ideas"
+msgstr ""
+
+#: templates/health/meal_planning.html:380
+msgid "Portions calculated for"
+msgstr ""
+
+#: templates/health/meal_planning.html:383
+msgid "Breakfast Options"
+msgstr ""
+
+#: templates/health/meal_planning.html:405
+#, fuzzy
+#| msgid "Quick Actions"
+msgid "Lunch Options"
+msgstr "Acciones Rápidas"
+
+#: templates/health/meal_planning.html:427
+msgid "Dinner Options"
+msgstr ""
+
+#: templates/health/meal_planning.html:450
+msgid "Food Preparation Guide"
+msgstr ""
+
+#: templates/health/meal_planning.html:455
+msgid "Boiling Chicken"
+msgstr ""
+
+#: templates/health/meal_planning.html:456
+msgid ""
+"Place boneless chicken breasts/thighs in pot, cover with water. Bring to "
+"boil, reduce heat, simmer 20-25 minutes until internal temp reaches 165°F "
+"(74°C). Save the broth - it's a natural appetite enhancer!"
+msgstr ""
+
+#: templates/health/meal_planning.html:463
+msgid "Cooking Ground Beef"
+msgstr ""
+
+#: templates/health/meal_planning.html:464
+msgid ""
+"Pan-cook over medium heat, breaking apart with spatula. Cook until no pink "
+"remains (internal temp 160°F/71°C). For leaner dogs, drain fat. For "
+"underweight dogs, keep the fat for extra calories."
+msgstr ""
+
+#: templates/health/meal_planning.html:471
+msgid "Preparing Eggs"
+msgstr ""
+
+#: templates/health/meal_planning.html:472
+msgid ""
+"Scramble WITHOUT oil or butter - use non-stick pan. Or hard-boil: place in "
+"cold water, bring to boil, turn off heat, cover 10-12 minutes. Maximum 2-3 "
+"eggs per day to avoid biotin issues."
+msgstr ""
+
+#: templates/health/meal_planning.html:479
+msgid "Cooking Liver"
+msgstr ""
+
+#: templates/health/meal_planning.html:480
+msgid ""
+"Boil 5-7 minutes until no longer pink inside, or pan-fry 2-3 minutes per "
+"side. Limit to 1-2 servings per week due to high vitamin A content. Great "
+"for iron and B vitamins."
+msgstr ""
+
+#: templates/health/meal_planning.html:487
+msgid "Using Canned Fish"
+msgstr ""
+
+#: templates/health/meal_planning.html:488
+msgid ""
+"Choose sardines/salmon packed in WATER (not oil). Drain, mash with fork. "
+"Check for bones in salmon (small ones are fine, good calcium). Limit tuna to "
+"2-3 meals/week due to mercury."
+msgstr ""
+
+#: templates/health/meal_planning.html:493
+msgid "Pro Tip"
+msgstr ""
+
+#: templates/health/meal_planning.html:494
+msgid ""
+"Slightly warm the food before serving - it releases aromas and makes it more "
+"appetizing for dogs with reduced appetite. Never serve cold from "
+"refrigerator."
+msgstr ""
+
+#: templates/health/meal_planning.html:499
+msgid "Supplement Preparation Guide"
+msgstr ""
+
+#: templates/health/meal_planning.html:504
+msgid "Calcium/Day"
+msgstr ""
+
+#: templates/health/meal_planning.html:508
+msgid "Omega-3/Day"
+msgstr ""
+
+#: templates/health/meal_planning.html:515
+msgid "Making Eggshell Calcium"
+msgstr ""
+
+#: templates/health/meal_planning.html:516
+msgid ""
+"Save eggshells and rinse. Boil shells for 10 minutes to sanitize. Dry "
+"completely (air dry or 200°F oven for 10 min). Grind to fine powder in "
+"coffee grinder or mortar. Store in airtight container. 1/2 teaspoon ≈ 400mg "
+"calcium."
+msgstr ""
+
+#: templates/health/meal_planning.html:524
+msgid ""
+"Read the label carefully - look for EPA and DHA amounts specifically (not "
+"just 'fish oil'). Target"
+msgstr ""
+
+#: templates/health/meal_planning.html:524
+msgid "combined EPA+DHA daily. Give with food to reduce fishy burps."
+msgstr ""
+
+#: templates/health/meal_planning.html:531
+msgid "Daily Multivitamin"
+msgstr ""
+
+#: templates/health/meal_planning.html:532
+msgid ""
+"Homemade diets can be deficient in zinc, iodine, and other micronutrients. "
+"Use a canine-specific multivitamin daily. Follow package dosing based on "
+"weight."
+msgstr ""
+
+#: templates/health/meal_planning.html:537
+msgid "Important"
+msgstr ""
+
+#: templates/health/meal_planning.html:538
+msgid ""
+"Supplements should be added to food, not given separately. This ensures "
+"absorption and reduces stomach upset."
+msgstr ""
+
+#: templates/health/meal_planning.html:543
+msgid "Weekly Shopping List"
+msgstr ""
+
+#: templates/health/meal_planning.html:544
+msgid "Based on 7-day meal plan for"
+msgstr ""
+
+#: templates/health/meal_planning.html:556
+msgid "Fish oil capsules"
+msgstr ""
+
+#: templates/health/meal_planning.html:557
+msgid "1 bottle"
+msgstr ""
+
+#: templates/health/meal_planning.html:561
+msgid "Canine multivitamin"
+msgstr ""
+
+#: templates/health/meal_planning.html:562
+msgid "30 day supply"
+msgstr ""
+
+#: templates/health/meal_planning.html:568
+msgid "Batch Cooking Tips"
+msgstr ""
+
+#: templates/health/meal_planning.html:573
+msgid "Sunday Prep"
+msgstr ""
+
+#: templates/health/meal_planning.html:573
+msgid ""
+"Boil 1-2kg chicken, cook 500g ground beef. Portion into daily containers. "
+"Refrigerate 3-4 days worth, freeze the rest."
+msgstr ""
+
+#: templates/health/meal_planning.html:579
+msgid "Egg Prep"
+msgstr ""
+
+#: templates/health/meal_planning.html:579
+msgid ""
+"Hard-boil a dozen eggs at once. Store in shell in refrigerator for up to 1 "
+"week. Peel and chop when needed."
+msgstr ""
+
+#: templates/health/meal_planning.html:585
+msgid ""
+"Process a week's worth of shells at once. Makes about 2-3 tablespoons of "
+"powder. Keep dry and sealed."
+msgstr ""
+
+#: templates/health/meal_planning.html:591
+msgid "Freezer Portions"
+msgstr ""
+
+#: templates/health/meal_planning.html:591
+msgid ""
+"Prepare individual meal portions in freezer bags. Thaw in refrigerator "
+"overnight. Warm before serving."
+msgstr ""
+
+#: templates/health/meal_planning.html:597
+#, fuzzy
+#| msgid "Bruno's Story"
+msgid "Broth Storage"
+msgstr "La Historia de Bruno"
+
+#: templates/health/meal_planning.html:597
+msgid ""
+"Freeze chicken broth in ice cube trays. Pop cubes into meals for extra "
+"flavor and moisture."
+msgstr ""
+
+#: templates/health/meal_planning.html:606
+msgid ""
+"This feeding protocol is based on research showing that cancer cells "
+"preferentially use glucose for energy (Warburg effect), while healthy cells "
+"can efficiently use fats and proteins."
+msgstr ""
+
+#: templates/health/meal_planning.html:609
+msgid ""
+"Key studies: Ogilvie GK et al. (2000), Vail DM et al. (1990). Omega-3 fatty "
+"acids (EPA/DHA) have been shown to slow tumor growth and improve survival in "
+"dogs with lymphoma."
+msgstr ""
+
+#: templates/health/nutrition.html:4
+#, fuzzy
+#| msgid "Daily Tracker"
+msgid "Nutrition Tracker"
+msgstr "Registro Diario"
+
+#: templates/health/nutrition.html:336
+msgid "Profile"
+msgstr ""
+
+#: templates/health/nutrition.html:339 templates/health/treatments.html:129
 msgid "Weight"
 msgstr "Peso"
 
-msgid "Total Treatments"
-msgstr "Total de Tratamientos"
+#: templates/health/nutrition.html:342
+msgid "Update"
+msgstr ""
 
-msgid "Chemo Sessions"
-msgstr "Sesiones de Quimio"
+#: templates/health/nutrition.html:347
+msgid "Today's Nutrition"
+msgstr ""
 
-msgid "Latest Weight"
-msgstr "Peso más Reciente"
+#: templates/health/nutrition.html:353
+#, fuzzy
+#| msgid "Total"
+msgid "Total Food"
+msgstr "Total"
 
-msgid "Treatment session recorded!"
-msgstr "Sesión de tratamiento registrada!"
+#: templates/health/nutrition.html:361 templates/health/nutrition.html:403
+#: templates/health/nutrition.html:414 templates/health/nutrition.html:559
+msgid "Target"
+msgstr ""
 
-msgid "Error saving treatment"
-msgstr "Error al guardar tratamiento"
+#: templates/health/nutrition.html:386
+msgid "Carbohydrates"
+msgstr ""
 
-# General/Common
-msgid "Home"
-msgstr "Inicio"
+#: templates/health/nutrition.html:392
+msgid "Target: 0g (zero-carb cancer protocol)"
+msgstr ""
 
-msgid "History"
-msgstr "Historial"
+#: templates/health/nutrition.html:397 templates/health/nutrition.html:456
+msgid "Calcium"
+msgstr ""
 
-msgid "Medications"
-msgstr "Medicamentos"
+#: templates/health/nutrition.html:408
+msgid "Omega-3 (EPA+DHA)"
+msgstr ""
 
-msgid "Save"
-msgstr "Guardar"
+#: templates/health/nutrition.html:420
+msgid "Today's Meals"
+msgstr ""
 
+#: templates/health/nutrition.html:444
+msgid "No meals logged yet today"
+msgstr ""
+
+#: templates/health/nutrition.html:447 templates/health/nutrition.html:484
+msgid "Add Meal"
+msgstr ""
+
+#: templates/health/nutrition.html:451
+msgid "Supplements"
+msgstr ""
+
+#: templates/health/nutrition.html:457
+msgid "Fish Oil"
+msgstr ""
+
+#: templates/health/nutrition.html:476
+msgid "No supplements logged yet today"
+msgstr ""
+
+#: templates/health/nutrition.html:487
+#, fuzzy
+#| msgid "Type"
+msgid "Meal Type"
+msgstr "Tipo"
+
+#: templates/health/nutrition.html:489 templates/health/tracker.html:215
+msgid "Breakfast"
+msgstr ""
+
+#: templates/health/nutrition.html:490 templates/health/tracker.html:219
+msgid "Lunch"
+msgstr ""
+
+#: templates/health/nutrition.html:491 templates/health/tracker.html:223
+msgid "Dinner"
+msgstr ""
+
+#: templates/health/nutrition.html:492
+msgid "Snack"
+msgstr ""
+
+#: templates/health/nutrition.html:504
+msgid "Refused"
+msgstr ""
+
+#: templates/health/nutrition.html:509
+msgid "Hand fed"
+msgstr ""
+
+#: templates/health/nutrition.html:510
+msgid "Warmed food"
+msgstr ""
+
+#: templates/health/nutrition.html:514
+msgid "Food Items"
+msgstr ""
+
+#: templates/health/nutrition.html:518
+#, fuzzy
+#| msgid "Select..."
+msgid "Select food..."
+msgstr "Seleccionar..."
+
+#: templates/health/nutrition.html:525
+msgid "limited"
+msgstr ""
+
+#: templates/health/nutrition.html:533
+msgid "Add another food"
+msgstr ""
+
+#: templates/health/nutrition.html:538
+msgid "Optional notes..."
+msgstr ""
+
+#: templates/health/nutrition.html:542 templates/health/nutrition.html:580
 msgid "Cancel"
 msgstr "Cancelar"
 
+#: templates/health/nutrition.html:543
+#, fuzzy
+#| msgid "Save"
+msgid "Save Meal"
+msgstr "Guardar"
+
+#: templates/health/nutrition.html:552 templates/health/nutrition.html:622
+msgid "Add Supplement"
+msgstr ""
+
+#: templates/health/nutrition.html:557
+msgid "Calcium Amount"
+msgstr ""
+
+#: templates/health/nutrition.html:559 templates/health/nutrition.html:571
+msgid "day"
+msgstr ""
+
+#: templates/health/nutrition.html:571
+msgid "Target total Omega-3"
+msgstr ""
+
+#: templates/health/nutrition.html:575
+#, fuzzy
+#| msgid "Dr. Name"
+msgid "Product Name"
+msgstr "Dr. Nombre"
+
+#: templates/health/nutrition.html:575
+#, fuzzy
+#| msgid "Constitutional"
+msgid "optional"
+msgstr "Constitucional"
+
+#: templates/health/nutrition.html:576
+msgid "e.g., Nordic Naturals"
+msgstr ""
+
+#: templates/health/nutrition.html:581
+msgid "Save"
+msgstr "Guardar"
+
+#: templates/health/nutrition.html:619
+msgid "Add Calcium Supplement"
+msgstr ""
+
+#: templates/health/nutrition.html:620
+msgid "Add Fish Oil Supplement"
+msgstr ""
+
+#: templates/health/nutrition.html:646
+msgid "Multivitamin logged!"
+msgstr ""
+
+#: templates/health/nutrition.html:650 templates/health/nutrition.html:764
+#, fuzzy
+#| msgid "Error saving event"
+msgid "Error saving supplement"
+msgstr "Error al guardar evento"
+
+#: templates/health/nutrition.html:668
+msgid "Weight updated! Targets recalculated."
+msgstr ""
+
+#: templates/health/nutrition.html:672
+#, fuzzy
+#| msgid "Error saving event"
+msgid "Error updating weight"
+msgstr "Error al guardar evento"
+
+#: templates/health/nutrition.html:698
+msgid "Please add at least one food item"
+msgstr ""
+
+#: templates/health/nutrition.html:723
+msgid "Warning"
+msgstr ""
+
+#: templates/health/nutrition.html:725
+msgid "Meal saved!"
+msgstr ""
+
+#: templates/health/nutrition.html:728
+#, fuzzy
+#| msgid "Error saving event"
+msgid "Error saving meal"
+msgstr "Error al guardar evento"
+
+#: templates/health/nutrition.html:760
+msgid "Supplement logged!"
+msgstr ""
+
+#: templates/health/record_detail.html:176
+msgid "Back to Records"
+msgstr ""
+
+#: templates/health/record_detail.html:190
 msgid "Edit"
 msgstr "Editar"
 
+#: templates/health/record_detail.html:191 templates/health/records.html:220
 msgid "Delete"
 msgstr "Eliminar"
 
+#: templates/health/record_detail.html:197
+msgid "Document"
+msgstr ""
+
+#: templates/health/record_detail.html:202
+msgid "Open Document"
+msgstr ""
+
+#: templates/health/record_detail.html:209
+#: templates/health/record_detail.html:249
+msgid "Lab Values"
+msgstr ""
+
+#: templates/health/record_detail.html:210
+msgid "values extracted"
+msgstr ""
+
+#: templates/health/record_detail.html:215
+msgid "Test"
+msgstr ""
+
+#: templates/health/record_detail.html:216
+msgid "Value"
+msgstr ""
+
+#: templates/health/record_detail.html:250
+msgid "No lab values extracted yet."
+msgstr ""
+
+#: templates/health/record_detail.html:251
+msgid ""
+"Lab values can be added manually via the admin interface or automatically "
+"extracted using AI parsing."
+msgstr ""
+
+#: templates/health/record_detail.html:257
+msgid "AI Extracted Text"
+msgstr ""
+
+#: templates/health/record_detail.html:277
+msgid ""
+"Are you sure you want to delete this record? This action cannot be undone."
+msgstr ""
+
+#: templates/health/record_edit.html:4
+msgid "Edit Record"
+msgstr ""
+
+#: templates/health/record_edit.html:64
+msgid "Back to Record"
+msgstr ""
+
+#: templates/health/record_edit.html:67
+msgid "Edit Medical Record"
+msgstr ""
+
+#: templates/health/record_edit.html:73 templates/health/records.html:147
+msgid "Record Type"
+msgstr ""
+
+#: templates/health/record_edit.html:82 templates/health/records.html:161
+msgid "Title / Description"
+msgstr ""
+
+#: templates/health/record_edit.html:83
+msgid "e.g., Pre-chemo CBC"
+msgstr ""
+
+#: templates/health/record_edit.html:92 templates/health/records.html:166
+msgid "Source"
+msgstr ""
+
+#: templates/health/record_edit.html:96 templates/health/records.html:170
+msgid "Vet Clinic"
+msgstr ""
+
+# General/Common
+#: templates/health/record_edit.html:100 templates/health/records.html:174
+#, fuzzy
+#| msgid "Home"
+msgid "At Home"
+msgstr "Inicio"
+
+#: templates/health/record_edit.html:106 templates/health/records.html:180
+msgid "Clinic Name"
+msgstr ""
+
+#: templates/health/record_edit.html:107 templates/health/records.html:181
+#: templates/health/treatments.html:72
+msgid "Veterinary clinic name"
+msgstr "Nombre de la clínica veterinaria"
+
+#: templates/health/record_edit.html:111 templates/health/records.html:185
+#, fuzzy
+#| msgid "Veterinary clinic name"
+msgid "Veterinarian"
+msgstr "Nombre de la clínica veterinaria"
+
+#: templates/health/record_edit.html:112 templates/health/records.html:186
+#, fuzzy
+#| msgid "Dr. Name"
+msgid "Dr. name"
+msgstr "Dr. Nombre"
+
+#: templates/health/record_edit.html:116
+msgid "Document File"
+msgstr ""
+
+#: templates/health/record_edit.html:119
+msgid "Current:"
+msgstr ""
+
+#: templates/health/record_edit.html:123
+msgid "Leave empty to keep current file"
+msgstr ""
+
+#: templates/health/record_edit.html:131
+msgid "Save Changes"
+msgstr ""
+
+#: templates/health/records.html:4
+#, fuzzy
+#| msgid "Medications"
+msgid "Medical Records"
+msgstr "Medicamentos"
+
+#: templates/health/records.html:134
+msgid "Upload Medical Record"
+msgstr ""
+
+#: templates/health/records.html:140
+msgid "Tap to select or drop file here"
+msgstr ""
+
+#: templates/health/records.html:141
+msgid "PDF, JPG, PNG supported"
+msgstr ""
+
+#: templates/health/records.html:162
+msgid "e.g., Pre-chemo CBC, Follow-up cytology"
+msgstr ""
+
+#: templates/health/records.html:191
+msgid "Additional notes..."
+msgstr ""
+
+#: templates/health/records.html:194 templates/health/records.html:350
+#: templates/health/records.html:355
+msgid "Upload Record"
+msgstr ""
+
+#: templates/health/records.html:200
+#, fuzzy
+#| msgid "Photo Gallery"
+msgid "Records Gallery"
+msgstr "Galería de Fotos"
+
+#: templates/health/records.html:201
+msgid "records on file"
+msgstr ""
+
+#: templates/health/records.html:229
+msgid "Lab Value Trends"
+msgstr ""
+
+#: templates/health/records.html:230
+msgid "Recent results at a glance"
+msgstr ""
+
+#: templates/health/records.html:248
+msgid "AI Parsing Enabled"
+msgstr ""
+
+#: templates/health/records.html:249
+msgid "Uploaded records will be automatically analyzed to extract lab values."
+msgstr ""
+
+#: templates/health/records.html:253
+msgid "AI Parsing"
+msgstr ""
+
+#: templates/health/records.html:254
+msgid ""
+"Enable AI parsing in Site Settings to automatically extract lab values from "
+"uploaded documents."
+msgstr ""
+
+#: templates/health/records.html:331
+#, fuzzy
+#| msgid "Loading..."
+msgid "Uploading..."
+msgstr "Cargando..."
+
+#: templates/health/records.html:345
+msgid "Record uploaded successfully!"
+msgstr ""
+
+#: templates/health/records.html:348 templates/health/records.html:353
+#, fuzzy
+#| msgid "Error saving event"
+msgid "Error uploading record"
+msgstr "Error al guardar evento"
+
+#: templates/health/records.html:361
+msgid "Are you sure you want to delete this record?"
+msgstr ""
+
+#: templates/health/records.html:375
+#, fuzzy
+#| msgid "Record Adverse Event"
+msgid "Record deleted"
+msgstr "Registrar Evento Adverso"
+
+#: templates/health/records.html:378 templates/health/records.html:381
+msgid "Error deleting record"
+msgstr ""
+
+#: templates/health/tracker.html:68
+msgid "Was today a good day?"
+msgstr ""
+
+#: templates/health/tracker.html:72
 msgid "Yes"
 msgstr "Si"
 
+#: templates/health/tracker.html:80
 msgid "No"
 msgstr "No"
 
-msgid "Loading..."
-msgstr "Cargando..."
+#: templates/health/tracker.html:86
+msgid "Mood & Engagement"
+msgstr ""
 
-msgid "Error"
-msgstr "Error"
+#: templates/health/tracker.html:87
+#, fuzzy
+#| msgid "Happiness Score"
+msgid "Happiness indicators"
+msgstr "Puntuación de Felicidad"
 
-msgid "Success"
-msgstr "Éxito"
+#: templates/health/tracker.html:105
+msgid "Tail / Body Language"
+msgstr ""
+
+#: templates/health/tracker.html:106
+msgid "Relaxed, wagging vs stiff"
+msgstr ""
+
+#: templates/health/tracker.html:114
+#, fuzzy
+#| msgid "Interest in surroundings"
+msgid "Interest in People"
+msgstr "Interes en el entorno"
+
+#: templates/health/tracker.html:115
+msgid "Seeks affection vs disengaged"
+msgstr ""
+
+#: templates/health/tracker.html:123
+#, fuzzy
+#| msgid "Interest in surroundings"
+msgid "Interest in Environment"
+msgstr "Interes en el entorno"
+
+#: templates/health/tracker.html:124
+msgid "Sniffing, alert vs dull"
+msgstr ""
+
+#: templates/health/tracker.html:132
+#, fuzzy
+#| msgid "Enjoyment of life"
+msgid "Enjoyment of Favorites"
+msgstr "Disfrute de la vida"
+
+#: templates/health/tracker.html:133
+msgid "Toys, walks, treats"
+msgstr ""
+
+#: templates/health/tracker.html:141
+#, fuzzy
+#| msgid "Overall Score"
+msgid "Overall Spark"
+msgstr "Puntuación General"
+
+#: templates/health/tracker.html:142
+msgid "Joy vs flatness"
+msgstr ""
+
+#: templates/health/tracker.html:154
+#, fuzzy
+#| msgid "Appetite"
+msgid "Appetite & Eating"
+msgstr "Apetito"
+
+#: templates/health/tracker.html:173
+msgid "Eats willingly vs refusal"
+msgstr ""
+
+#: templates/health/tracker.html:181
+msgid "Food Enjoyment"
+msgstr ""
+
+#: templates/health/tracker.html:182
+msgid "Excited vs reluctant"
+msgstr ""
+
+#: templates/health/tracker.html:190
+#, fuzzy
+#| msgid "Nausea"
+msgid "Nausea Signs"
+msgstr "Náuseas"
+
+#: templates/health/tracker.html:191
+msgid "5 = none, 0 = vomiting"
+msgstr ""
+
+#: templates/health/tracker.html:199
+msgid "Weight / Body Condition"
+msgstr ""
+
+#: templates/health/tracker.html:200
+msgid "Stable vs noticeable loss"
+msgstr ""
+
+#: templates/health/tracker.html:211
+msgid "Meals Eaten Today"
+msgstr ""
+
+#: templates/health/tracker.html:227
+msgid "Treats"
+msgstr ""
+
+#: templates/health/tracker.html:234
+#, fuzzy
+#| msgid "Mobility"
+msgid "Energy & Mobility"
+msgstr "Movilidad"
+
+#: templates/health/tracker.html:252
+#, fuzzy
+#| msgid "Energy level"
+msgid "Energy Level"
+msgstr "Nivel de energía"
+
+#: templates/health/tracker.html:253
+msgid "Normal vs lethargic"
+msgstr ""
+
+#: templates/health/tracker.html:261
+msgid "Willingness to Move"
+msgstr ""
+
+#: templates/health/tracker.html:262
+msgid "Gets up easily vs hesitation"
+msgstr ""
+
+#: templates/health/tracker.html:270
+#, fuzzy
+#| msgid "Comfort"
+msgid "Walking Comfort"
+msgstr "Comodidad"
+
+#: templates/health/tracker.html:271
+msgid "Smooth gait vs limping"
+msgstr ""
+
+#: templates/health/tracker.html:279
+#, fuzzy
+#| msgid "Comfort"
+msgid "Resting Comfort"
+msgstr "Comodidad"
+
+#: templates/health/tracker.html:280
+msgid "Settles easily vs restless"
+msgstr ""
+
+#: templates/health/tracker.html:292
+msgid "Pain & Physical Comfort"
+msgstr ""
+
+#: templates/health/tracker.html:310
+msgid "Breathing Comfort"
+msgstr ""
+
+#: templates/health/tracker.html:311
+msgid "Normal vs labored"
+msgstr ""
+
+#: templates/health/tracker.html:320
+msgid "5 = none, 0 = panting, whining"
+msgstr ""
+
+#: templates/health/tracker.html:328
+msgid "Sleep Quality"
+msgstr ""
+
+#: templates/health/tracker.html:329
+msgid "Restful vs disrupted"
+msgstr ""
+
+#: templates/health/tracker.html:337
+#, fuzzy
+#| msgid "Response"
+msgid "Response to Touch"
+msgstr "Respuesta"
+
+#: templates/health/tracker.html:338
+msgid "Enjoys vs flinches"
+msgstr ""
+
+#: templates/health/tracker.html:353
+msgid "What made today good?"
+msgstr ""
+
+#: templates/health/tracker.html:354 templates/health/tracker.html:359
+msgid "Optional..."
+msgstr ""
+
+#: templates/health/tracker.html:358
+msgid "What seemed hardest?"
+msgstr ""
+
+#: templates/health/tracker.html:363
+msgid "Other observations"
+msgstr ""
+
+#: templates/health/tracker.html:364
+msgid "Fever, coughing, diarrhea, bad breath changes..."
+msgstr ""
+
+#: templates/health/tracker.html:368
+msgid "Save Today's Entry"
+msgstr ""
+
+#: templates/health/tracker.html:418
+msgid "Entry saved!"
+msgstr ""
+
+#: templates/health/tracker.html:420 templates/health/tracker.html:423
+#, fuzzy
+#| msgid "Error saving event"
+msgid "Error saving entry"
+msgstr "Error al guardar evento"
+
+# Treatments
+#: templates/health/treatments.html:4 templates/health/treatments.html:8
+msgid "Treatment Sessions"
+msgstr "Sesiones de Tratamiento"
+
+#: templates/health/treatments.html:9
+msgid "Track chemotherapy, radiation, and other cancer treatments"
+msgstr ""
+"Registrar quimioterapia, radiación y otros tratamientos contra el cáncer"
+
+#: templates/health/treatments.html:12
+msgid "Record New Treatment"
+msgstr "Registrar Nuevo Tratamiento"
+
+#: templates/health/treatments.html:23
+msgid "Treatment Type"
+msgstr "Tipo de Tratamiento"
+
+#: templates/health/treatments.html:25
+msgid "Select type..."
+msgstr "Seleccionar tipo..."
+
+#: templates/health/treatments.html:26
+msgid "Chemotherapy"
+msgstr "Quimioterapia"
+
+#: templates/health/treatments.html:27
+msgid "Radiation Therapy"
+msgstr "Radioterapia"
+
+#: templates/health/treatments.html:28
+msgid "Surgery"
+msgstr "Cirugía"
+
+#: templates/health/treatments.html:29
+msgid "Immunotherapy"
+msgstr "Inmunoterapia"
+
+#: templates/health/treatments.html:30
+msgid "Palliative Care"
+msgstr "Cuidados Paliativos"
+
+#: templates/health/treatments.html:38
+msgid "Chemotherapy Agent"
+msgstr "Agente de Quimioterapia"
+
+#: templates/health/treatments.html:40
+msgid "Select agent..."
+msgstr "Seleccionar agente..."
+
+#: templates/health/treatments.html:41
+msgid "Common Lymphoma Protocols"
+msgstr "Protocolos Comunes de Linfoma"
+
+#: templates/health/treatments.html:51
+msgid "Combination Protocols"
+msgstr "Protocolos Combinados"
+
+#: templates/health/treatments.html:60
+msgid "Dose"
+msgstr "Dosis"
+
+#: templates/health/treatments.html:64
+msgid "Cycle Number"
+msgstr "Número de Ciclo"
+
+#: templates/health/treatments.html:71
+msgid "Location/Clinic"
+msgstr "Ubicación/Clínica"
+
+#: templates/health/treatments.html:75
+msgid "Administering Veterinarian"
+msgstr "Veterinario que Administra"
+
+#: templates/health/treatments.html:76
+msgid "Dr. Name"
+msgstr "Dr. Nombre"
+
+#: templates/health/treatments.html:82
+msgid "Pre-treatment Weight (kg)"
+msgstr "Peso Pre-tratamiento (kg)"
+
+#: templates/health/treatments.html:86
+msgid "Response Assessment"
+msgstr "Evaluación de Respuesta"
+
+#: templates/health/treatments.html:88
+msgid "Not assessed"
+msgstr "No evaluado"
+
+#: templates/health/treatments.html:89
+msgid "CR - Complete Response"
+msgstr "RC - Respuesta Completa"
+
+#: templates/health/treatments.html:90
+msgid "PR - Partial Response"
+msgstr "RP - Respuesta Parcial"
+
+#: templates/health/treatments.html:91
+msgid "SD - Stable Disease"
+msgstr "EE - Enfermedad Estable"
+
+#: templates/health/treatments.html:92
+msgid "PD - Progressive Disease"
+msgstr "EP - Enfermedad Progresiva"
+
+#: templates/health/treatments.html:98
+msgid "VCOG Response Evaluation Criteria:"
+msgstr "Criterios de Evaluación de Respuesta VCOG:"
+
+#: templates/health/treatments.html:100
+msgid "Disappearance of all target lesions"
+msgstr "Desaparición de todas las lesiones objetivo"
+
+#: templates/health/treatments.html:101
+#, fuzzy, python-format
+#| msgid ">=30% decrease in sum of target lesion diameters"
+msgid "≥30%% decrease in sum of target lesion diameters"
+msgstr ">=30% de disminución en la suma de diámetros de lesiones objetivo"
+
+#: templates/health/treatments.html:102
+msgid "Neither PR nor PD criteria met"
+msgstr "Ni criterios de RP ni EP cumplidos"
+
+#: templates/health/treatments.html:103
+#, fuzzy, python-format
+#| msgid ">=20% increase in sum of target lesion diameters or new lesions"
+msgid "≥20%% increase in sum of target lesion diameters or new lesions"
+msgstr ""
+">=20% de aumento en la suma de diámetros de lesiones objetivo o nuevas "
+"lesiones"
+
+#: templates/health/treatments.html:109
+msgid "Pre-medications, reactions, observations..."
+msgstr "Pre-medicaciones, reacciones, observaciones..."
+
+#: templates/health/treatments.html:112
+msgid "Record Treatment Session"
+msgstr "Registrar Sesión de Tratamiento"
+
+#: templates/health/treatments.html:119
+msgid "Treatment History"
+msgstr "Historial de Tratamientos"
+
+#: templates/health/treatments.html:125
+msgid "Type"
+msgstr "Tipo"
+
+#: templates/health/treatments.html:126
+msgid "Agent/Details"
+msgstr "Agente/Detalles"
+
+#: templates/health/treatments.html:127
+msgid "Cycle"
+msgstr "Ciclo"
+
+#: templates/health/treatments.html:128
+msgid "Response"
+msgstr "Respuesta"
+
+#: templates/health/treatments.html:166
+msgid "Total Treatments"
+msgstr "Total de Tratamientos"
+
+#: templates/health/treatments.html:174
+msgid "Chemo Sessions"
+msgstr "Sesiones de Quimio"
+
+#: templates/health/treatments.html:182
+msgid "Latest Weight"
+msgstr "Peso más Reciente"
+
+#: templates/health/treatments.html:229
+msgid "Treatment session recorded!"
+msgstr "Sesión de tratamiento registrada!"
+
+#: templates/health/treatments.html:232
+msgid "Error saving treatment"
+msgstr "Error al guardar tratamiento"
+
+#~ msgid "Grade 1 - Mild"
+#~ msgstr "Grado 1 - Leve"
+
+#~ msgid "Grade 3 - Severe"
+#~ msgstr "Grado 3 - Severo"
+
+#~ msgid "Grade 4 - Life-threatening"
+#~ msgstr "Grado 4 - Potencialmente mortal"
+
+#~ msgid "Grade 5 - Death"
+#~ msgstr "Grado 5 - Muerte"
+
+#~ msgid "History"
+#~ msgstr "Historial"
+
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#~ msgid "Success"
+#~ msgstr "Éxito"
 
 # QoL Status Messages
-msgid "Excellent quality of life"
-msgstr "Excelente calidad de vida"
-
-msgid "Good quality of life"
-msgstr "Buena calidad de vida"
-
-msgid "Quality of life needs monitoring"
-msgstr "La calidad de vida necesita monitoreo"
-
-msgid "Quality of life concerns - consult veterinarian"
-msgstr "Preocupaciones de calidad de vida - consultar veterinario"
-
-msgid "No assessment data available"
-msgstr "No hay datos de evaluación disponibles"
-
-# Fundraiser Page
-msgid "Help Bruno Fight Cancer"
-msgstr "Ayuda a Bruno a Luchar Contra él Cáncer"
-
-msgid "He doesn't know he's sick. He just knows he loves us."
-msgstr "El no sabe que está enfermo. Solo sabe que nos ama."
-
-msgid "Donate Now"
-msgstr "Donar Ahora"
-
-msgid "Meet Bruno"
-msgstr "Conoce a Bruno"
-
-msgid "Bruno is a 6-year-old dog with a heart of gold. He was recently diagnosed with lymphoma, a common but aggressive cancer in dogs. Without treatment, he may only have weeks left."
-msgstr "Bruno es un perro de 6 años con un corazón de oro. Recientemente le diagnosticaron linfoma, un cáncer común pero agresivo en perros. Sin tratamiento, puede que sólo le queden semanas."
-
-msgid "With your help, Bruno can receive chemotherapy that could give him months—even years—of quality time with his family who loves him more than words can say."
-msgstr "Con tu ayuda, Bruno puede recibir quimioterapia que podría darle meses—incluso años—de tiempo de calidad con su familia que lo ama más de lo que las palabras pueden expresar."
-
-msgid "Bruno's Story"
-msgstr "La Historia de Bruno"
-
-msgid "A Love Like No Other"
-msgstr "Un Amor Como Ningún Otro"
-
-msgid "Bruno came into our lives six years ago, and from day one, he's been our shadow, our comfort, and our joy. He greets every morning with a wagging tail and ends every night curled up at our feet."
-msgstr "Bruno llego a nuestras vidas hace seis años, y desde el primer día, ha sido nuestra sombra, nuestro consuelo y nuestra alegría. Saluda cada mañana con la cola meneando y termina cada noche acurrucado a nuestros pies."
-
-msgid "The Diagnosis"
-msgstr "El Diagnóstico"
-
-msgid "When we noticed his lymph nodes were swollen, our hearts sank. The vet confirmed our fears: B-cell lymphoma. But there's hope—with CHOP chemotherapy, Bruno could have 12-18 more months of tail wags and belly rubs."
-msgstr "Cuando notamos que sus ganglios linfáticos estaban inflamados, nuestros corazones se hundieron. El veterinario confirmó nuestros temores: linfoma de células B. Pero hay esperanza—con quimioterapia CHOP, Bruno podría tener 12-18 meses más de meneos de cola y caricias en la panza."
-
-msgid "We Can't Do This Alone"
-msgstr "No Podemos Hacerlo Solos"
-
-msgid "With only one income and no savings to fall back on, the cost of treatment feels impossible. We cancelled Christmas travel to stay by his side. We'd give anything for more time with him—but we need help to make it happen."
-msgstr "Con un sólo ingreso y sin ahorros en que apoyarnos, el costo del tratamiento parece imposible. Cancelamos nuestro viaje de Navidad para quedarnos a su lado. Daríamos cualquier cosa por más tiempo con el—pero necesitamos ayuda para que suceda."
-
-msgid "Every Day Counts"
-msgstr "Cada Día Cuenta"
-
-msgid "The sooner we start, the more good days we get to keep."
-msgstr "Cuanto antes comencemos, más días buenos podremos conservar."
-
-msgid "Lymphoma moves fast. Early treatment can slow the disease and give Bruno more time—more walks, more naps in the sun, more moments together. Your donation goes directly toward:"
-msgstr "El linfoma avanza rápido. El tratamiento temprano puede frenar la enfermedad y darle a Bruno más tiempo—mas paseos, más siestas al sol, más momentos juntos. Tu donación va directamente a:"
-
-msgid "Veterinary oncology visits"
-msgstr "Consultas de oncología veterinaria"
-
-msgid "Chemotherapy treatments"
-msgstr "Tratamientos de quimioterapia"
-
-msgid "Ongoing monitoring"
-msgstr "Monitoreo continuo"
-
-msgid "Transportation to frequent appointments"
-msgstr "Transporte a citas frecuentes"
-
-msgid "Why We Need to Act Now"
-msgstr "Por Que Necesitamos Actuar Ahora"
-
-msgid "Canine lymphoma is treatable, but time is critical. With chemotherapy, dogs can live significantly longer with a good quality of life."
-msgstr "El linfoma canino es tratable, pero el tiempo es crítico. Con quimioterapia, los perros pueden vivir significativamente más con buena calidad de vida."
-
-msgid "We've already lost precious time."
-msgstr "Ya hemos perdido tiempo valioso."
-
-msgid "Without Treatment"
-msgstr "Sin Tratamiento"
-
-msgid "With CHOP Chemotherapy"
-msgstr "Con Quimioterapia CHOP"
-
-msgid "Bruno could have as little as 2 weeks left without treatment"
-msgstr "A Bruno podrían quedarle tan sólo 2 semanas sin tratamiento"
-
-msgid "Expected survival for B-cell Stage IIIa lymphoma"
-msgstr "Supervivencia esperada para linfoma de células B etapa IIIa"
-
-msgid "of dogs respond positively to chemotherapy"
-msgstr "de los perros responden positivamente a la quimioterapia"
-
-msgid "achieve complete remission"
-msgstr "logran remisión completa"
-
-msgid "survive 2 years or longer"
-msgstr "sobreviven 2 años o más"
-
-msgid "Share Bruno's Story"
-msgstr "Comparte la Historia de Bruno"
-
-msgid "Can't donate? Sharing helps just as much!"
-msgstr "No puedes donar? Compartir ayuda igual!"
-
-msgid "Share on Facebook"
-msgstr "Compartir en Facebook"
-
-msgid "Share on Twitter"
-msgstr "Compartir en Twitter"
-
-msgid "Share on WhatsApp"
-msgstr "Compartir en WhatsApp"
-
-msgid "Copy Link"
-msgstr "Copiar Enlace"
-
-msgid "Link copied!"
-msgstr "Enlace copiado!"
-
-msgid "Photo Gallery"
-msgstr "Galería de Fotos"
-
-msgid "Thank you for caring."
-msgstr "Gracias por preocuparte."
-
-msgid "Every dollar, every share, every kind thought helps Bruno fight. From our family to yours—thank you."
-msgstr "Cada dólar, cada compartida, cada pensamiento amable ayuda a Bruno a luchar. De nuestra familia a la tuya—gracias."
-
-msgid "Give Bruno More Time"
-msgstr "Dale a Bruno Más Tiempo"
-
-# Additional Fundraiser Page Translations
-msgid "Bruno, a loving 6-year-old dog"
-msgstr "Bruno, un amoroso perro de 6 años"
-
-msgid "Six years of unconditional love."
-msgstr "Seis años de amor incondicional."
-
-msgid "Bruno and Tatum are inseparable. Where one goes, the other follows. He's not just a dog—he's a best friend, a protector, a constant source of comfort through every hard day and quiet night."
-msgstr "Bruno y Tatum son inseparables. Donde va uno, el otro lo sigue. No es sólo un perro—es un mejor amigo, un protector, una fuente constante de consuelo en cada día difícil y cada noche tranquila."
-
-msgid "Now Bruno has been diagnosed with"
-msgstr "Ahora a Bruno le han diagnosticado"
-
-msgid "lymphoma"
-msgstr "linfoma"
-
-msgid "He's still happy, still wagging his tail, still looking at us like nothing is wrong. That's what makes this so hard."
-msgstr "Sigue feliz, sigue meneando la cola, sigue mirándonos como si nada estuviera mal. Eso es lo que hace esto tan difícil."
-
-msgid "Bruno with his family"
-msgstr "Bruno con su familia"
-
-msgid "He Still Greets Each Day with Joy"
-msgstr "Aún Recibe Cada Día con Alegría"
-
-msgid "Bruno doesn't know what lymphoma means. He just knows he wants to be close to us, to play, to rest his head in our laps. His spirit hasn't changed—and we're fighting to keep it that way for as long as we can."
-msgstr "Bruno no sabe que significa el linfoma. Solo sabe que quiere estar cerca de nosotros, jugar, descansar su cabeza en nuestro regazo. Su espíritu no ha cambiado—y estamos luchando para mantenerlo así el mayor tiempo posible."
-
-msgid "Bruno being playful"
-msgstr "Bruno jugando"
-
-msgid "It's been two weeks since we discovered Bruno's swollen lymph nodes—and they've tripled in size since then. The diagnostic testing had to be sent to Mexico City, which delayed the diagnosis. Every day without treatment, the cancer spreads."
-msgstr "Han pasado dos semanas desde que descubrimos los ganglios linfáticos inflamados de Bruno—y se han triplicado de tamaño desde entonces. Las pruebas diagnósticas tuvieron que enviarse a la Ciudad de México, lo que retrasó el diagnóstico. Cada día sin tratamiento, el cáncer se propaga."
-
-msgid "2-4 weeks"
-msgstr "2-4 semanas"
-
-msgid "12-18 months"
-msgstr "12-18 meses"
-
-msgid "Statistics from veterinary oncology research. Individual outcomes vary based on lymphoma type, stage, and timing of treatment."
-msgstr "Estadísticas de investigación en oncología veterinaria. Los resultados individuales varían según el tipo de linfoma, la etapa y el momento del tratamiento."
-
-msgid "This Is Who We're Fighting For"
-msgstr "Por Quien Estamos Luchando"
-
-msgid "Bruno portrait"
-msgstr "Retrato de Bruno"
-
-msgid "Bruno relaxing"
-msgstr "Bruno descansando"
-
-msgid "Bruno happy"
-msgstr "Bruno feliz"
-
-msgid "Bruno looking hopeful"
-msgstr "Bruno con esperanza"
-
-msgid "Help Us Keep Him a Little Longer"
-msgstr "Ayudanos a Mantenerlo un Poco Mas"
-
-msgid "We're not ready to say goodbye. Bruno still has so much love to give, and we want to give him every chance to keep giving it."
-msgstr "No estamos listos para decir adios. Bruno todavia tiene mucho amor que dar, y queremos darle todas las oportunidades para seguir dandolo."
-
-msgid "Any amount helps. If you can't donate, sharing his story means the world to us."
-msgstr "Cualquier cantidad ayuda. Si no puedes donar, compartir su historia significa mucho para nosotros."
-
-msgid "Donate to Bruno's Treatment"
-msgstr "Donar al Tratamiento de Bruno"
-
-msgid "Can't donate? Please share Bruno's story!"
-msgstr "No puedes donar? Por favor comparte la historia de Bruno!"
-
-msgid "Share on X"
-msgstr "Compartir en X"
-
-msgid "Thank you for caring about Bruno. Every donation and share brings us closer to giving him more good days."
-msgstr "Gracias por preocuparte por Bruno. Cada donación y cada compartida nos acerca a darle más días buenos."
-
-msgid "Donate on GoFundMe"
-msgstr "Donar en GoFundMe"
+#~ msgid "Excellent quality of life"
+#~ msgstr "Excelente calidad de vida"
+
+#~ msgid "Quality of life needs monitoring"
+#~ msgstr "La calidad de vida necesita monitoreo"
+
+#~ msgid "Quality of life concerns - consult veterinarian"
+#~ msgstr "Preocupaciones de calidad de vida - consultar veterinario"
+
+#~ msgid "No assessment data available"
+#~ msgstr "No hay datos de evaluación disponibles"
+
+#~ msgid ""
+#~ "Bruno is a 6-year-old dog with a heart of gold. He was recently diagnosed "
+#~ "with lymphoma, a common but aggressive cancer in dogs. Without treatment, "
+#~ "he may only have weeks left."
+#~ msgstr ""
+#~ "Bruno es un perro de 6 años con un corazón de oro. Recientemente le "
+#~ "diagnosticaron linfoma, un cáncer común pero agresivo en perros. Sin "
+#~ "tratamiento, puede que sólo le queden semanas."
+
+#~ msgid ""
+#~ "With your help, Bruno can receive chemotherapy that could give him months—"
+#~ "even years—of quality time with his family who loves him more than words "
+#~ "can say."
+#~ msgstr ""
+#~ "Con tu ayuda, Bruno puede recibir quimioterapia que podría darle meses—"
+#~ "incluso años—de tiempo de calidad con su familia que lo ama más de lo que "
+#~ "las palabras pueden expresar."
+
+#~ msgid "A Love Like No Other"
+#~ msgstr "Un Amor Como Ningún Otro"
+
+#~ msgid ""
+#~ "Bruno came into our lives six years ago, and from day one, he's been our "
+#~ "shadow, our comfort, and our joy. He greets every morning with a wagging "
+#~ "tail and ends every night curled up at our feet."
+#~ msgstr ""
+#~ "Bruno llego a nuestras vidas hace seis años, y desde el primer día, ha "
+#~ "sido nuestra sombra, nuestro consuelo y nuestra alegría. Saluda cada "
+#~ "mañana con la cola meneando y termina cada noche acurrucado a nuestros "
+#~ "pies."
+
+#~ msgid "The Diagnosis"
+#~ msgstr "El Diagnóstico"
+
+#~ msgid ""
+#~ "When we noticed his lymph nodes were swollen, our hearts sank. The vet "
+#~ "confirmed our fears: B-cell lymphoma. But there's hope—with CHOP "
+#~ "chemotherapy, Bruno could have 12-18 more months of tail wags and belly "
+#~ "rubs."
+#~ msgstr ""
+#~ "Cuando notamos que sus ganglios linfáticos estaban inflamados, nuestros "
+#~ "corazones se hundieron. El veterinario confirmó nuestros temores: linfoma "
+#~ "de células B. Pero hay esperanza—con quimioterapia CHOP, Bruno podría "
+#~ "tener 12-18 meses más de meneos de cola y caricias en la panza."
+
+#~ msgid "Share Bruno's Story"
+#~ msgstr "Comparte la Historia de Bruno"
+
+#~ msgid "Can't donate? Sharing helps just as much!"
+#~ msgstr "No puedes donar? Compartir ayuda igual!"
+
+#~ msgid "Share on Twitter"
+#~ msgstr "Compartir en Twitter"
+
+#~ msgid "Share on WhatsApp"
+#~ msgstr "Compartir en WhatsApp"
+
+#~ msgid "Copy Link"
+#~ msgstr "Copiar Enlace"
+
+#~ msgid "Link copied!"
+#~ msgstr "Enlace copiado!"
+
+#~ msgid "Thank you for caring."
+#~ msgstr "Gracias por preocuparte."
+
+#~ msgid ""
+#~ "Every dollar, every share, every kind thought helps Bruno fight. From our "
+#~ "family to yours—thank you."
+#~ msgstr ""
+#~ "Cada dólar, cada compartida, cada pensamiento amable ayuda a Bruno a "
+#~ "luchar. De nuestra familia a la tuya—gracias."
+
+#~ msgid "Give Bruno More Time"
+#~ msgstr "Dale a Bruno Más Tiempo"
