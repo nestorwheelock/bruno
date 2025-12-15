@@ -215,9 +215,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# CSRF trusted origins - read from environment or use defaults
+_csrf_origins = os.environ.get("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:1080",
     "http://127.0.0.1:1080",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-]
+] + ([origin.strip() for origin in _csrf_origins.split(",") if origin.strip()] if _csrf_origins else [])
+
+# Trust X-Forwarded-Proto header from nginx proxy
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
