@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Bruno{% endblock %}</title>
     {% load static %}
+
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    {% block og_meta %}
+    <meta property="og:title" content="Help Bruno Fight Cancer">
+    <meta property="og:description" content="Bruno is a 6-year-old dog diagnosed with lymphoma. Help us give him more time with his family through chemotherapy treatment.">
+    <meta property="og:image" content="https://helpbruno.com{% static 'images/bruno1.jpg' %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://helpbruno.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Help Bruno Fight Cancer">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Help Bruno Fight Cancer">
+    <meta name="twitter:description" content="Bruno is a 6-year-old dog diagnosed with lymphoma. Help us give him more time with his family.">
+    <meta name="twitter:image" content="https://helpbruno.com{% static 'images/bruno1.jpg' %}">
+
+    <!-- WhatsApp specific -->
+    <meta property="og:image:alt" content="Bruno, a loving 6-year-old dog fighting cancer">
+    {% endblock %}
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     {% block extra_fonts %}{% endblock %}
