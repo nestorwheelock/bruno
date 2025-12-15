@@ -3,6 +3,66 @@
 
 {% block title %}{% trans "Adverse Events" %} - Bruno Health{% endblock %}
 
+{% block extra_css %}
+<style>
+.grade-radio-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.grade-radio-option {
+    flex: 1;
+    min-width: 60px;
+}
+.grade-radio-option input {
+    display: none;
+}
+.grade-radio-option label {
+    display: block;
+    padding: 12px 8px;
+    text-align: center;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+.grade-radio-option label small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #6c757d;
+    margin-top: 2px;
+}
+.grade-radio-option input:checked + label {
+    border-color: #ffc107;
+    background: #fff3cd;
+}
+.grade-radio-option:nth-child(3) input:checked + label,
+.grade-radio-option:nth-child(4) input:checked + label {
+    border-color: #dc3545;
+    background: #f8d7da;
+}
+.grade-radio-option:nth-child(5) input:checked + label {
+    border-color: #212529;
+    background: #e9ecef;
+}
+@media (max-width: 576px) {
+    .grade-radio-option {
+        min-width: 45px;
+    }
+    .grade-radio-option label {
+        padding: 10px 4px;
+        font-size: 0.75rem;
+    }
+    .grade-radio-option label small {
+        font-size: 0.6rem;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-3">
     <h2>{% trans "VCOG-CTCAE Adverse Events" %}</h2>
@@ -66,15 +126,30 @@
                             <option value="OTHER" data-category="OTHER">{% trans "Other (specify in notes)" %}</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-2">
+                    <div class="col-12 mb-2">
                         <label class="form-label">{% trans "Grade (1-5)" %}</label>
-                        <select name="grade" class="form-select" required>
-                            <option value="1">{% trans "Grade 1 - Mild" %}</option>
-                            <option value="2">{% trans "Grade 2 - Moderate" %}</option>
-                            <option value="3">{% trans "Grade 3 - Severe" %}</option>
-                            <option value="4">{% trans "Grade 4 - Life-threatening" %}</option>
-                            <option value="5">{% trans "Grade 5 - Death" %}</option>
-                        </select>
+                        <div class="grade-radio-group">
+                            <div class="grade-radio-option">
+                                <input type="radio" name="grade" id="grade1" value="1" checked>
+                                <label for="grade1">1<small>{% trans "Mild" %}</small></label>
+                            </div>
+                            <div class="grade-radio-option">
+                                <input type="radio" name="grade" id="grade2" value="2">
+                                <label for="grade2">2<small>{% trans "Moderate" %}</small></label>
+                            </div>
+                            <div class="grade-radio-option">
+                                <input type="radio" name="grade" id="grade3" value="3">
+                                <label for="grade3">3<small>{% trans "Severe" %}</small></label>
+                            </div>
+                            <div class="grade-radio-option">
+                                <input type="radio" name="grade" id="grade4" value="4">
+                                <label for="grade4">4<small>{% trans "Life-threat" %}</small></label>
+                            </div>
+                            <div class="grade-radio-option">
+                                <input type="radio" name="grade" id="grade5" value="5">
+                                <label for="grade5">5<small>{% trans "Death" %}</small></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

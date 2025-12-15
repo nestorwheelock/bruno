@@ -3,6 +3,60 @@
 
 {% block title %}{% trans "CBPI Pain Assessment" %} - Bruno Health{% endblock %}
 
+{% block extra_css %}
+<style>
+.radio-matrix {
+    width: 100%;
+    border-collapse: collapse;
+}
+.radio-matrix th, .radio-matrix td {
+    text-align: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid #dee2e6;
+}
+.radio-matrix th {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+.radio-matrix .question-cell {
+    text-align: left;
+    min-width: 180px;
+    font-weight: 500;
+}
+.radio-matrix input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+.radio-matrix tr:hover {
+    background-color: #f8f9fa;
+}
+.scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #6c757d;
+    padding: 0 10px;
+    margin-bottom: 5px;
+}
+@media (max-width: 768px) {
+    .radio-matrix {
+        font-size: 0.85rem;
+    }
+    .radio-matrix th, .radio-matrix td {
+        padding: 6px 2px;
+    }
+    .radio-matrix input[type="radio"] {
+        width: 16px;
+        height: 16px;
+    }
+    .radio-matrix .question-cell {
+        min-width: 120px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-3">
     <h2>{% trans "Canine Brief Pain Inventory (CBPI)" %}</h2>
@@ -14,74 +68,106 @@
             <form id="cbpiForm">
                 {% csrf_token %}
 
-                <h5>{% trans "Pain Severity" %} <small class="text-muted">(0 = {% trans "no pain" %}, 10 = {% trans "extreme pain" %})</small></h5>
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Worst pain in last 7 days" %}</label>
-                        <input type="range" class="form-range" name="worst_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Least pain in last 7 days" %}</label>
-                        <input type="range" class="form-range" name="least_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Average pain" %}</label>
-                        <input type="range" class="form-range" name="average_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Pain right now" %}</label>
-                        <input type="range" class="form-range" name="current_pain" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
+                <h5 class="mb-3">{% trans "Pain Severity" %}</h5>
+                <div class="scale-labels">
+                    <span>0 = {% trans "no pain" %}</span>
+                    <span>10 = {% trans "extreme pain" %}</span>
+                </div>
+                <div class="table-responsive mb-4">
+                    <table class="radio-matrix">
+                        <thead>
+                            <tr>
+                                <th class="question-cell"></th>
+                                <th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="question-cell">{% trans "Worst pain in last 7 days" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="worst_pain" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Least pain in last 7 days" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="least_pain" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Average pain" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="average_pain" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Pain right now" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="current_pain" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <h5>{% trans "Pain Interference" %} <small class="text-muted">(0 = {% trans "no interference" %}, 10 = {% trans "completely interferes" %})</small></h5>
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "General activity" %}</label>
-                        <input type="range" class="form-range" name="general_activity" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Enjoyment of life" %}</label>
-                        <input type="range" class="form-range" name="enjoyment_of_life" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Ability to rise" %}</label>
-                        <input type="range" class="form-range" name="ability_to_rise" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Ability to walk" %}</label>
-                        <input type="range" class="form-range" name="ability_to_walk" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Ability to run" %}</label>
-                        <input type="range" class="form-range" name="ability_to_run" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Ability to climb" %}</label>
-                        <input type="range" class="form-range" name="ability_to_climb" min="0" max="10" value="0" oninput="this.nextElementSibling.value=this.value">
-                        <output>0</output>
-                    </div>
+                <h5 class="mb-3">{% trans "Pain Interference" %}</h5>
+                <div class="scale-labels">
+                    <span>0 = {% trans "no interference" %}</span>
+                    <span>10 = {% trans "completely interferes" %}</span>
+                </div>
+                <div class="table-responsive mb-4">
+                    <table class="radio-matrix">
+                        <thead>
+                            <tr>
+                                <th class="question-cell"></th>
+                                <th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="question-cell">{% trans "General activity" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="general_activity" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Enjoyment of life" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="enjoyment_of_life" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Ability to rise" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="ability_to_rise" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Ability to walk" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="ability_to_walk" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Ability to run" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="ability_to_run" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Ability to climb" %}</td>
+                                {% for i in "01234567890" %}<td><input type="radio" name="ability_to_climb" value="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}checked{% endif %}></td>{% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <h5>{% trans "Overall Quality of Life" %}</h5>
-                <div class="mb-3">
-                    <select name="overall_quality_of_life" class="form-select" required>
-                        <option value="">{% trans "Select..." %}</option>
-                        <option value="1">{% trans "Poor" %}</option>
-                        <option value="2">{% trans "Fair" %}</option>
-                        <option value="3">{% trans "Good" %}</option>
-                        <option value="4">{% trans "Very Good" %}</option>
-                        <option value="5">{% trans "Excellent" %}</option>
-                    </select>
+                <div class="table-responsive mb-4">
+                    <table class="radio-matrix">
+                        <thead>
+                            <tr>
+                                <th class="question-cell"></th>
+                                <th>{% trans "Poor" %}</th>
+                                <th>{% trans "Fair" %}</th>
+                                <th>{% trans "Good" %}</th>
+                                <th>{% trans "Very Good" %}</th>
+                                <th>{% trans "Excellent" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="question-cell">{% trans "Quality of Life" %}</td>
+                                <td><input type="radio" name="overall_quality_of_life" value="1"></td>
+                                <td><input type="radio" name="overall_quality_of_life" value="2"></td>
+                                <td><input type="radio" name="overall_quality_of_life" value="3" checked></td>
+                                <td><input type="radio" name="overall_quality_of_life" value="4"></td>
+                                <td><input type="radio" name="overall_quality_of_life" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="mb-3">

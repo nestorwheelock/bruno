@@ -3,6 +3,56 @@
 
 {% block title %}{% trans "CORQ Assessment" %} - Bruno Health{% endblock %}
 
+{% block extra_css %}
+<style>
+.radio-matrix {
+    width: 100%;
+    border-collapse: collapse;
+}
+.radio-matrix th, .radio-matrix td {
+    text-align: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid #dee2e6;
+}
+.radio-matrix th {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+.radio-matrix .question-cell {
+    text-align: left;
+    min-width: 150px;
+    font-weight: 500;
+}
+.radio-matrix input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+.radio-matrix tr:hover {
+    background-color: #f8f9fa;
+}
+.section-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+@media (max-width: 768px) {
+    .radio-matrix {
+        font-size: 0.85rem;
+    }
+    .radio-matrix th, .radio-matrix td {
+        padding: 6px 2px;
+    }
+    .radio-matrix input[type="radio"] {
+        width: 16px;
+        height: 16px;
+    }
+    .radio-matrix .question-cell {
+        min-width: 100px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-3">
     <h2>{% trans "Canine Owner-Reported Quality of Life (CORQ)" %}</h2>
@@ -14,193 +64,164 @@
             <form id="corqForm">
                 {% csrf_token %}
 
-                <h5>{% trans "Vitality" %}</h5>
-                <div class="row mb-3">
-                    {% for field, label in vitality_fields %}
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{{ label }}</label>
-                        <select name="{{ field }}" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    {% empty %}
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Energy level" %}</label>
-                        <select name="energy_level" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Playfulness" %}</label>
-                        <select name="playfulness" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Interest in surroundings" %}</label>
-                        <select name="interest_in_surroundings" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Appetite" %}</label>
-                        <select name="appetite" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    {% endfor %}
-                </div>
+                <div class="table-responsive mb-4">
+                    <table class="radio-matrix">
+                        <thead>
+                            <tr>
+                                <th class="question-cell"></th>
+                                <th>{% trans "Never" %}<br><small>1</small></th>
+                                <th>{% trans "Rarely" %}<br><small>2</small></th>
+                                <th>{% trans "Sometimes" %}<br><small>3</small></th>
+                                <th>{% trans "Often" %}<br><small>4</small></th>
+                                <th>{% trans "Always" %}<br><small>5</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="section-header">
+                                <td colspan="6"><h5 class="mb-0 mt-2">{% trans "Vitality" %}</h5></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Energy level" %}</td>
+                                <td><input type="radio" name="energy_level" value="1"></td>
+                                <td><input type="radio" name="energy_level" value="2"></td>
+                                <td><input type="radio" name="energy_level" value="3" checked></td>
+                                <td><input type="radio" name="energy_level" value="4"></td>
+                                <td><input type="radio" name="energy_level" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Playfulness" %}</td>
+                                <td><input type="radio" name="playfulness" value="1"></td>
+                                <td><input type="radio" name="playfulness" value="2"></td>
+                                <td><input type="radio" name="playfulness" value="3" checked></td>
+                                <td><input type="radio" name="playfulness" value="4"></td>
+                                <td><input type="radio" name="playfulness" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Interest in surroundings" %}</td>
+                                <td><input type="radio" name="interest_in_surroundings" value="1"></td>
+                                <td><input type="radio" name="interest_in_surroundings" value="2"></td>
+                                <td><input type="radio" name="interest_in_surroundings" value="3" checked></td>
+                                <td><input type="radio" name="interest_in_surroundings" value="4"></td>
+                                <td><input type="radio" name="interest_in_surroundings" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Appetite" %}</td>
+                                <td><input type="radio" name="appetite" value="1"></td>
+                                <td><input type="radio" name="appetite" value="2"></td>
+                                <td><input type="radio" name="appetite" value="3" checked></td>
+                                <td><input type="radio" name="appetite" value="4"></td>
+                                <td><input type="radio" name="appetite" value="5"></td>
+                            </tr>
 
-                <h5>{% trans "Companionship" %}</h5>
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Seeks attention" %}</label>
-                        <select name="seeks_attention" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Enjoys interaction" %}</label>
-                        <select name="enjoys_interaction" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Greets family" %}</label>
-                        <select name="greets_family" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Tail wagging" %}</label>
-                        <select name="tail_wagging" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                </div>
+                            <tr class="section-header">
+                                <td colspan="6"><h5 class="mb-0 mt-2">{% trans "Companionship" %}</h5></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Seeks attention" %}</td>
+                                <td><input type="radio" name="seeks_attention" value="1"></td>
+                                <td><input type="radio" name="seeks_attention" value="2"></td>
+                                <td><input type="radio" name="seeks_attention" value="3" checked></td>
+                                <td><input type="radio" name="seeks_attention" value="4"></td>
+                                <td><input type="radio" name="seeks_attention" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Enjoys interaction" %}</td>
+                                <td><input type="radio" name="enjoys_interaction" value="1"></td>
+                                <td><input type="radio" name="enjoys_interaction" value="2"></td>
+                                <td><input type="radio" name="enjoys_interaction" value="3" checked></td>
+                                <td><input type="radio" name="enjoys_interaction" value="4"></td>
+                                <td><input type="radio" name="enjoys_interaction" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Greets family" %}</td>
+                                <td><input type="radio" name="greets_family" value="1"></td>
+                                <td><input type="radio" name="greets_family" value="2"></td>
+                                <td><input type="radio" name="greets_family" value="3" checked></td>
+                                <td><input type="radio" name="greets_family" value="4"></td>
+                                <td><input type="radio" name="greets_family" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Tail wagging" %}</td>
+                                <td><input type="radio" name="tail_wagging" value="1"></td>
+                                <td><input type="radio" name="tail_wagging" value="2"></td>
+                                <td><input type="radio" name="tail_wagging" value="3" checked></td>
+                                <td><input type="radio" name="tail_wagging" value="4"></td>
+                                <td><input type="radio" name="tail_wagging" value="5"></td>
+                            </tr>
 
-                <h5>{% trans "Pain Signs" %} <small class="text-muted">({% trans "lower = better" %})</small></h5>
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Shows pain" %}</label>
-                        <select name="shows_pain" class="form-select" required>
-                            <option value="1" selected>{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3">{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Vocalizes pain" %}</label>
-                        <select name="vocalizes_pain" class="form-select" required>
-                            <option value="1" selected>{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3">{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Avoids touch" %}</label>
-                        <select name="avoids_touch" class="form-select" required>
-                            <option value="1" selected>{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3">{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Pants/restless" %}</label>
-                        <select name="pants_restless" class="form-select" required>
-                            <option value="1" selected>{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3">{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                </div>
+                            <tr class="section-header">
+                                <td colspan="6"><h5 class="mb-0 mt-2">{% trans "Pain Signs" %} <small class="text-muted">({% trans "lower = better" %})</small></h5></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Shows pain" %}</td>
+                                <td><input type="radio" name="shows_pain" value="1" checked></td>
+                                <td><input type="radio" name="shows_pain" value="2"></td>
+                                <td><input type="radio" name="shows_pain" value="3"></td>
+                                <td><input type="radio" name="shows_pain" value="4"></td>
+                                <td><input type="radio" name="shows_pain" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Vocalizes pain" %}</td>
+                                <td><input type="radio" name="vocalizes_pain" value="1" checked></td>
+                                <td><input type="radio" name="vocalizes_pain" value="2"></td>
+                                <td><input type="radio" name="vocalizes_pain" value="3"></td>
+                                <td><input type="radio" name="vocalizes_pain" value="4"></td>
+                                <td><input type="radio" name="vocalizes_pain" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Avoids touch" %}</td>
+                                <td><input type="radio" name="avoids_touch" value="1" checked></td>
+                                <td><input type="radio" name="avoids_touch" value="2"></td>
+                                <td><input type="radio" name="avoids_touch" value="3"></td>
+                                <td><input type="radio" name="avoids_touch" value="4"></td>
+                                <td><input type="radio" name="avoids_touch" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Pants/restless" %}</td>
+                                <td><input type="radio" name="pants_restless" value="1" checked></td>
+                                <td><input type="radio" name="pants_restless" value="2"></td>
+                                <td><input type="radio" name="pants_restless" value="3"></td>
+                                <td><input type="radio" name="pants_restless" value="4"></td>
+                                <td><input type="radio" name="pants_restless" value="5"></td>
+                            </tr>
 
-                <h5>{% trans "Mobility" %}</h5>
-                <div class="row mb-3">
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Walks normally" %}</label>
-                        <select name="walks_normally" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Rises easily" %}</label>
-                        <select name="rises_easily" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Climbs stairs" %}</label>
-                        <select name="climbs_stairs" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <label class="form-label">{% trans "Jumps" %}</label>
-                        <select name="jumps" class="form-select" required>
-                            <option value="1">{% trans "Never" %}</option>
-                            <option value="2">{% trans "Rarely" %}</option>
-                            <option value="3" selected>{% trans "Sometimes" %}</option>
-                            <option value="4">{% trans "Often" %}</option>
-                            <option value="5">{% trans "Always" %}</option>
-                        </select>
-                    </div>
+                            <tr class="section-header">
+                                <td colspan="6"><h5 class="mb-0 mt-2">{% trans "Mobility" %}</h5></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Walks normally" %}</td>
+                                <td><input type="radio" name="walks_normally" value="1"></td>
+                                <td><input type="radio" name="walks_normally" value="2"></td>
+                                <td><input type="radio" name="walks_normally" value="3" checked></td>
+                                <td><input type="radio" name="walks_normally" value="4"></td>
+                                <td><input type="radio" name="walks_normally" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Rises easily" %}</td>
+                                <td><input type="radio" name="rises_easily" value="1"></td>
+                                <td><input type="radio" name="rises_easily" value="2"></td>
+                                <td><input type="radio" name="rises_easily" value="3" checked></td>
+                                <td><input type="radio" name="rises_easily" value="4"></td>
+                                <td><input type="radio" name="rises_easily" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Climbs stairs" %}</td>
+                                <td><input type="radio" name="climbs_stairs" value="1"></td>
+                                <td><input type="radio" name="climbs_stairs" value="2"></td>
+                                <td><input type="radio" name="climbs_stairs" value="3" checked></td>
+                                <td><input type="radio" name="climbs_stairs" value="4"></td>
+                                <td><input type="radio" name="climbs_stairs" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="question-cell">{% trans "Jumps" %}</td>
+                                <td><input type="radio" name="jumps" value="1"></td>
+                                <td><input type="radio" name="jumps" value="2"></td>
+                                <td><input type="radio" name="jumps" value="3" checked></td>
+                                <td><input type="radio" name="jumps" value="4"></td>
+                                <td><input type="radio" name="jumps" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <h5>{% trans "Global Quality of Life" %}</h5>

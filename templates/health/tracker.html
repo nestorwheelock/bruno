@@ -1,251 +1,376 @@
 {% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+.radio-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+.radio-matrix th, .radio-matrix td {
+    text-align: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--gray-200);
+}
+.radio-matrix th {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+.radio-matrix .question-cell {
+    text-align: left;
+    min-width: 120px;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+.radio-matrix .hint {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    font-weight: 400;
+}
+.radio-matrix input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+.radio-matrix tr:hover {
+    background-color: var(--gray-50);
+}
+@media (max-width: 480px) {
+    .radio-matrix {
+        font-size: 0.8rem;
+    }
+    .radio-matrix th, .radio-matrix td {
+        padding: 6px 2px;
+    }
+    .radio-matrix input[type="radio"] {
+        width: 18px;
+        height: 18px;
+    }
+    .radio-matrix .question-cell {
+        min-width: 90px;
+    }
+    .radio-matrix .hint {
+        font-size: 0.65rem;
+    }
+}
+</style>
+{% endblock %}
 
 {% block main_content %}
 <form id="dailyForm">
     {% csrf_token %}
 
     <div class="card summary-card">
-        <h2>Was today a good day?</h2>
+        <h2>{% trans "Was today a good day?" %}</h2>
         <div class="day-rating">
             <label class="rating-option">
                 <input type="radio" name="good_day" value="yes" {% if entry.good_day == 'yes' %}checked{% endif %}>
-                <span class="rating-btn good">Yes</span>
+                <span class="rating-btn good">{% trans "Yes" %}</span>
             </label>
             <label class="rating-option">
                 <input type="radio" name="good_day" value="mixed" {% if entry.good_day == 'mixed' %}checked{% endif %}>
-                <span class="rating-btn mixed">Mixed</span>
+                <span class="rating-btn mixed">{% trans "Mixed" %}</span>
             </label>
             <label class="rating-option">
                 <input type="radio" name="good_day" value="no" {% if entry.good_day == 'no' %}checked{% endif %}>
-                <span class="rating-btn bad">No</span>
+                <span class="rating-btn bad">{% trans "No" %}</span>
             </label>
         </div>
     </div>
 
     <div class="card">
-        <h2>Mood & Engagement</h2>
-        <p class="card-subtitle">Happiness indicators</p>
+        <h2>{% trans "Mood & Engagement" %}</h2>
+        <p class="card-subtitle">{% trans "Happiness indicators" %}</p>
 
-        <div class="metric">
-            <label>Tail / Body Language</label>
-            <p class="metric-hint">Relaxed, wagging, loose vs stiff, withdrawn</p>
-            <div class="score-slider">
-                <input type="range" name="tail_body_language" min="0" max="5" value="{{ entry.tail_body_language|default:3 }}">
-                <span class="score-display">{{ entry.tail_body_language|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Interest in People</label>
-            <p class="metric-hint">Seeks affection, follows you vs disengaged</p>
-            <div class="score-slider">
-                <input type="range" name="interest_people" min="0" max="5" value="{{ entry.interest_people|default:3 }}">
-                <span class="score-display">{{ entry.interest_people|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Interest in Environment</label>
-            <p class="metric-hint">Sniffing, watching, alert vs dull</p>
-            <div class="score-slider">
-                <input type="range" name="interest_environment" min="0" max="5" value="{{ entry.interest_environment|default:3 }}">
-                <span class="score-display">{{ entry.interest_environment|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Enjoyment of Favorites</label>
-            <p class="metric-hint">Toys, walks, treats, sun, car rides</p>
-            <div class="score-slider">
-                <input type="range" name="enjoyment_favorites" min="0" max="5" value="{{ entry.enjoyment_favorites|default:3 }}">
-                <span class="score-display">{{ entry.enjoyment_favorites|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Overall "Spark"</label>
-            <p class="metric-hint">Your gut sense of joy vs flatness</p>
-            <div class="score-slider">
-                <input type="range" name="overall_spark" min="0" max="5" value="{{ entry.overall_spark|default:3 }}">
-                <span class="score-display">{{ entry.overall_spark|default:3 }}</span>
-            </div>
+        <div class="table-responsive">
+            <table class="radio-matrix">
+                <thead>
+                    <tr>
+                        <th class="question-cell"></th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Tail / Body Language" %}
+                            <span class="hint">{% trans "Relaxed, wagging vs stiff" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="tail_body_language" value="{{ forloop.counter0 }}" {% if entry.tail_body_language == forloop.counter0 or entry.tail_body_language == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Interest in People" %}
+                            <span class="hint">{% trans "Seeks affection vs disengaged" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="interest_people" value="{{ forloop.counter0 }}" {% if entry.interest_people == forloop.counter0 or entry.interest_people == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Interest in Environment" %}
+                            <span class="hint">{% trans "Sniffing, alert vs dull" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="interest_environment" value="{{ forloop.counter0 }}" {% if entry.interest_environment == forloop.counter0 or entry.interest_environment == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Enjoyment of Favorites" %}
+                            <span class="hint">{% trans "Toys, walks, treats" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="enjoyment_favorites" value="{{ forloop.counter0 }}" {% if entry.enjoyment_favorites == forloop.counter0 or entry.enjoyment_favorites == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Overall Spark" %}
+                            <span class="hint">{% trans "Joy vs flatness" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="overall_spark" value="{{ forloop.counter0 }}" {% if entry.overall_spark == forloop.counter0 or entry.overall_spark == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <div class="card">
-        <h2>Appetite & Eating</h2>
+        <h2>{% trans "Appetite & Eating" %}</h2>
 
-        <div class="metric">
-            <label>Appetite</label>
-            <p class="metric-hint">Eats willingly vs refusal</p>
-            <div class="score-slider">
-                <input type="range" name="appetite" min="0" max="5" value="{{ entry.appetite|default:3 }}">
-                <span class="score-display">{{ entry.appetite|default:3 }}</span>
-            </div>
+        <div class="table-responsive">
+            <table class="radio-matrix">
+                <thead>
+                    <tr>
+                        <th class="question-cell"></th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Appetite" %}
+                            <span class="hint">{% trans "Eats willingly vs refusal" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="appetite" value="{{ forloop.counter0 }}" {% if entry.appetite == forloop.counter0 or entry.appetite == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Food Enjoyment" %}
+                            <span class="hint">{% trans "Excited vs reluctant" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="food_enjoyment" value="{{ forloop.counter0 }}" {% if entry.food_enjoyment == forloop.counter0 or entry.food_enjoyment == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Nausea Signs" %}
+                            <span class="hint">{% trans "5 = none, 0 = vomiting" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="nausea_signs" value="{{ forloop.counter0 }}" {% if entry.nausea_signs == forloop.counter0 or entry.nausea_signs == None and forloop.counter0 == 5 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Weight / Body Condition" %}
+                            <span class="hint">{% trans "Stable vs noticeable loss" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="weight_condition" value="{{ forloop.counter0 }}" {% if entry.weight_condition == forloop.counter0 or entry.weight_condition == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="metric">
-            <label>Food Enjoyment</label>
-            <p class="metric-hint">Excited, slow, or reluctant</p>
-            <div class="score-slider">
-                <input type="range" name="food_enjoyment" min="0" max="5" value="{{ entry.food_enjoyment|default:3 }}">
-                <span class="score-display">{{ entry.food_enjoyment|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Nausea Signs</label>
-            <p class="metric-hint">5 = none, 0 = lip licking, drooling, vomiting</p>
-            <div class="score-slider">
-                <input type="range" name="nausea_signs" min="0" max="5" value="{{ entry.nausea_signs|default:5 }}">
-                <span class="score-display">{{ entry.nausea_signs|default:5 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Weight / Body Condition</label>
-            <p class="metric-hint">Stable vs noticeable loss</p>
-            <div class="score-slider">
-                <input type="range" name="weight_condition" min="0" max="5" value="{{ entry.weight_condition|default:3 }}">
-                <span class="score-display">{{ entry.weight_condition|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Meals Eaten Today</label>
+            <label>{% trans "Meals Eaten Today" %}</label>
             <div class="meal-checkboxes">
                 <label class="checkbox-option">
                     <input type="checkbox" name="breakfast" {% if entry.breakfast %}checked{% endif %}>
-                    <span>Breakfast</span>
+                    <span>{% trans "Breakfast" %}</span>
                 </label>
                 <label class="checkbox-option">
                     <input type="checkbox" name="lunch" {% if entry.lunch %}checked{% endif %}>
-                    <span>Lunch</span>
+                    <span>{% trans "Lunch" %}</span>
                 </label>
                 <label class="checkbox-option">
                     <input type="checkbox" name="dinner" {% if entry.dinner %}checked{% endif %}>
-                    <span>Dinner</span>
+                    <span>{% trans "Dinner" %}</span>
                 </label>
                 <label class="checkbox-option">
                     <input type="checkbox" name="treats" {% if entry.treats %}checked{% endif %}>
-                    <span>Treats</span>
+                    <span>{% trans "Treats" %}</span>
                 </label>
             </div>
         </div>
     </div>
 
     <div class="card">
-        <h2>Energy & Mobility</h2>
+        <h2>{% trans "Energy & Mobility" %}</h2>
 
-        <div class="metric">
-            <label>Energy Level</label>
-            <p class="metric-hint">Normal, slightly tired, lethargic</p>
-            <div class="score-slider">
-                <input type="range" name="energy_level" min="0" max="5" value="{{ entry.energy_level|default:3 }}">
-                <span class="score-display">{{ entry.energy_level|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Willingness to Move</label>
-            <p class="metric-hint">Gets up easily vs hesitation</p>
-            <div class="score-slider">
-                <input type="range" name="willingness_move" min="0" max="5" value="{{ entry.willingness_move|default:3 }}">
-                <span class="score-display">{{ entry.willingness_move|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Walking Comfort</label>
-            <p class="metric-hint">Smooth gait vs stiffness/limping</p>
-            <div class="score-slider">
-                <input type="range" name="walking_comfort" min="0" max="5" value="{{ entry.walking_comfort|default:3 }}">
-                <span class="score-display">{{ entry.walking_comfort|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Resting Comfort</label>
-            <p class="metric-hint">Settles easily vs restless</p>
-            <div class="score-slider">
-                <input type="range" name="resting_comfort" min="0" max="5" value="{{ entry.resting_comfort|default:3 }}">
-                <span class="score-display">{{ entry.resting_comfort|default:3 }}</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Pain & Physical Comfort</h2>
-
-        <div class="metric">
-            <label>Breathing Comfort</label>
-            <p class="metric-hint">Normal vs labored</p>
-            <div class="score-slider">
-                <input type="range" name="breathing_comfort" min="0" max="5" value="{{ entry.breathing_comfort|default:5 }}">
-                <span class="score-display">{{ entry.breathing_comfort|default:5 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Pain Signs</label>
-            <p class="metric-hint">5 = none, 0 = panting, whining, guarding</p>
-            <div class="score-slider">
-                <input type="range" name="pain_signs" min="0" max="5" value="{{ entry.pain_signs|default:5 }}">
-                <span class="score-display">{{ entry.pain_signs|default:5 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Sleep Quality</label>
-            <p class="metric-hint">Restful vs disrupted</p>
-            <div class="score-slider">
-                <input type="range" name="sleep_quality" min="0" max="5" value="{{ entry.sleep_quality|default:3 }}">
-                <span class="score-display">{{ entry.sleep_quality|default:3 }}</span>
-            </div>
-        </div>
-
-        <div class="metric">
-            <label>Response to Touch</label>
-            <p class="metric-hint">Enjoys vs flinches</p>
-            <div class="score-slider">
-                <input type="range" name="response_touch" min="0" max="5" value="{{ entry.response_touch|default:5 }}">
-                <span class="score-display">{{ entry.response_touch|default:5 }}</span>
-            </div>
+        <div class="table-responsive">
+            <table class="radio-matrix">
+                <thead>
+                    <tr>
+                        <th class="question-cell"></th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Energy Level" %}
+                            <span class="hint">{% trans "Normal vs lethargic" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="energy_level" value="{{ forloop.counter0 }}" {% if entry.energy_level == forloop.counter0 or entry.energy_level == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Willingness to Move" %}
+                            <span class="hint">{% trans "Gets up easily vs hesitation" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="willingness_move" value="{{ forloop.counter0 }}" {% if entry.willingness_move == forloop.counter0 or entry.willingness_move == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Walking Comfort" %}
+                            <span class="hint">{% trans "Smooth gait vs limping" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="walking_comfort" value="{{ forloop.counter0 }}" {% if entry.walking_comfort == forloop.counter0 or entry.walking_comfort == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Resting Comfort" %}
+                            <span class="hint">{% trans "Settles easily vs restless" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="resting_comfort" value="{{ forloop.counter0 }}" {% if entry.resting_comfort == forloop.counter0 or entry.resting_comfort == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <div class="card">
-        <h2>Notes</h2>
+        <h2>{% trans "Pain & Physical Comfort" %}</h2>
 
-        <div class="metric">
-            <label>What made today good?</label>
-            <textarea name="good_notes" rows="2" placeholder="Optional...">{{ entry.good_notes }}</textarea>
-        </div>
-
-        <div class="metric">
-            <label>What seemed hardest?</label>
-            <textarea name="hard_notes" rows="2" placeholder="Optional...">{{ entry.hard_notes }}</textarea>
-        </div>
-
-        <div class="metric">
-            <label>Other observations</label>
-            <textarea name="other_notes" rows="2" placeholder="Fever, coughing, diarrhea, bad breath changes...">{{ entry.other_notes }}</textarea>
+        <div class="table-responsive">
+            <table class="radio-matrix">
+                <thead>
+                    <tr>
+                        <th class="question-cell"></th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Breathing Comfort" %}
+                            <span class="hint">{% trans "Normal vs labored" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="breathing_comfort" value="{{ forloop.counter0 }}" {% if entry.breathing_comfort == forloop.counter0 or entry.breathing_comfort == None and forloop.counter0 == 5 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Pain Signs" %}
+                            <span class="hint">{% trans "5 = none, 0 = panting, whining" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="pain_signs" value="{{ forloop.counter0 }}" {% if entry.pain_signs == forloop.counter0 or entry.pain_signs == None and forloop.counter0 == 5 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Sleep Quality" %}
+                            <span class="hint">{% trans "Restful vs disrupted" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="sleep_quality" value="{{ forloop.counter0 }}" {% if entry.sleep_quality == forloop.counter0 or entry.sleep_quality == None and forloop.counter0 == 3 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td class="question-cell">
+                            {% trans "Response to Touch" %}
+                            <span class="hint">{% trans "Enjoys vs flinches" %}</span>
+                        </td>
+                        {% for i in "012345" %}
+                        <td><input type="radio" name="response_touch" value="{{ forloop.counter0 }}" {% if entry.response_touch == forloop.counter0 or entry.response_touch == None and forloop.counter0 == 5 %}checked{% endif %}></td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <button type="submit" class="save-btn">Save Today's Entry</button>
+    <div class="card">
+        <h2>{% trans "Notes" %}</h2>
+
+        <div class="metric">
+            <label>{% trans "What made today good?" %}</label>
+            <textarea name="good_notes" rows="2" placeholder="{% trans 'Optional...' %}">{{ entry.good_notes }}</textarea>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "What seemed hardest?" %}</label>
+            <textarea name="hard_notes" rows="2" placeholder="{% trans 'Optional...' %}">{{ entry.hard_notes }}</textarea>
+        </div>
+
+        <div class="metric">
+            <label>{% trans "Other observations" %}</label>
+            <textarea name="other_notes" rows="2" placeholder="{% trans 'Fever, coughing, diarrhea, bad breath changes...' %}">{{ entry.other_notes }}</textarea>
+        </div>
+    </div>
+
+    <button type="submit" class="save-btn">{% trans "Save Today's Entry" %}</button>
 </form>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    document.querySelectorAll('input[type="range"]').forEach(slider => {
-        const display = slider.parentElement.querySelector('.score-display');
-        slider.addEventListener('input', () => {
-            display.textContent = slider.value;
-        });
-    });
-
     document.getElementById('dailyForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -290,12 +415,12 @@
             });
 
             if (response.ok) {
-                showToast('Entry saved!');
+                showToast('{% trans "Entry saved!" %}');
             } else {
-                showToast('Error saving entry');
+                showToast('{% trans "Error saving entry" %}');
             }
         } catch (err) {
-            showToast('Error saving entry');
+            showToast('{% trans "Error saving entry" %}');
         }
     });
 </script>
