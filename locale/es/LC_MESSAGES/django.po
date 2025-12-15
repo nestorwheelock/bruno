@@ -24,13 +24,13 @@ msgid "Quality of Life Dashboard"
 msgstr "Panel de Calidad de Vida"
 
 msgid "CORQ Total Score"
-msgstr "Puntuacion Total CORQ"
+msgstr "Puntuación Total CORQ"
 
 msgid "Last assessment"
-msgstr "Ultima evaluacion"
+msgstr "Última evaluación"
 
 msgid "Pain Assessment (CBPI)"
-msgstr "Evaluacion del Dolor (CBPI)"
+msgstr "Evaluación del Dolor (CBPI)"
 
 msgid "Pain Severity"
 msgstr "Severidad del Dolor"
@@ -39,13 +39,13 @@ msgid "Interference"
 msgstr "Interferencia"
 
 msgid "QoL Rating"
-msgstr "Calificacion de Calidad de Vida"
+msgstr "Calificación de Calidad de Vida"
 
 msgid "No CBPI assessments yet"
-msgstr "Aun no hay evaluaciones CBPI"
+msgstr "Aún no hay evaluaciones CBPI"
 
 msgid "New CBPI Assessment"
-msgstr "Nueva Evaluacion CBPI"
+msgstr "Nueva Evaluación CBPI"
 
 msgid "Quality of Life (CORQ)"
 msgstr "Calidad de Vida (CORQ)"
@@ -66,13 +66,13 @@ msgid "Global QoL"
 msgstr "Calidad de Vida Global"
 
 msgid "No CORQ assessments yet"
-msgstr "Aun no hay evaluaciones CORQ"
+msgstr "Aún no hay evaluaciones CORQ"
 
 msgid "New CORQ Assessment"
-msgstr "Nueva Evaluacion CORQ"
+msgstr "Nueva Evaluación CORQ"
 
 msgid "Last 30 Days"
-msgstr "Ultimos 30 Dias"
+msgstr "Últimos 30 Días"
 
 msgid "Good"
 msgstr "Bueno"
@@ -84,7 +84,7 @@ msgid "Bad"
 msgstr "Malo"
 
 msgid "Total days tracked"
-msgstr "Total de dias registrados"
+msgstr "Total de días registrados"
 
 msgid "Daily Tracker"
 msgstr "Registro Diario"
@@ -93,13 +93,13 @@ msgid "Daily Scores Trend"
 msgstr "Tendencia de Puntuaciones Diarias"
 
 msgid "Lymph Node Measurements"
-msgstr "Mediciones de Ganglios Linfaticos"
+msgstr "Mediciones de Ganglios Linfáticos"
 
 msgid "Happiness Score"
-msgstr "Puntuacion de Felicidad"
+msgstr "Puntuación de Felicidad"
 
 msgid "Overall Score"
-msgstr "Puntuacion General"
+msgstr "Puntuación General"
 
 msgid "Mandibular L"
 msgstr "Mandibular Izq"
@@ -108,10 +108,10 @@ msgid "Mandibular R"
 msgstr "Mandibular Der"
 
 msgid "Popliteal L"
-msgstr "Popliteo Izq"
+msgstr "Poplíteo Izq"
 
 msgid "Popliteal R"
-msgstr "Popliteo Der"
+msgstr "Poplíteo Der"
 
 msgid "Active Adverse Events (VCOG-CTCAE)"
 msgstr "Eventos Adversos Activos (VCOG-CTCAE)"
@@ -132,7 +132,7 @@ msgid "Manage Treatments"
 msgstr "Gestionar Tratamientos"
 
 msgid "Quick Actions"
-msgstr "Acciones Rapidas"
+msgstr "Acciones Rápidas"
 
 msgid "Daily Entry"
 msgstr "Entrada Diaria"
@@ -144,20 +144,20 @@ msgid "CORQ"
 msgstr "CORQ"
 
 msgid "Lymph Nodes"
-msgstr "Ganglios Linfaticos"
+msgstr "Ganglios Linfáticos"
 
 # CBPI Assessment
 msgid "CBPI Pain Assessment"
-msgstr "Evaluacion de Dolor CBPI"
+msgstr "Evaluación de Dolor CBPI"
 
 msgid "Canine Brief Pain Inventory (CBPI)"
 msgstr "Inventario Breve de Dolor Canino (CBPI)"
 
 msgid "Validated pain assessment for dogs with cancer"
-msgstr "Evaluacion validada de dolor para perros con cancer"
+msgstr "Evaluación validada de dolor para perros con cáncer"
 
 msgid "New Assessment"
-msgstr "Nueva Evaluacion"
+msgstr "Nueva Evaluación"
 
 msgid "no pain"
 msgstr "sin dolor"
@@ -166,10 +166,10 @@ msgid "extreme pain"
 msgstr "dolor extremo"
 
 msgid "Worst pain in last 7 days"
-msgstr "Peor dolor en los ultimos 7 dias"
+msgstr "Peor dolor en los últimos 7 días"
 
 msgid "Least pain in last 7 days"
-msgstr "Menor dolor en los ultimos 7 dias"
+msgstr "Menor dolor en los últimos 7 días"
 
 msgid "Average pain"
 msgstr "Dolor promedio"
@@ -226,7 +226,7 @@ msgid "Notes"
 msgstr "Notas"
 
 msgid "Save CBPI Assessment"
-msgstr "Guardar Evaluacion CBPI"
+msgstr "Guardar Evaluación CBPI"
 
 msgid "Assessment History"
 msgstr "Historial de Evaluaciones"
@@ -245,13 +245,13 @@ msgstr "Guardado!"
 
 # CORQ Assessment
 msgid "CORQ Assessment"
-msgstr "Evaluacion CORQ"
+msgstr "Evaluación CORQ"
 
 msgid "Canine Owner-Reported Quality of Life (CORQ)"
-msgstr "Calidad de Vida Reportada por el Dueno (CORQ)"
+msgstr "Calidad de Vida Reportada por el Dueño (CORQ)"
 
 msgid "Validated quality of life questionnaire for dogs with cancer"
-msgstr "Cuestionario validado de calidad de vida para perros con cancer"
+msgstr "Cuestionario validado de calidad de vida para perros con cáncer"
 
 msgid "Never"
 msgstr "Nunca"
@@ -269,10 +269,10 @@ msgid "Always"
 msgstr "Siempre"
 
 msgid "Energy level"
-msgstr "Nivel de energia"
+msgstr "Nivel de energía"
 
 msgid "Playfulness"
-msgstr "Jugueton"
+msgstr "Juguetón"
 
 msgid "Interest in surroundings"
 msgstr "Interes en el entorno"
@@ -281,13 +281,13 @@ msgid "Appetite"
 msgstr "Apetito"
 
 msgid "Companionship"
-msgstr "Compania"
+msgstr "Compañía"
 
 msgid "Seeks attention"
-msgstr "Busca atencion"
+msgstr "Busca atención"
 
 msgid "Enjoys interaction"
-msgstr "Disfruta la interaccion"
+msgstr "Disfruta la interacción"
 
 msgid "Greets family"
 msgstr "Saluda a la familia"
@@ -317,7 +317,7 @@ msgid "Walks normally"
 msgstr "Camina normalmente"
 
 msgid "Rises easily"
-msgstr "Se levanta facilmente"
+msgstr "Se levanta fácilmente"
 
 msgid "Climbs stairs"
 msgstr "Sube escaleras"
@@ -332,7 +332,7 @@ msgid "Overall QoL (0-100)"
 msgstr "CdV General (0-100)"
 
 msgid "Save CORQ Assessment"
-msgstr "Guardar Evaluacion CORQ"
+msgstr "Guardar Evaluación CORQ"
 
 msgid "Total"
 msgstr "Total"
@@ -345,28 +345,28 @@ msgid "VCOG-CTCAE Adverse Events"
 msgstr "Eventos Adversos VCOG-CTCAE"
 
 msgid "Veterinary Cooperative Oncology Group - Common Terminology Criteria for Adverse Events v2"
-msgstr "Grupo de Oncologia Veterinaria Cooperativa - Criterios de Terminologia Comun para Eventos Adversos v2"
+msgstr "Grupo de Oncología Veterinaria Cooperativa - Criterios de Terminología Común para Eventos Adversos v2"
 
 msgid "Record New Adverse Event"
 msgstr "Registrar Nuevo Evento Adverso"
 
 msgid "Category"
-msgstr "Categoria"
+msgstr "Categoría"
 
 msgid "Select category..."
-msgstr "Seleccionar categoria..."
+msgstr "Seleccionar categoría..."
 
 msgid "Gastrointestinal"
 msgstr "Gastrointestinal"
 
 msgid "Hematologic"
-msgstr "Hematologico"
+msgstr "Hematológico"
 
 msgid "Dermatologic"
-msgstr "Dermatologico"
+msgstr "Dermatológico"
 
 msgid "Neurologic"
-msgstr "Neurologico"
+msgstr "Neurológico"
 
 msgid "Respiratory"
 msgstr "Respiratorio"
@@ -396,16 +396,16 @@ msgid "Anorexia"
 msgstr "Anorexia"
 
 msgid "Vomiting"
-msgstr "Vomito"
+msgstr "Vómito"
 
 msgid "Diarrhea"
 msgstr "Diarrea"
 
 msgid "Constipation"
-msgstr "Estrenimiento"
+msgstr "Estreñimiento"
 
 msgid "Nausea"
-msgstr "Nauseas"
+msgstr "Náuseas"
 
 msgid "Neutropenia"
 msgstr "Neutropenia"
@@ -423,10 +423,10 @@ msgid "Dermatitis"
 msgstr "Dermatitis"
 
 msgid "Peripheral Neuropathy"
-msgstr "Neuropatia Periferica"
+msgstr "Neuropatía Periférica"
 
 msgid "Seizure"
-msgstr "Convulsion"
+msgstr "Convulsión"
 
 msgid "Fatigue/Lethargy"
 msgstr "Fatiga/Letargo"
@@ -435,7 +435,7 @@ msgid "Fever"
 msgstr "Fiebre"
 
 msgid "Weight Loss"
-msgstr "Perdida de Peso"
+msgstr "Pérdida de Peso"
 
 msgid "Other (specify in notes)"
 msgstr "Otro (especificar en notas)"
@@ -477,16 +477,16 @@ msgid "Grade 5"
 msgstr "Grado 5"
 
 msgid "Mild; asymptomatic or mild symptoms; clinical or diagnostic observations only; intervention not indicated"
-msgstr "Leve; asintomatico o sintomas leves; solo observaciones clinicas o diagnosticas; intervencion no indicada"
+msgstr "Leve; asintomático o síntomas leves; sólo observaciones clínicas o diagnósticas; intervención no indicada"
 
 msgid "Moderate; minimal, local or noninvasive intervention indicated; limiting age-appropriate instrumental ADL"
-msgstr "Moderado; intervencion minima, local o no invasiva indicada; limitando AVD instrumentales apropiadas para la edad"
+msgstr "Moderado; intervención mínima, local o no invasiva indicada; limitando AVD instrumentales apropiadas para la edad"
 
 msgid "Severe or medically significant but not immediately life-threatening; hospitalization or prolongation of hospitalization indicated"
-msgstr "Severo o medicamente significativo pero no inmediatamente mortal; hospitalizacion o prolongacion de hospitalizacion indicada"
+msgstr "Severo o médicamente significativo pero no inmediatamente mortal; hospitalización o prolongación de hospitalización indicada"
 
 msgid "Life-threatening consequences; urgent intervention indicated"
-msgstr "Consecuencias potencialmente mortales; intervencion urgente indicada"
+msgstr "Consecuencias potencialmente mortales; intervención urgente indicada"
 
 msgid "Death related to adverse event"
 msgstr "Muerte relacionada con evento adverso"
@@ -535,7 +535,7 @@ msgid "Treatment Sessions"
 msgstr "Sesiones de Tratamiento"
 
 msgid "Track chemotherapy, radiation, and other cancer treatments"
-msgstr "Registrar quimioterapia, radiacion y otros tratamientos contra el cancer"
+msgstr "Registrar quimioterapia, radiación y otros tratamientos contra el cáncer"
 
 msgid "Record New Treatment"
 msgstr "Registrar Nuevo Tratamiento"
@@ -553,7 +553,7 @@ msgid "Radiation Therapy"
 msgstr "Radioterapia"
 
 msgid "Surgery"
-msgstr "Cirugia"
+msgstr "Cirugía"
 
 msgid "Immunotherapy"
 msgstr "Inmunoterapia"
@@ -577,13 +577,13 @@ msgid "Dose"
 msgstr "Dosis"
 
 msgid "Cycle Number"
-msgstr "Numero de Ciclo"
+msgstr "Número de Ciclo"
 
 msgid "Location/Clinic"
-msgstr "Ubicacion/Clinica"
+msgstr "Ubicación/Clínica"
 
 msgid "Veterinary clinic name"
-msgstr "Nombre de la clinica veterinaria"
+msgstr "Nombre de la clínica veterinaria"
 
 msgid "Administering Veterinarian"
 msgstr "Veterinario que Administra"
@@ -595,7 +595,7 @@ msgid "Pre-treatment Weight (kg)"
 msgstr "Peso Pre-tratamiento (kg)"
 
 msgid "Response Assessment"
-msgstr "Evaluacion de Respuesta"
+msgstr "Evaluación de Respuesta"
 
 msgid "Not assessed"
 msgstr "No evaluado"
@@ -613,25 +613,25 @@ msgid "PD - Progressive Disease"
 msgstr "EP - Enfermedad Progresiva"
 
 msgid "VCOG Response Evaluation Criteria:"
-msgstr "Criterios de Evaluacion de Respuesta VCOG:"
+msgstr "Criterios de Evaluación de Respuesta VCOG:"
 
 msgid "Disappearance of all target lesions"
-msgstr "Desaparicion de todas las lesiones objetivo"
+msgstr "Desaparición de todas las lesiones objetivo"
 
 msgid ">=30% decrease in sum of target lesion diameters"
-msgstr ">=30% de disminucion en la suma de diametros de lesiones objetivo"
+msgstr ">=30% de disminución en la suma de diámetros de lesiones objetivo"
 
 msgid "Neither PR nor PD criteria met"
 msgstr "Ni criterios de RP ni EP cumplidos"
 
 msgid ">=20% increase in sum of target lesion diameters or new lesions"
-msgstr ">=20% de aumento en la suma de diametros de lesiones objetivo o nuevas lesiones"
+msgstr ">=20% de aumento en la suma de diámetros de lesiones objetivo o nuevas lesiones"
 
 msgid "Pre-medications, reactions, observations..."
 msgstr "Pre-medicaciones, reacciones, observaciones..."
 
 msgid "Record Treatment Session"
-msgstr "Registrar Sesion de Tratamiento"
+msgstr "Registrar Sesión de Tratamiento"
 
 msgid "Treatment History"
 msgstr "Historial de Tratamientos"
@@ -658,10 +658,10 @@ msgid "Chemo Sessions"
 msgstr "Sesiones de Quimio"
 
 msgid "Latest Weight"
-msgstr "Peso mas Reciente"
+msgstr "Peso más Reciente"
 
 msgid "Treatment session recorded!"
-msgstr "Sesion de tratamiento registrada!"
+msgstr "Sesión de tratamiento registrada!"
 
 msgid "Error saving treatment"
 msgstr "Error al guardar tratamiento"
@@ -701,7 +701,7 @@ msgid "Error"
 msgstr "Error"
 
 msgid "Success"
-msgstr "Exito"
+msgstr "Éxito"
 
 # QoL Status Messages
 msgid "Excellent quality of life"
@@ -717,14 +717,14 @@ msgid "Quality of life concerns - consult veterinarian"
 msgstr "Preocupaciones de calidad de vida - consultar veterinario"
 
 msgid "No assessment data available"
-msgstr "No hay datos de evaluacion disponibles"
+msgstr "No hay datos de evaluación disponibles"
 
 # Fundraiser Page
 msgid "Help Bruno Fight Cancer"
-msgstr "Ayuda a Bruno a Luchar Contra el Cancer"
+msgstr "Ayuda a Bruno a Luchar Contra él Cáncer"
 
 msgid "He doesn't know he's sick. He just knows he loves us."
-msgstr "El no sabe que esta enfermo. Solo sabe que nos ama."
+msgstr "El no sabe que está enfermo. Solo sabe que nos ama."
 
 msgid "Donate Now"
 msgstr "Donar Ahora"
@@ -733,43 +733,43 @@ msgid "Meet Bruno"
 msgstr "Conoce a Bruno"
 
 msgid "Bruno is a 6-year-old dog with a heart of gold. He was recently diagnosed with lymphoma, a common but aggressive cancer in dogs. Without treatment, he may only have weeks left."
-msgstr "Bruno es un perro de 6 anos con un corazon de oro. Recientemente le diagnosticaron linfoma, un cancer comun pero agresivo en perros. Sin tratamiento, puede que solo le queden semanas."
+msgstr "Bruno es un perro de 6 años con un corazón de oro. Recientemente le diagnosticaron linfoma, un cáncer común pero agresivo en perros. Sin tratamiento, puede que sólo le queden semanas."
 
 msgid "With your help, Bruno can receive chemotherapy that could give him months—even years—of quality time with his family who loves him more than words can say."
-msgstr "Con tu ayuda, Bruno puede recibir quimioterapia que podria darle meses—incluso anos—de tiempo de calidad con su familia que lo ama mas de lo que las palabras pueden expresar."
+msgstr "Con tu ayuda, Bruno puede recibir quimioterapia que podría darle meses—incluso años—de tiempo de calidad con su familia que lo ama más de lo que las palabras pueden expresar."
 
 msgid "Bruno's Story"
 msgstr "La Historia de Bruno"
 
 msgid "A Love Like No Other"
-msgstr "Un Amor Como Ningun Otro"
+msgstr "Un Amor Como Ningún Otro"
 
 msgid "Bruno came into our lives six years ago, and from day one, he's been our shadow, our comfort, and our joy. He greets every morning with a wagging tail and ends every night curled up at our feet."
-msgstr "Bruno llego a nuestras vidas hace seis anos, y desde el primer dia, ha sido nuestra sombra, nuestro consuelo y nuestra alegria. Saluda cada manana con la cola meneando y termina cada noche acurrucado a nuestros pies."
+msgstr "Bruno llego a nuestras vidas hace seis años, y desde el primer día, ha sido nuestra sombra, nuestro consuelo y nuestra alegría. Saluda cada mañana con la cola meneando y termina cada noche acurrucado a nuestros pies."
 
 msgid "The Diagnosis"
-msgstr "El Diagnostico"
+msgstr "El Diagnóstico"
 
 msgid "When we noticed his lymph nodes were swollen, our hearts sank. The vet confirmed our fears: B-cell lymphoma. But there's hope—with CHOP chemotherapy, Bruno could have 12-18 more months of tail wags and belly rubs."
-msgstr "Cuando notamos que sus ganglios linfaticos estaban inflamados, nuestros corazones se hundieron. El veterinario confirmo nuestros temores: linfoma de celulas B. Pero hay esperanza—con quimioterapia CHOP, Bruno podria tener 12-18 meses mas de meneos de cola y caricias en la panza."
+msgstr "Cuando notamos que sus ganglios linfáticos estaban inflamados, nuestros corazones se hundieron. El veterinario confirmó nuestros temores: linfoma de células B. Pero hay esperanza—con quimioterapia CHOP, Bruno podría tener 12-18 meses más de meneos de cola y caricias en la panza."
 
 msgid "We Can't Do This Alone"
 msgstr "No Podemos Hacerlo Solos"
 
 msgid "With only one income and no savings to fall back on, the cost of treatment feels impossible. We cancelled Christmas travel to stay by his side. We'd give anything for more time with him—but we need help to make it happen."
-msgstr "Con un solo ingreso y sin ahorros en que apoyarnos, el costo del tratamiento parece imposible. Cancelamos nuestro viaje de Navidad para quedarnos a su lado. Dariamos cualquier cosa por mas tiempo con el—pero necesitamos ayuda para que suceda."
+msgstr "Con un sólo ingreso y sin ahorros en que apoyarnos, el costo del tratamiento parece imposible. Cancelamos nuestro viaje de Navidad para quedarnos a su lado. Daríamos cualquier cosa por más tiempo con el—pero necesitamos ayuda para que suceda."
 
 msgid "Every Day Counts"
-msgstr "Cada Dia Cuenta"
+msgstr "Cada Día Cuenta"
 
 msgid "The sooner we start, the more good days we get to keep."
-msgstr "Cuanto antes comencemos, mas dias buenos podremos conservar."
+msgstr "Cuanto antes comencemos, más días buenos podremos conservar."
 
 msgid "Lymphoma moves fast. Early treatment can slow the disease and give Bruno more time—more walks, more naps in the sun, more moments together. Your donation goes directly toward:"
-msgstr "El linfoma avanza rapido. El tratamiento temprano puede frenar la enfermedad y darle a Bruno mas tiempo—mas paseos, mas siestas al sol, mas momentos juntos. Tu donacion va directamente a:"
+msgstr "El linfoma avanza rápido. El tratamiento temprano puede frenar la enfermedad y darle a Bruno más tiempo—mas paseos, más siestas al sol, más momentos juntos. Tu donación va directamente a:"
 
 msgid "Veterinary oncology visits"
-msgstr "Consultas de oncologia veterinaria"
+msgstr "Consultas de oncología veterinaria"
 
 msgid "Chemotherapy treatments"
 msgstr "Tratamientos de quimioterapia"
@@ -784,7 +784,7 @@ msgid "Why We Need to Act Now"
 msgstr "Por Que Necesitamos Actuar Ahora"
 
 msgid "Canine lymphoma is treatable, but time is critical. With chemotherapy, dogs can live significantly longer with a good quality of life."
-msgstr "El linfoma canino es tratable, pero el tiempo es critico. Con quimioterapia, los perros pueden vivir significativamente mas con buena calidad de vida."
+msgstr "El linfoma canino es tratable, pero el tiempo es crítico. Con quimioterapia, los perros pueden vivir significativamente más con buena calidad de vida."
 
 msgid "We've already lost precious time."
 msgstr "Ya hemos perdido tiempo valioso."
@@ -796,19 +796,19 @@ msgid "With CHOP Chemotherapy"
 msgstr "Con Quimioterapia CHOP"
 
 msgid "Bruno could have as little as 2 weeks left without treatment"
-msgstr "A Bruno podrian quedarle tan solo 2 semanas sin tratamiento"
+msgstr "A Bruno podrían quedarle tan sólo 2 semanas sin tratamiento"
 
 msgid "Expected survival for B-cell Stage IIIa lymphoma"
-msgstr "Supervivencia esperada para linfoma de celulas B etapa IIIa"
+msgstr "Supervivencia esperada para linfoma de células B etapa IIIa"
 
 msgid "of dogs respond positively to chemotherapy"
 msgstr "de los perros responden positivamente a la quimioterapia"
 
 msgid "achieve complete remission"
-msgstr "logran remision completa"
+msgstr "logran remisión completa"
 
 msgid "survive 2 years or longer"
-msgstr "sobreviven 2 anos o mas"
+msgstr "sobreviven 2 años o más"
 
 msgid "Share Bruno's Story"
 msgstr "Comparte la Historia de Bruno"
@@ -832,26 +832,26 @@ msgid "Link copied!"
 msgstr "Enlace copiado!"
 
 msgid "Photo Gallery"
-msgstr "Galeria de Fotos"
+msgstr "Galería de Fotos"
 
 msgid "Thank you for caring."
 msgstr "Gracias por preocuparte."
 
 msgid "Every dollar, every share, every kind thought helps Bruno fight. From our family to yours—thank you."
-msgstr "Cada dolar, cada compartida, cada pensamiento amable ayuda a Bruno a luchar. De nuestra familia a la tuya—gracias."
+msgstr "Cada dólar, cada compartida, cada pensamiento amable ayuda a Bruno a luchar. De nuestra familia a la tuya—gracias."
 
 msgid "Give Bruno More Time"
-msgstr "Dale a Bruno Mas Tiempo"
+msgstr "Dale a Bruno Más Tiempo"
 
 # Additional Fundraiser Page Translations
 msgid "Bruno, a loving 6-year-old dog"
-msgstr "Bruno, un amoroso perro de 6 anos"
+msgstr "Bruno, un amoroso perro de 6 años"
 
 msgid "Six years of unconditional love."
-msgstr "Seis anos de amor incondicional."
+msgstr "Seis años de amor incondicional."
 
 msgid "Bruno and Tatum are inseparable. Where one goes, the other follows. He's not just a dog—he's a best friend, a protector, a constant source of comfort through every hard day and quiet night."
-msgstr "Bruno y Tatum son inseparables. Donde va uno, el otro lo sigue. No es solo un perro—es un mejor amigo, un protector, una fuente constante de consuelo en cada dia dificil y cada noche tranquila."
+msgstr "Bruno y Tatum son inseparables. Donde va uno, el otro lo sigue. No es sólo un perro—es un mejor amigo, un protector, una fuente constante de consuelo en cada día difícil y cada noche tranquila."
 
 msgid "Now Bruno has been diagnosed with"
 msgstr "Ahora a Bruno le han diagnosticado"
@@ -860,22 +860,22 @@ msgid "lymphoma"
 msgstr "linfoma"
 
 msgid "He's still happy, still wagging his tail, still looking at us like nothing is wrong. That's what makes this so hard."
-msgstr "Sigue feliz, sigue meneando la cola, sigue mirandonos como si nada estuviera mal. Eso es lo que hace esto tan dificil."
+msgstr "Sigue feliz, sigue meneando la cola, sigue mirándonos como si nada estuviera mal. Eso es lo que hace esto tan difícil."
 
 msgid "Bruno with his family"
 msgstr "Bruno con su familia"
 
 msgid "He Still Greets Each Day with Joy"
-msgstr "Aun Recibe Cada Dia con Alegria"
+msgstr "Aún Recibe Cada Día con Alegría"
 
 msgid "Bruno doesn't know what lymphoma means. He just knows he wants to be close to us, to play, to rest his head in our laps. His spirit hasn't changed—and we're fighting to keep it that way for as long as we can."
-msgstr "Bruno no sabe que significa el linfoma. Solo sabe que quiere estar cerca de nosotros, jugar, descansar su cabeza en nuestro regazo. Su espiritu no ha cambiado—y estamos luchando para mantenerlo asi el mayor tiempo posible."
+msgstr "Bruno no sabe que significa el linfoma. Solo sabe que quiere estar cerca de nosotros, jugar, descansar su cabeza en nuestro regazo. Su espíritu no ha cambiado—y estamos luchando para mantenerlo así el mayor tiempo posible."
 
 msgid "Bruno being playful"
 msgstr "Bruno jugando"
 
 msgid "It's been two weeks since we discovered Bruno's swollen lymph nodes—and they've tripled in size since then. The diagnostic testing had to be sent to Mexico City, which delayed the diagnosis. Every day without treatment, the cancer spreads."
-msgstr "Han pasado dos semanas desde que descubrimos los ganglios linfaticos inflamados de Bruno—y se han triplicado de tamano desde entonces. Las pruebas diagnosticas tuvieron que enviarse a la Ciudad de Mexico, lo que retraso el diagnostico. Cada dia sin tratamiento, el cancer se propaga."
+msgstr "Han pasado dos semanas desde que descubrimos los ganglios linfáticos inflamados de Bruno—y se han triplicado de tamaño desde entonces. Las pruebas diagnósticas tuvieron que enviarse a la Ciudad de México, lo que retrasó el diagnóstico. Cada día sin tratamiento, el cáncer se propaga."
 
 msgid "2-4 weeks"
 msgstr "2-4 semanas"
@@ -884,7 +884,7 @@ msgid "12-18 months"
 msgstr "12-18 meses"
 
 msgid "Statistics from veterinary oncology research. Individual outcomes vary based on lymphoma type, stage, and timing of treatment."
-msgstr "Estadisticas de investigacion en oncologia veterinaria. Los resultados individuales varian segun el tipo de linfoma, la etapa y el momento del tratamiento."
+msgstr "Estadísticas de investigación en oncología veterinaria. Los resultados individuales varían según el tipo de linfoma, la etapa y el momento del tratamiento."
 
 msgid "This Is Who We're Fighting For"
 msgstr "Por Quien Estamos Luchando"
@@ -920,7 +920,7 @@ msgid "Share on X"
 msgstr "Compartir en X"
 
 msgid "Thank you for caring about Bruno. Every donation and share brings us closer to giving him more good days."
-msgstr "Gracias por preocuparte por Bruno. Cada donacion y cada compartida nos acerca a darle mas dias buenos."
+msgstr "Gracias por preocuparte por Bruno. Cada donación y cada compartida nos acerca a darle más días buenos."
 
 msgid "Donate on GoFundMe"
 msgstr "Donar en GoFundMe"
