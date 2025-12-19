@@ -76,6 +76,24 @@ Evidence-based nutrition tracking for homemade zero-carbohydrate cancer diets ba
 
 ## Additional Features
 
+### Case Journal / Timeline
+A comprehensive medical journal system for documenting Bruno's treatment journey:
+- **Timeline Entries:** Chronological record of vet visits, lab results, treatments, symptoms, concerns, and milestones
+- **Entry Types:** Vet Visit, Lab Result, Imaging, Procedure, Treatment, Medication Change, Symptom, Communication, Milestone, Concern, Research
+- **Rich Content:** Full narrative entries with mood tracking, file attachments (photos, videos, PDFs), and tags
+- **Provider Integration:** Link entries to healthcare providers with trust ratings
+- **Navigation:** Swipe-enabled prev/next navigation between entries, keyboard shortcuts
+- **Mobile-First:** Optimized for quick entries during vet visits
+
+### Provider Tracking
+Track all veterinarians, clinics, and specialists involved in care:
+- **Trust Ratings:** 1-5 star system with color-coded ratings
+- **Contact Info:** Phone, email, website, location
+- **Credentials:** Track DVM, DACVIM, and other certifications
+- **Issues/Concerns:** Document any problems or reasons for distrust
+- **Notes:** General notes about each provider
+
+### Core Tracking Features
 - **Daily Health Tracking:** Record quality-of-life metrics including mood, appetite, energy, and comfort levels
 - **Medication Management:** Track medications and record doses given
 - **Lymph Node Measurements:** Monitor node sizes over time (mandibular, popliteal)
@@ -153,11 +171,14 @@ bruno/
 │   │   ├── Food            # Food database with status
 │   │   ├── Meal / MealItem # Meal logging
 │   │   ├── SupplementDose  # Supplement tracking
-│   │   └── DailyNutritionSummary # Daily totals/warnings
+│   │   ├── DailyNutritionSummary # Daily totals/warnings
+│   │   ├── Provider        # Healthcare provider tracking
+│   │   ├── TimelineEntry   # Case journal entries
+│   │   └── TimelineAttachment # File attachments for entries
 │   ├── fixtures/foods.json # Pre-populated food database
 │   ├── views.py            # All views
 │   ├── urls.py             # URL routing
-│   └── tests.py            # Test suite
+│   └── tests.py            # Test suite (94 tests)
 ├── planning/               # Research documentation
 │   └── NUTRITION_RESEARCH.md  # Nutrition research citations
 ├── fundraiser/             # Public fundraising page
