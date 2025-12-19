@@ -5,302 +5,797 @@
 
 {% block extra_css %}
 <style>
-    .status-indicator {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-        font-size: 2rem;
-        font-weight: bold;
-        color: white;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    .status-green { background: linear-gradient(135deg, #28a745, #20c997); }
-    .status-yellow { background: linear-gradient(135deg, #ffc107, #fd7e14); }
-    .status-orange { background: linear-gradient(135deg, #fd7e14, #dc3545); }
-    .status-red { background: linear-gradient(135deg, #dc3545, #721c24); }
-    .status-gray { background: linear-gradient(135deg, #6c757d, #495057); }
+/* Dashboard - Mobile First */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
 
-    .card { margin-bottom: 1rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .card-header { font-weight: bold; }
-    .score-display { font-size: 2rem; font-weight: bold; }
-    .chart-container { height: 250px; }
-    .stat-box { text-align: center; padding: 1rem; }
-    .stat-value { font-size: 2rem; font-weight: bold; }
-    .stat-label { color: #6c757d; font-size: 0.85rem; }
-    .event-grade-1 { border-left: 4px solid #28a745; }
-    .event-grade-2 { border-left: 4px solid #ffc107; }
-    .event-grade-3 { border-left: 4px solid #fd7e14; }
-    .event-grade-4 { border-left: 4px solid #dc3545; }
-    .event-grade-5 { border-left: 4px solid #721c24; }
+.time-selector {
+    display: flex;
+    gap: 4px;
+}
+
+.time-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    border-radius: 16px;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.time-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Status Banner */
+.status-banner {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.status-score {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.status-score.green { color: #22c55e; }
+.status-score.yellow { color: #eab308; }
+.status-score.orange { color: #f97316; }
+.status-score.red { color: #ef4444; }
+.status-score.gray { color: #9ca3af; }
+
+.status-stars {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.status-stars .filled { color: #facc15; }
+.status-stars .empty { color: var(--gray-300); }
+
+.status-message {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.status-time {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+}
+
+.trend-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.trend-improving { background: #dcfce7; color: #166534; }
+.trend-stable { background: #f3f4f6; color: #4b5563; }
+.trend-declining { background: #fee2e2; color: #991b1b; }
+
+/* Snapshot Grid */
+.snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.snapshot-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.snapshot-label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-bottom: 4px;
+}
+
+.snapshot-stars {
+    font-size: 0.875rem;
+    margin-bottom: 2px;
+}
+
+.snapshot-stars .filled { color: #facc15; }
+.snapshot-stars .empty { color: var(--gray-300); }
+
+.snapshot-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.snapshot-card.meals .meal-dots {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.meal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gray-200);
+}
+
+.meal-dot.filled { background: #22c55e; }
+
+/* Collapsible Sections */
+.dashboard-section {
+    background: var(--white);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.section-title {
+    font-weight: 600;
+    font-size: 0.9375rem;
+}
+
+.section-toggle {
+    color: var(--gray-400);
+    transition: transform 0.2s;
+}
+
+.section-header.collapsed .section-toggle {
+    transform: rotate(-90deg);
+}
+
+.section-content {
+    padding: 0 16px 16px;
+}
+
+.section-content.collapsed {
+    display: none;
+}
+
+/* Chart Container */
+.chart-container {
+    height: 200px;
+    margin-bottom: 8px;
+}
+
+/* Progress Bars */
+.progress-item {
+    margin-bottom: 12px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+    margin-bottom: 4px;
+}
+
+.progress-bar-container {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+.progress-bar-fill.good { background: #22c55e; }
+.progress-bar-fill.warning { background: #eab308; }
+.progress-bar-fill.danger { background: #ef4444; }
+.progress-bar-fill.info { background: var(--primary); }
+
+/* Supplement Checklist */
+.supplement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.supplement-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+}
+
+.supplement-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+.supplement-check.done { background: #dcfce7; color: #166534; }
+.supplement-check.pending { background: var(--gray-200); color: var(--gray-500); }
+
+/* Medication List */
+.med-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.med-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--gray-50);
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.med-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.med-status .check { color: #22c55e; }
+.med-status .pending { color: var(--gray-400); }
+
+/* Event List */
+.event-item {
+    padding: 10px 12px;
+    border-left: 4px solid;
+    background: var(--gray-50);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 8px;
+}
+
+.event-item.grade-1 { border-color: #22c55e; }
+.event-item.grade-2 { border-color: #eab308; }
+.event-item.grade-3 { border-color: #f97316; }
+.event-item.grade-4 { border-color: #ef4444; }
+.event-item.grade-5 { border-color: #7f1d1d; }
+
+.event-title {
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.event-meta {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+.event-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    float: right;
+}
+
+.event-badge.grade-1 { background: #dcfce7; color: #166534; }
+.event-badge.grade-2 { background: #fef9c3; color: #854d0e; }
+.event-badge.grade-3 { background: #ffedd5; color: #9a3412; }
+.event-badge.grade-4 { background: #fee2e2; color: #991b1b; }
+.event-badge.grade-5 { background: #7f1d1d; color: white; }
+
+/* Reminder List */
+.reminder-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.reminder-item:last-child { border-bottom: none; }
+
+.reminder-name { font-size: 0.875rem; }
+
+.reminder-status {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+.reminder-status.overdue { background: #fee2e2; color: #991b1b; }
+.reminder-status.due { background: #fef9c3; color: #854d0e; }
+.reminder-status.ok { background: #dcfce7; color: #166534; }
+
+/* Action Buttons */
+.section-action {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    color: var(--primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-top: 12px;
+}
+
+.vet-report-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    text-align: center;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+/* No data state */
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: var(--gray-500);
+    font-size: 0.875rem;
+}
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid py-3">
-    <!-- Language Switcher -->
-    <div class="text-end mb-3">
-        <form method="post" action="{% url 'health:set_language' %}" class="d-inline">
-            {% csrf_token %}
-            <select name="language" onchange="this.form.submit()" class="form-select form-select-sm d-inline-block w-auto">
-                <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
-                <option value="es" {% if LANGUAGE_CODE == 'es' %}selected{% endif %}>Español</option>
-            </select>
-        </form>
+{% block main_content %}
+<!-- Time Range Selector -->
+<div class="dashboard-header">
+    <h2 style="font-size: 1.125rem; margin: 0;">{% trans "Dashboard" %}</h2>
+    <div class="time-selector">
+        <button class="time-btn" data-days="7">7d</button>
+        <button class="time-btn active" data-days="30">30d</button>
+        <button class="time-btn" data-days="90">90d</button>
     </div>
+</div>
 
-    <h2 class="mb-4">{% trans "Quality of Life Dashboard" %}</h2>
-
-    <!-- QoL Status Banner -->
-    <div class="card mb-4">
-        <div class="card-body text-center">
-            <div class="status-indicator status-{{ qol_status }}">
-                {% if qol_status == 'green' %}✓
-                {% elif qol_status == 'yellow' %}!
-                {% elif qol_status == 'orange' %}⚠
-                {% elif qol_status == 'red' %}✕
-                {% else %}?{% endif %}
-            </div>
-            <h3>{{ qol_message }}</h3>
-            {% if latest_corq %}
-            <p class="mb-0">{% trans "CORQ Total Score" %}: <span class="score-display">{{ latest_corq.total_score }}/80</span></p>
-            <small class="text-muted">{% trans "Last assessment" %}: {{ latest_corq.date }}</small>
+<!-- Today's Status Banner -->
+<div class="status-banner">
+    {% if today_scores.overall %}
+    <div class="status-score {{ qol_status }}">{{ today_scores.overall }}</div>
+    <div class="status-stars">
+        {% for i in "12345" %}
+            {% if forloop.counter <= today_scores.overall|default:0 %}
+                <span class="filled">&#9733;</span>
+            {% else %}
+                <span class="empty">&#9733;</span>
             {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="status-score gray">--</div>
+    <div class="status-stars">
+        <span class="empty">&#9733;</span>
+        <span class="empty">&#9733;</span>
+        <span class="empty">&#9733;</span>
+        <span class="empty">&#9733;</span>
+        <span class="empty">&#9733;</span>
+    </div>
+    {% endif %}
+    <div class="status-message">{{ qol_message }}</div>
+    {% if today_entry %}
+    <div class="status-time">{% trans "Updated" %}: {{ today_entry.updated_at|timesince }} {% trans "ago" %}</div>
+    {% else %}
+    <div class="status-time">{% trans "No entry today" %}</div>
+    {% endif %}
+    {% if trend != 'stable' or trend_value != 0 %}
+    <div class="trend-indicator trend-{{ trend }}">
+        {% if trend == 'improving' %}&#8599;{% elif trend == 'declining' %}&#8600;{% else %}&#8594;{% endif %}
+        {% if trend == 'improving' %}{% trans "Improving" %}{% elif trend == 'declining' %}{% trans "Declining" %}{% else %}{% trans "Stable" %}{% endif %}
+        {% if trend_value %}({{ trend_value|stringformat:"+.1f" }}){% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Today's Snapshot -->
+<div class="snapshot-grid">
+    <div class="snapshot-card">
+        <div class="snapshot-label">{% trans "Mood" %}</div>
+        <div class="snapshot-stars">
+            {% for i in "12345" %}
+                {% if forloop.counter <= today_scores.mood|default:0 %}
+                    <span class="filled">&#9733;</span>
+                {% else %}
+                    <span class="empty">&#9733;</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="snapshot-value">{% if today_scores.mood %}{{ today_scores.mood }}/5{% else %}--{% endif %}</div>
+    </div>
+    <div class="snapshot-card">
+        <div class="snapshot-label">{% trans "Appetite" %}</div>
+        <div class="snapshot-stars">
+            {% for i in "12345" %}
+                {% if forloop.counter <= today_scores.appetite|default:0 %}
+                    <span class="filled">&#9733;</span>
+                {% else %}
+                    <span class="empty">&#9733;</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="snapshot-value">{% if today_scores.appetite %}{{ today_scores.appetite }}/5{% else %}--{% endif %}</div>
+    </div>
+    <div class="snapshot-card">
+        <div class="snapshot-label">{% trans "Energy" %}</div>
+        <div class="snapshot-stars">
+            {% for i in "12345" %}
+                {% if forloop.counter <= today_scores.energy|default:0 %}
+                    <span class="filled">&#9733;</span>
+                {% else %}
+                    <span class="empty">&#9733;</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="snapshot-value">{% if today_scores.energy %}{{ today_scores.energy }}/5{% else %}--{% endif %}</div>
+    </div>
+    <div class="snapshot-card">
+        <div class="snapshot-label">{% trans "Comfort" %}</div>
+        <div class="snapshot-stars">
+            {% for i in "12345" %}
+                {% if forloop.counter <= today_scores.pain|default:0 %}
+                    <span class="filled">&#9733;</span>
+                {% else %}
+                    <span class="empty">&#9733;</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="snapshot-value">{% if today_scores.pain %}{{ today_scores.pain }}/5{% else %}--{% endif %}</div>
+    </div>
+    <div class="snapshot-card meals">
+        <div class="snapshot-label">{% trans "Meals" %}</div>
+        <div class="meal-dots">
+            <div class="meal-dot {% if today_entry.breakfast %}filled{% endif %}" title="{% trans 'Breakfast' %}"></div>
+            <div class="meal-dot {% if today_entry.lunch %}filled{% endif %}" title="{% trans 'Lunch' %}"></div>
+            <div class="meal-dot {% if today_entry.dinner %}filled{% endif %}" title="{% trans 'Dinner' %}"></div>
+            <div class="meal-dot {% if today_entry.treats %}filled{% endif %}" title="{% trans 'Treats' %}"></div>
+        </div>
+        <div class="snapshot-value">
+            {% with meals_count=today_entry.breakfast|add:today_entry.lunch|add:today_entry.dinner|add:today_entry.treats %}
+            {{ meals_count|default:0 }}/4
+            {% endwith %}
         </div>
     </div>
-
-    <div class="row">
-        <!-- CBPI Summary -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-info text-white">
-                    {% trans "Pain Assessment (CBPI)" %}
-                </div>
-                <div class="card-body">
-                    {% if latest_cbpi %}
-                    <div class="row text-center">
-                        <div class="col-6">
-                            <div class="stat-value">{{ latest_cbpi.pain_severity_score }}</div>
-                            <div class="stat-label">{% trans "Pain Severity" %}</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-value">{{ latest_cbpi.pain_interference_score }}</div>
-                            <div class="stat-label">{% trans "Interference" %}</div>
-                        </div>
-                    </div>
-                    <hr>
-                    <p class="text-center mb-0">
-                        {% trans "QoL Rating" %}: {{ latest_cbpi.get_overall_quality_of_life_display }}
-                    </p>
-                    <small class="text-muted d-block text-center">{{ latest_cbpi.date }}</small>
-                    {% else %}
-                    <p class="text-muted text-center">{% trans "No CBPI assessments yet" %}</p>
-                    {% endif %}
-                    <a href="{% url 'health:cbpi' %}" class="btn btn-outline-info btn-sm w-100 mt-2">{% trans "New CBPI Assessment" %}</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- CORQ Summary -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-success text-white">
-                    {% trans "Quality of Life (CORQ)" %}
-                </div>
-                <div class="card-body">
-                    {% if latest_corq %}
-                    <div class="row text-center">
-                        <div class="col-3">
-                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.vitality_score }}</div>
-                            <div class="stat-label">{% trans "Vitality" %}</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.companionship_score }}</div>
-                            <div class="stat-label">{% trans "Social" %}</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.pain_score }}</div>
-                            <div class="stat-label">{% trans "Comfort" %}</div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-value" style="font-size:1.2rem">{{ latest_corq.mobility_score }}</div>
-                            <div class="stat-label">{% trans "Mobility" %}</div>
-                        </div>
-                    </div>
-                    <hr>
-                    <p class="text-center mb-0">
-                        {% trans "Global QoL" %}: {{ latest_corq.global_qol }}/100
-                    </p>
-                    <small class="text-muted d-block text-center">{{ latest_corq.date }}</small>
-                    {% else %}
-                    <p class="text-muted text-center">{% trans "No CORQ assessments yet" %}</p>
-                    {% endif %}
-                    <a href="{% url 'health:corq' %}" class="btn btn-outline-success btn-sm w-100 mt-2">{% trans "New CORQ Assessment" %}</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Good Days Summary -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    {% trans "Last 30 Days" %}
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <div class="stat-value text-success">{{ good_days }}</div>
-                            <div class="stat-label">{% trans "Good" %}</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-value text-warning">{{ mixed_days }}</div>
-                            <div class="stat-label">{% trans "Mixed" %}</div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-value text-danger">{{ bad_days }}</div>
-                            <div class="stat-label">{% trans "Bad" %}</div>
-                        </div>
-                    </div>
-                    <hr>
-                    <p class="text-center mb-0">{% trans "Total days tracked" %}: {{ total_days }}</p>
-                    <a href="{% url 'health:tracker' %}" class="btn btn-outline-primary btn-sm w-100 mt-2">{% trans "Daily Tracker" %}</a>
-                </div>
-            </div>
-        </div>
+    <div class="snapshot-card">
+        <a href="{% url 'health:tracker' %}" style="text-decoration: none; color: var(--primary);">
+            <div class="snapshot-label">{% trans "Log Data" %}</div>
+            <div style="font-size: 1.5rem; margin: 4px 0;">+</div>
+            <div class="snapshot-value">{% trans "Enter" %}</div>
+        </a>
     </div>
+</div>
 
-    <!-- Charts Row -->
-    <div class="row mt-4">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">{% trans "Daily Scores Trend" %}</div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="dailyChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">{% trans "Lymph Node Measurements" %}</div>
-                <div class="card-body">
-                    <div class="chart-container">
-                        <canvas id="nodesChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- QoL Trends Section -->
+<div class="dashboard-section">
+    <div class="section-header" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "QoL Trends" %}</span>
+        <span class="section-toggle">&#9662;</span>
     </div>
-
-    <!-- Adverse Events & Treatments -->
-    <div class="row mt-4">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header bg-warning text-dark">
-                    {% trans "Active Adverse Events (VCOG-CTCAE)" %}
-                </div>
-                <div class="card-body">
-                    {% if recent_events %}
-                    <ul class="list-group list-group-flush">
-                        {% for event in recent_events %}
-                        <li class="list-group-item event-grade-{{ event.grade }}">
-                            <strong>{{ event.get_event_display }}</strong>
-                            <span class="badge bg-{% if event.grade >= 3 %}danger{% elif event.grade == 2 %}warning{% else %}secondary{% endif %} float-end">
-                                Grade {{ event.grade }}
-                            </span>
-                            <br><small class="text-muted">{{ event.date }} - {{ event.get_category_display }}</small>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p class="text-muted text-center mb-0">{% trans "No active adverse events" %}</p>
-                    {% endif %}
-                    <a href="{% url 'health:events' %}" class="btn btn-outline-warning btn-sm w-100 mt-2">{% trans "Manage Events" %}</a>
-                </div>
-            </div>
+    <div class="section-content">
+        <div class="chart-container">
+            <canvas id="dailyChart"></canvas>
         </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header bg-secondary text-white">
-                    {% trans "Recent Treatments" %}
-                </div>
-                <div class="card-body">
-                    {% if recent_treatments %}
-                    <ul class="list-group list-group-flush">
-                        {% for tx in recent_treatments %}
-                        <li class="list-group-item">
-                            <strong>{{ tx.get_treatment_type_display }}</strong>
-                            {% if tx.agent %}- {{ tx.agent }}{% endif %}
-                            {% if tx.cycle_number %}<span class="badge bg-info float-end">Cycle {{ tx.cycle_number }}</span>{% endif %}
-                            <br><small class="text-muted">{{ tx.date }}</small>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p class="text-muted text-center mb-0">{% trans "No recent treatments" %}</p>
-                    {% endif %}
-                    <a href="{% url 'health:treatments' %}" class="btn btn-outline-secondary btn-sm w-100 mt-2">{% trans "Manage Treatments" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick Links -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">{% trans "Quick Actions" %}</div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 col-md-3 mb-2">
-                            <a href="{% url 'health:tracker' %}" class="btn btn-primary w-100">{% trans "Daily Entry" %}</a>
-                        </div>
-                        <div class="col-6 col-md-3 mb-2">
-                            <a href="{% url 'health:cbpi' %}" class="btn btn-info w-100">{% trans "CBPI" %}</a>
-                        </div>
-                        <div class="col-6 col-md-3 mb-2">
-                            <a href="{% url 'health:corq' %}" class="btn btn-success w-100">{% trans "CORQ" %}</a>
-                        </div>
-                        <div class="col-6 col-md-3 mb-2">
-                            <a href="{% url 'health:nodes' %}" class="btn btn-secondary w-100">{% trans "Lymph Nodes" %}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style="text-align: center; font-size: 0.8125rem; color: var(--gray-500);">
+            {% trans "Last 30 days - Happiness & Overall scores" %}
         </div>
     </div>
 </div>
+
+<!-- Treatment Response Section -->
+<div class="dashboard-section">
+    <div class="section-header" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "Treatment Response" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content">
+        <div class="chart-container">
+            <canvas id="nodesChart"></canvas>
+        </div>
+        {% if latest_node %}
+        <div style="font-size: 0.8125rem; color: var(--gray-500); text-align: center;">
+            {% trans "Last measurement" %}: {{ latest_node.date }}
+        </div>
+        {% endif %}
+        {% if recent_treatments %}
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-100);">
+            <div style="font-size: 0.75rem; color: var(--gray-500); margin-bottom: 6px;">{% trans "Recent Treatment" %}</div>
+            {% with tx=recent_treatments.0 %}
+            <div style="font-size: 0.875rem;">
+                <strong>{{ tx.get_treatment_type_display }}</strong>
+                {% if tx.agent %} - {{ tx.agent }}{% endif %}
+                {% if tx.cycle_number %}<span style="float: right; color: var(--primary);">Cycle {{ tx.cycle_number }}</span>{% endif %}
+            </div>
+            <div style="font-size: 0.75rem; color: var(--gray-500);">{{ tx.date }}</div>
+            {% endwith %}
+        </div>
+        {% endif %}
+        <a href="{% url 'health:nodes' %}" class="section-action">{% trans "Record Lymph Nodes" %} &rarr;</a>
+    </div>
+</div>
+
+<!-- Nutrition Section -->
+<div class="dashboard-section">
+    <div class="section-header collapsed" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "Nutrition Today" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content collapsed">
+        {% if today_nutrition and dog_profile %}
+        <div class="progress-item">
+            <div class="progress-label">
+                <span>{% trans "Food" %}</span>
+                <span>{{ today_nutrition.total_food_g|floatformat:0 }}g / {{ dog_profile.daily_food_max_g|floatformat:0 }}g</span>
+            </div>
+            <div class="progress-bar-container">
+                {% widthratio today_nutrition.total_food_g dog_profile.daily_food_max_g 100 as food_pct %}
+                <div class="progress-bar-fill {% if food_pct >= 80 and food_pct <= 120 %}good{% elif food_pct < 50 %}danger{% else %}warning{% endif %}" style="width: {{ food_pct|default:0 }}%"></div>
+            </div>
+        </div>
+        <div class="progress-item">
+            <div class="progress-label">
+                <span>{% trans "Protein" %}</span>
+                <span>{{ today_nutrition.total_protein_g|floatformat:0 }}g</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill info" style="width: {% widthratio today_nutrition.total_protein_g 100 100 %}%"></div>
+            </div>
+        </div>
+        <div class="progress-item">
+            <div class="progress-label">
+                <span>{% trans "Fat" %}</span>
+                <span>{{ today_nutrition.total_fat_g|floatformat:0 }}g</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill info" style="width: {% widthratio today_nutrition.total_fat_g 80 100 %}%"></div>
+            </div>
+        </div>
+        <div class="progress-item">
+            <div class="progress-label">
+                <span>{% trans "Carbs" %}</span>
+                <span>{{ today_nutrition.total_carbs_g|floatformat:0 }}g</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill {% if today_nutrition.total_carbs_g > 30 %}danger{% else %}good{% endif %}" style="width: {% widthratio today_nutrition.total_carbs_g 50 100 %}%"></div>
+            </div>
+        </div>
+        <div class="supplement-list" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-100);">
+            <div class="supplement-item">
+                <span class="supplement-check {% if today_nutrition.total_calcium_mg >= dog_profile.daily_calcium_min_mg %}done{% else %}pending{% endif %}">
+                    {% if today_nutrition.total_calcium_mg >= dog_profile.daily_calcium_min_mg %}&#10003;{% else %}&#9675;{% endif %}
+                </span>
+                <span>{% trans "Calcium" %}: {{ today_nutrition.total_calcium_mg|floatformat:0 }}mg</span>
+            </div>
+            <div class="supplement-item">
+                <span class="supplement-check {% if today_nutrition.total_omega3_mg >= dog_profile.daily_omega3_min_mg %}done{% else %}pending{% endif %}">
+                    {% if today_nutrition.total_omega3_mg >= dog_profile.daily_omega3_min_mg %}&#10003;{% else %}&#9675;{% endif %}
+                </span>
+                <span>{% trans "Omega-3" %}: {{ today_nutrition.total_omega3_mg|floatformat:0 }}mg</span>
+            </div>
+            <div class="supplement-item">
+                <span class="supplement-check {% if today_nutrition.multivitamin_given %}done{% else %}pending{% endif %}">
+                    {% if today_nutrition.multivitamin_given %}&#10003;{% else %}&#9675;{% endif %}
+                </span>
+                <span>{% trans "Multivitamin" %}</span>
+            </div>
+        </div>
+        {% if dog_profile.weight_kg %}
+        <div style="margin-top: 12px; font-size: 0.875rem; color: var(--gray-600);">
+            {% trans "Weight" %}: {{ dog_profile.weight_kg }}kg
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="no-data">{% trans "No nutrition data for today" %}</div>
+        {% endif %}
+        <a href="{% url 'health:nutrition' %}" class="section-action">{% trans "Log Meal" %} &rarr;</a>
+    </div>
+</div>
+
+<!-- Medications Section -->
+<div class="dashboard-section">
+    <div class="section-header collapsed" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "Medications" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content collapsed">
+        {% if active_meds %}
+        <div class="med-list">
+            {% for med in active_meds %}
+            <div class="med-item">
+                <div>
+                    <strong>{{ med.name }}</strong>
+                    <span style="color: var(--gray-500);">{{ med.dosage }}</span>
+                </div>
+                <div class="med-status">
+                    {% if med.id in doses_given %}
+                    <span class="check">&#10003;</span>
+                    <span style="color: var(--gray-500); font-size: 0.75rem;">{% trans "Given" %}</span>
+                    {% else %}
+                    <span class="pending">&#9675;</span>
+                    <span style="color: var(--gray-500); font-size: 0.75rem;">{% trans "Due" %}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-data">{% trans "No active medications" %}</div>
+        {% endif %}
+        <a href="{% url 'health:medications' %}" class="section-action">{% trans "Record Dose" %} &rarr;</a>
+    </div>
+</div>
+
+<!-- Recent Events Section -->
+<div class="dashboard-section">
+    <div class="section-header collapsed" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "Recent Events" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content collapsed">
+        {% if recent_events %}
+        {% for event in recent_events %}
+        <div class="event-item grade-{{ event.grade }}">
+            <span class="event-badge grade-{{ event.grade }}">Grade {{ event.grade }}</span>
+            <div class="event-title">{{ event.get_event_display }}</div>
+            <div class="event-meta">
+                {{ event.date }} - {{ event.get_category_display }}
+                {% if event.resolved %}<span style="color: #22c55e;"> - {% trans "Resolved" %}</span>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="no-data">{% trans "No recent events" %}</div>
+        {% endif %}
+        <a href="{% url 'health:events' %}" class="section-action">{% trans "Log Event" %} &rarr;</a>
+    </div>
+</div>
+
+<!-- Assessments Due Section -->
+{% if assessment_reminders %}
+<div class="dashboard-section">
+    <div class="section-header" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "Assessments Due" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content">
+        {% for reminder in assessment_reminders %}
+        <a href="{% url reminder.url %}" class="reminder-item" style="text-decoration: none; color: inherit;">
+            <span class="reminder-name">{{ reminder.name }}</span>
+            <span class="reminder-status {% if reminder.overdue %}overdue{% else %}due{% endif %}">
+                {% if reminder.days == None %}
+                {% trans "Never done" %}
+                {% elif reminder.overdue %}
+                {{ reminder.days }} {% trans "days overdue" %}
+                {% else %}
+                {{ reminder.days }} {% trans "days ago" %}
+                {% endif %}
+            </span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- 30-Day Summary -->
+<div class="dashboard-section">
+    <div class="section-header collapsed" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "30-Day Summary" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content collapsed">
+        <div style="display: flex; justify-content: space-around; text-align: center;">
+            <div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #22c55e;">{{ good_days }}</div>
+                <div style="font-size: 0.75rem; color: var(--gray-500);">{% trans "Good Days" %}</div>
+            </div>
+            <div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #eab308;">{{ mixed_days }}</div>
+                <div style="font-size: 0.75rem; color: var(--gray-500);">{% trans "Mixed Days" %}</div>
+            </div>
+            <div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #ef4444;">{{ bad_days }}</div>
+                <div style="font-size: 0.75rem; color: var(--gray-500);">{% trans "Bad Days" %}</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 12px; font-size: 0.875rem; color: var(--gray-500);">
+            {% trans "Total days tracked" %}: {{ total_days }}
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// Toggle sections
+function toggleSection(header) {
+    header.classList.toggle('collapsed');
+    const content = header.nextElementSibling;
+    content.classList.toggle('collapsed');
+}
+
+// Time range selector
+let currentDays = 30;
+document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentDays = parseInt(this.dataset.days);
+        localStorage.setItem('dashboardDays', currentDays);
+        loadCharts();
+    });
+});
+
+// Restore saved time range
+const savedDays = localStorage.getItem('dashboardDays');
+if (savedDays) {
+    currentDays = parseInt(savedDays);
+    document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.days) === currentDays);
+    });
+}
+
+let dailyChart, nodesChart;
+
+function loadCharts() {
     // Daily Scores Chart
-    fetch('{% url "health:api_chart_data" %}?type=daily&days=30')
+    fetch(`{% url "health:api_chart_data" %}?type=daily&days=${currentDays}`)
         .then(response => response.json())
         .then(data => {
+            if (dailyChart) dailyChart.destroy();
             if (data.labels && data.labels.length > 0) {
-                new Chart(document.getElementById('dailyChart'), {
+                dailyChart = new Chart(document.getElementById('dailyChart'), {
                     type: 'line',
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: '{% trans "Happiness Score" %}',
+                            label: '{% trans "Happiness" %}',
                             data: data.happiness,
-                            borderColor: '#28a745',
-                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
                             tension: 0.3,
                             fill: true
                         }, {
-                            label: '{% trans "Overall Score" %}',
+                            label: '{% trans "Overall" %}',
                             data: data.overall,
-                            borderColor: '#007bff',
-                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             tension: 0.3,
                             fill: true
                         }]
@@ -308,55 +803,56 @@ document.addEventListener('DOMContentLoaded', function() {
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 5 }
-                        }
+                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } },
+                        scales: { y: { beginAtZero: true, max: 5 } }
                     }
                 });
             }
         });
 
     // Lymph Nodes Chart
-    fetch('{% url "health:api_chart_data" %}?type=nodes&days=60')
+    fetch(`{% url "health:api_chart_data" %}?type=nodes&days=${currentDays * 2}`)
         .then(response => response.json())
         .then(data => {
+            if (nodesChart) nodesChart.destroy();
             if (data.labels && data.labels.length > 0) {
-                new Chart(document.getElementById('nodesChart'), {
+                nodesChart = new Chart(document.getElementById('nodesChart'), {
                     type: 'line',
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: '{% trans "Mandibular L" %}',
+                            label: '{% trans "Mand L" %}',
                             data: data.mandibular_left,
-                            borderColor: '#dc3545',
+                            borderColor: '#ef4444',
                             tension: 0.3
                         }, {
-                            label: '{% trans "Mandibular R" %}',
+                            label: '{% trans "Mand R" %}',
                             data: data.mandibular_right,
-                            borderColor: '#fd7e14',
+                            borderColor: '#f97316',
                             tension: 0.3
                         }, {
-                            label: '{% trans "Popliteal L" %}',
+                            label: '{% trans "Pop L" %}',
                             data: data.popliteal_left,
-                            borderColor: '#20c997',
+                            borderColor: '#14b8a6',
                             tension: 0.3
                         }, {
-                            label: '{% trans "Popliteal R" %}',
+                            label: '{% trans "Pop R" %}',
                             data: data.popliteal_right,
-                            borderColor: '#6f42c1',
+                            borderColor: '#8b5cf6',
                             tension: 0.3
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, title: { display: true, text: 'cm' } }
-                        }
+                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'cm' } } }
                     }
                 });
             }
         });
-});
+}
+
+document.addEventListener('DOMContentLoaded', loadCharts);
 </script>
 {% endblock %}

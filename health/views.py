@@ -277,20 +277,113 @@ def dashboard_view(request):
     today = date.today()
     thirty_days_ago = today - timedelta(days=30)
 
+    # Get today's entry
+    today_entry = DailyEntry.objects.filter(date=today).first()
+
+    # Calculate today's category scores
+    today_scores = {
+        'mood': None,
+        'appetite': None,
+        'energy': None,
+        'pain': None,
+        'overall': None,
+    }
+    if today_entry:
+        # Mood (5 fields)
+        mood_fields = [today_entry.tail_body_language, today_entry.interest_people,
+                       today_entry.interest_environment, today_entry.enjoyment_favorites,
+                       today_entry.overall_spark]
+        mood_valid = [f for f in mood_fields if f is not None]
+        if mood_valid:
+            today_scores['mood'] = round(sum(mood_valid) / len(mood_valid), 1)
+
+        # Appetite (2 fields)
+        appetite_fields = [today_entry.appetite, today_entry.food_enjoyment]
+        appetite_valid = [f for f in appetite_fields if f is not None]
+        if appetite_valid:
+            today_scores['appetite'] = round(sum(appetite_valid) / len(appetite_valid), 1)
+
+        # Energy (2 fields)
+        energy_fields = [today_entry.energy_level, today_entry.willingness_move]
+        energy_valid = [f for f in energy_fields if f is not None]
+        if energy_valid:
+            today_scores['energy'] = round(sum(energy_valid) / len(energy_valid), 1)
+
+        # Pain/Comfort (2 fields - higher is better/less pain)
+        pain_fields = [today_entry.pain_signs, today_entry.breathing_comfort]
+        pain_valid = [f for f in pain_fields if f is not None]
+        if pain_valid:
+            today_scores['pain'] = round(sum(pain_valid) / len(pain_valid), 1)
+
+        today_scores['overall'] = today_entry.overall_score
+
     # Get latest assessments
     latest_cbpi = CBPIAssessment.objects.first()
     latest_corq = CORQAssessment.objects.first()
     latest_node = LymphNodeMeasurement.objects.first()
 
+    # Assessment reminders - days since last
+    assessment_reminders = []
+    if latest_cbpi:
+        days_since_cbpi = (today - latest_cbpi.date).days
+        if days_since_cbpi >= 7:
+            assessment_reminders.append({
+                'name': 'CBPI Pain',
+                'days': days_since_cbpi,
+                'overdue': days_since_cbpi > 7,
+                'url': 'health:cbpi'
+            })
+    else:
+        assessment_reminders.append({
+            'name': 'CBPI Pain',
+            'days': None,
+            'overdue': True,
+            'url': 'health:cbpi'
+        })
+
+    if latest_corq:
+        days_since_corq = (today - latest_corq.date).days
+        if days_since_corq >= 14:
+            assessment_reminders.append({
+                'name': 'CORQ QoL',
+                'days': days_since_corq,
+                'overdue': days_since_corq > 14,
+                'url': 'health:corq'
+            })
+    else:
+        assessment_reminders.append({
+            'name': 'CORQ QoL',
+            'days': None,
+            'overdue': True,
+            'url': 'health:corq'
+        })
+
+    if latest_node:
+        days_since_nodes = (today - latest_node.date).days
+        if days_since_nodes >= 7:
+            assessment_reminders.append({
+                'name': 'Lymph Nodes',
+                'days': days_since_nodes,
+                'overdue': days_since_nodes > 7,
+                'url': 'health:nodes'
+            })
+    else:
+        assessment_reminders.append({
+            'name': 'Lymph Nodes',
+            'days': None,
+            'overdue': True,
+            'url': 'health:nodes'
+        })
+
     # Recent adverse events
     recent_events = VCOGCTCAEEvent.objects.filter(
-        date__gte=thirty_days_ago, resolved=False
-    ).order_by('-grade', '-date')[:5]
+        date__gte=thirty_days_ago
+    ).order_by('-date')[:5]
 
     # Recent treatments
     recent_treatments = TreatmentSession.objects.filter(
         date__gte=thirty_days_ago
-    )[:5]
+    ).order_by('-date')[:5]
 
     # Daily entry stats
     entries = DailyEntry.objects.filter(date__gte=thirty_days_ago)
@@ -299,10 +392,56 @@ def dashboard_view(request):
     bad_days = entries.filter(good_day='no').count()
     total_days = good_days + mixed_days + bad_days
 
-    # Calculate QoL status color based on CORQ
+    # Nutrition data
+    today_nutrition = DailyNutritionSummary.objects.filter(date=today).first()
+    dog_profile = DogProfile.objects.first()
+
+    # Medication data
+    active_meds = Medication.objects.filter(active=True)
+    today_doses = MedicationDose.objects.filter(
+        given_at__date=today
+    ).select_related('medication')
+    doses_given = {dose.medication_id for dose in today_doses}
+
+    # Calculate trend (compare last 7 days to previous 7 days)
+    seven_days_ago = today - timedelta(days=7)
+    fourteen_days_ago = today - timedelta(days=14)
+
+    recent_entries = DailyEntry.objects.filter(date__gte=seven_days_ago, date__lt=today)
+    previous_entries = DailyEntry.objects.filter(date__gte=fourteen_days_ago, date__lt=seven_days_ago)
+
+    recent_scores = [e.overall_score for e in recent_entries if e.overall_score]
+    previous_scores = [e.overall_score for e in previous_entries if e.overall_score]
+
+    trend = 'stable'
+    trend_value = 0
+    if recent_scores and previous_scores:
+        recent_avg = sum(recent_scores) / len(recent_scores)
+        previous_avg = sum(previous_scores) / len(previous_scores)
+        trend_value = round(recent_avg - previous_avg, 1)
+        if trend_value > 0.2:
+            trend = 'improving'
+        elif trend_value < -0.2:
+            trend = 'declining'
+
+    # Calculate QoL status color based on today's entry or CORQ
     qol_status = 'gray'
-    qol_message = _('No assessments yet')
-    if latest_corq:
+    qol_message = _('No entry yet today')
+    if today_scores['overall']:
+        score = today_scores['overall']
+        if score >= 4:
+            qol_status = 'green'
+            qol_message = _('Great day!')
+        elif score >= 3:
+            qol_status = 'yellow'
+            qol_message = _('Good day')
+        elif score >= 2:
+            qol_status = 'orange'
+            qol_message = _('Difficult day')
+        else:
+            qol_status = 'red'
+            qol_message = _('Hard day - monitor closely')
+    elif latest_corq:
         total = latest_corq.total_score
         if total >= 60:
             qol_status = 'green'
@@ -318,15 +457,24 @@ def dashboard_view(request):
             qol_message = _('Poor - urgent consultation needed')
 
     context = {
+        'today_entry': today_entry,
+        'today_scores': today_scores,
         'latest_cbpi': latest_cbpi,
         'latest_corq': latest_corq,
         'latest_node': latest_node,
+        'assessment_reminders': assessment_reminders,
         'recent_events': recent_events,
         'recent_treatments': recent_treatments,
         'good_days': good_days,
         'mixed_days': mixed_days,
         'bad_days': bad_days,
         'total_days': total_days,
+        'today_nutrition': today_nutrition,
+        'dog_profile': dog_profile,
+        'active_meds': active_meds,
+        'doses_given': doses_given,
+        'trend': trend,
+        'trend_value': trend_value,
         'qol_status': qol_status,
         'qol_message': qol_message,
     }
