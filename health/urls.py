@@ -67,4 +67,10 @@ urlpatterns = [
     # Providers
     path('providers/', views.provider_list, name='provider_list'),
     path('providers/new/', views.provider_create, name='provider_create'),
+
+    # Calendar Views
+    path('calendar/', views.calendar_month_view, name='calendar'),
+    path('calendar/<int:year>/<int:month>/', views.calendar_month_view, name='calendar_month'),
+    path('calendar/week/', views.calendar_week_view, name='calendar_week'),
+    path('calendar/week/<int:year>/<int:week>/', views.calendar_week_view, name='calendar_week_detail'),
 ]

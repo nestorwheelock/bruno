@@ -1587,3 +1587,151 @@ def provider_create(request):
         'trust_choices': Provider.TRUST_CHOICES,
     }
     return render(request, 'health/provider_form.html', context)
+
+
+# ============================================================================
+# Calendar Views
+# ============================================================================
+
+@login_required(login_url='health:login')
+def calendar_month_view(request, year=None, month=None):
+    """Monthly calendar view showing timeline entries."""
+    from calendar import monthrange
+
+    today = date.today()
+    year = int(year) if year else today.year
+    month = int(month) if month else today.month
+
+    # Get first and last day of month
+    first_day = date(year, month, 1)
+    _, last_day_num = monthrange(year, month)
+    last_day = date(year, month, last_day_num)
+
+    # Extend range to include full weeks for calendar grid (Monday start)
+    start_weekday = first_day.weekday()  # Monday = 0
+    end_weekday = last_day.weekday()
+
+    calendar_start = first_day - timedelta(days=start_weekday)
+    calendar_end = last_day + timedelta(days=(6 - end_weekday))
+
+    # Get entries for the visible range
+    entries = TimelineEntry.objects.filter(
+        user=request.user,
+        date__gte=calendar_start,
+        date__lte=calendar_end
+    ).order_by('date', 'time')
+
+    # Group entries by date
+    entries_by_date = {}
+    for entry in entries:
+        date_key = entry.date.isoformat()
+        if date_key not in entries_by_date:
+            entries_by_date[date_key] = []
+        entries_by_date[date_key].append({
+            'id': entry.id,
+            'title': entry.title,
+            'entry_type': entry.entry_type,
+            'status': entry.status,
+            'time': entry.time.strftime('%H:%M') if entry.time else None,
+        })
+
+    # Build calendar weeks
+    weeks = []
+    current_date = calendar_start
+    while current_date <= calendar_end:
+        week = []
+        for _ in range(7):
+            week.append({
+                'date': current_date,
+                'is_current_month': current_date.month == month,
+                'is_today': current_date == today,
+                'entries': entries_by_date.get(current_date.isoformat(), [])
+            })
+            current_date += timedelta(days=1)
+        weeks.append(week)
+
+    # Navigation
+    prev_month_date = first_day - timedelta(days=1)
+    next_month_date = last_day + timedelta(days=1)
+
+    context = {
+        'year': year,
+        'month': month,
+        'month_name': first_day.strftime('%B'),
+        'weeks': weeks,
+        'today': today,
+        'prev_year': prev_month_date.year,
+        'prev_month': prev_month_date.month,
+        'next_year': next_month_date.year,
+        'next_month': next_month_date.month,
+        'view_mode': 'month',
+    }
+    return render(request, 'health/calendar.html', context)
+
+
+@login_required(login_url='health:login')
+def calendar_week_view(request, year=None, week=None):
+    """Weekly calendar view with more detail per day."""
+    today = date.today()
+
+    if year and week:
+        # Get first day of specified week
+        first_day = date.fromisocalendar(int(year), int(week), 1)
+    else:
+        # Current week - Monday of this week
+        first_day = today - timedelta(days=today.weekday())
+
+    last_day = first_day + timedelta(days=6)
+
+    # Get entries for the week
+    entries = TimelineEntry.objects.filter(
+        user=request.user,
+        date__gte=first_day,
+        date__lte=last_day
+    ).select_related('provider').order_by('date', 'time')
+
+    # Group by date
+    entries_by_date = {}
+    for entry in entries:
+        date_key = entry.date.isoformat()
+        if date_key not in entries_by_date:
+            entries_by_date[date_key] = []
+        entries_by_date[date_key].append({
+            'id': entry.id,
+            'title': entry.title,
+            'entry_type': entry.entry_type,
+            'status': entry.status,
+            'time': entry.time,
+            'provider': entry.provider.name if entry.provider else None,
+        })
+
+    # Build days array
+    days = []
+    current_date = first_day
+    for _ in range(7):
+        days.append({
+            'date': current_date,
+            'day_name': current_date.strftime('%a'),
+            'is_today': current_date == today,
+            'entries': entries_by_date.get(current_date.isoformat(), [])
+        })
+        current_date += timedelta(days=1)
+
+    # Navigation
+    prev_week = first_day - timedelta(days=7)
+    next_week = first_day + timedelta(days=7)
+
+    context = {
+        'year': first_day.isocalendar()[0],
+        'week': first_day.isocalendar()[1],
+        'first_day': first_day,
+        'last_day': last_day,
+        'days': days,
+        'today': today,
+        'prev_year': prev_week.isocalendar()[0],
+        'prev_week': prev_week.isocalendar()[1],
+        'next_year': next_week.isocalendar()[0],
+        'next_week': next_week.isocalendar()[1],
+        'view_mode': 'week',
+    }
+    return render(request, 'health/calendar.html', context)

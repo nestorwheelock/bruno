@@ -1,0 +1,378 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Calendar" %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Calendar Header */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.calendar-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    min-width: 150px;
+    text-align: center;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 4px;
+}
+
+.view-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 16px;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.view-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Month View Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: var(--gray-200);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.calendar-weekday {
+    background: var(--gray-50);
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-500);
+}
+
+.calendar-day {
+    background: white;
+    min-height: 80px;
+    padding: 4px;
+    position: relative;
+}
+
+.calendar-day.other-month {
+    background: var(--gray-50);
+}
+
+.calendar-day.today {
+    background: #eef2ff;
+}
+
+.day-number {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.calendar-day.today .day-number {
+    background: var(--primary);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.day-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.day-entry {
+    font-size: 0.6875rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Entry type colors */
+.day-entry.vet_visit { background: #dbeafe; color: #1e40af; }
+.day-entry.lab_result { background: #fce7f3; color: #9d174d; }
+.day-entry.treatment { background: #fef3c7; color: #92400e; }
+.day-entry.symptom { background: #fef9c3; color: #854d0e; }
+.day-entry.medication { background: #d1fae5; color: #065f46; }
+.day-entry.procedure { background: #fee2e2; color: #991b1b; }
+.day-entry.imaging { background: #e0e7ff; color: #4338ca; }
+.day-entry.communication { background: #f3e8ff; color: #6b21a8; }
+.day-entry.milestone { background: #ccfbf1; color: #115e59; }
+.day-entry.concern { background: #fee2e2; color: #b91c1c; }
+.day-entry.research { background: #e0f2fe; color: #0369a1; }
+.day-entry.other { background: var(--gray-100); color: var(--gray-700); }
+
+/* Status indicators */
+.day-entry.scheduled {
+    border-left: 3px solid var(--primary);
+}
+
+.day-entry.cancelled {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.entry-more {
+    font-size: 0.6875rem;
+    color: var(--gray-500);
+    padding: 2px 4px;
+}
+
+/* Week View */
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.week-day {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 200px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.week-day.today {
+    border: 2px solid var(--primary);
+}
+
+.week-day-header {
+    text-align: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.week-day-name {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+}
+
+.week-day-number {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.week-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.week-entry {
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.week-entry-time {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-bottom: 2px;
+}
+
+.week-entry-title {
+    font-weight: 500;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+    .calendar-day {
+        min-height: 60px;
+    }
+
+    .day-entries {
+        display: none;
+    }
+
+    .calendar-day.has-entries::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    .week-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .week-day {
+        min-height: auto;
+    }
+}
+
+/* Quick add button */
+.quick-add-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    z-index: 50;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <div class="calendar-header">
+        <div class="calendar-nav">
+            {% if view_mode == 'month' %}
+            <a href="{% url 'health:calendar_month' prev_year prev_month %}" class="nav-btn">&larr;</a>
+            <span class="calendar-title">{{ month_name }} {{ year }}</span>
+            <a href="{% url 'health:calendar_month' next_year next_month %}" class="nav-btn">&rarr;</a>
+            {% else %}
+            <a href="{% url 'health:calendar_week_detail' prev_year prev_week %}" class="nav-btn">&larr;</a>
+            <span class="calendar-title">{{ first_day|date:"M j" }} - {{ last_day|date:"M j, Y" }}</span>
+            <a href="{% url 'health:calendar_week_detail' next_year next_week %}" class="nav-btn">&rarr;</a>
+            {% endif %}
+        </div>
+        <div class="view-toggle">
+            <a href="{% url 'health:calendar' %}" class="view-btn {% if view_mode == 'month' %}active{% endif %}">{% trans "Month" %}</a>
+            <a href="{% url 'health:calendar_week' %}" class="view-btn {% if view_mode == 'week' %}active{% endif %}">{% trans "Week" %}</a>
+        </div>
+    </div>
+</div>
+
+{% if view_mode == 'month' %}
+<!-- Month View -->
+<div class="calendar-grid">
+    <div class="calendar-weekday">{% trans "Mon" %}</div>
+    <div class="calendar-weekday">{% trans "Tue" %}</div>
+    <div class="calendar-weekday">{% trans "Wed" %}</div>
+    <div class="calendar-weekday">{% trans "Thu" %}</div>
+    <div class="calendar-weekday">{% trans "Fri" %}</div>
+    <div class="calendar-weekday">{% trans "Sat" %}</div>
+    <div class="calendar-weekday">{% trans "Sun" %}</div>
+
+    {% for week in weeks %}
+        {% for day in week %}
+        <div class="calendar-day {% if not day.is_current_month %}other-month{% endif %} {% if day.is_today %}today{% endif %} {% if day.entries %}has-entries{% endif %}"
+             data-date="{{ day.date|date:'Y-m-d' }}">
+            <div class="day-number">{{ day.date.day }}</div>
+            <div class="day-entries">
+                {% for entry in day.entries|slice:":3" %}
+                <a href="{% url 'health:timeline_detail' entry.id %}"
+                   class="day-entry {{ entry.entry_type }} {{ entry.status }}">
+                    {% if entry.time %}{{ entry.time }}{% endif %} {{ entry.title|truncatechars:15 }}
+                </a>
+                {% endfor %}
+                {% if day.entries|length > 3 %}
+                <span class="entry-more">+{{ day.entries|length|add:"-3" }} {% trans "more" %}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+{% else %}
+<!-- Week View -->
+<div class="week-grid">
+    {% for day in days %}
+    <div class="week-day {% if day.is_today %}today{% endif %}">
+        <div class="week-day-header">
+            <div class="week-day-name">{{ day.day_name }}</div>
+            <div class="week-day-number">{{ day.date.day }}</div>
+        </div>
+        <div class="week-entries">
+            {% for entry in day.entries %}
+            <a href="{% url 'health:timeline_detail' entry.id %}"
+               class="week-entry {{ entry.entry_type }} {{ entry.status }}">
+                {% if entry.time %}
+                <div class="week-entry-time">{{ entry.time|time:"g:i A" }}</div>
+                {% endif %}
+                <div class="week-entry-title">{{ entry.title }}</div>
+                {% if entry.provider %}
+                <div style="font-size: 0.75rem; color: var(--gray-500);">{{ entry.provider }}</div>
+                {% endif %}
+            </a>
+            {% empty %}
+            <div style="color: var(--gray-400); font-size: 0.8125rem; text-align: center; padding: 20px;">
+                {% trans "No entries" %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<a href="{% url 'health:timeline_create' %}" class="quick-add-btn" title="{% trans 'New Entry' %}">+</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Click on calendar day to create entry for that date
+document.querySelectorAll('.calendar-day').forEach(day => {
+    day.addEventListener('click', function(e) {
+        if (e.target.classList.contains('day-entry')) return;
+        const date = this.dataset.date;
+        window.location.href = "{% url 'health:timeline_create' %}?date=" + date;
+    });
+});
+</script>
+{% endblock %}

@@ -2956,3 +2956,155 @@ class DashboardQolStatusTests(TestCase):
             )
         response = self.client.get(self.dashboard_url)
         self.assertEqual(response.status_code, 200)
+
+
+# ============================================================================
+# Calendar View Tests
+# ============================================================================
+
+class CalendarMonthViewTests(TestCase):
+    """Tests for calendar month view."""
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.calendar_url = reverse('health:calendar')
+
+    def test_calendar_requires_login(self):
+        """Calendar view requires authentication."""
+        response = self.client.get(self.calendar_url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={self.calendar_url}")
+
+    def test_calendar_authenticated(self):
+        """Authenticated users can access calendar."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.calendar_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'health/calendar.html')
+
+    def test_calendar_context_has_weeks(self):
+        """Calendar context includes weeks array."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.calendar_url)
+        self.assertIn('weeks', response.context)
+        self.assertIn('year', response.context)
+        self.assertIn('month', response.context)
+        self.assertIn('month_name', response.context)
+        self.assertEqual(response.context['view_mode'], 'month')
+
+    def test_calendar_specific_month(self):
+        """Can navigate to specific month."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(reverse('health:calendar_month', args=[2025, 6]))
+        self.assertEqual(response.context['year'], 2025)
+        self.assertEqual(response.context['month'], 6)
+        self.assertEqual(response.context['month_name'], 'June')
+
+    def test_calendar_shows_entries(self):
+        """Calendar shows entries on correct days."""
+        self.client.login(username='testuser', password='testpass123')
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            entry_type='vet_visit',
+            title='Test Appointment'
+        )
+        response = self.client.get(self.calendar_url)
+        # Find today in weeks
+        found = False
+        for week in response.context['weeks']:
+            for day in week:
+                if day['is_today'] and day['entries']:
+                    found = True
+                    self.assertEqual(len(day['entries']), 1)
+                    self.assertEqual(day['entries'][0]['title'], 'Test Appointment')
+        self.assertTrue(found)
+
+    def test_calendar_navigation_links(self):
+        """Calendar has prev/next month navigation."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(reverse('health:calendar_month', args=[2025, 6]))
+        self.assertIn('prev_year', response.context)
+        self.assertIn('prev_month', response.context)
+        self.assertIn('next_year', response.context)
+        self.assertIn('next_month', response.context)
+        # June 2025 -> prev is May 2025, next is July 2025
+        self.assertEqual(response.context['prev_month'], 5)
+        self.assertEqual(response.context['next_month'], 7)
+
+    def test_calendar_weeks_have_seven_days(self):
+        """Each week in calendar has exactly 7 days."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.calendar_url)
+        for week in response.context['weeks']:
+            self.assertEqual(len(week), 7)
+
+    def test_calendar_marks_today(self):
+        """Calendar correctly marks today."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.calendar_url)
+        today_found = False
+        for week in response.context['weeks']:
+            for day in week:
+                if day['is_today']:
+                    today_found = True
+                    self.assertEqual(day['date'], date.today())
+        self.assertTrue(today_found)
+
+
+class CalendarWeekViewTests(TestCase):
+    """Tests for calendar week view."""
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.week_url = reverse('health:calendar_week')
+
+    def test_week_view_requires_login(self):
+        """Week view requires authentication."""
+        response = self.client.get(self.week_url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={self.week_url}")
+
+    def test_week_view_authenticated(self):
+        """Authenticated users can access week view."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.week_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['view_mode'], 'week')
+
+    def test_week_view_has_seven_days(self):
+        """Week view shows exactly 7 days."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.week_url)
+        self.assertIn('days', response.context)
+        self.assertEqual(len(response.context['days']), 7)
+
+    def test_week_view_shows_entries(self):
+        """Week view shows entries on correct days."""
+        self.client.login(username='testuser', password='testpass123')
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            entry_type='vet_visit',
+            title='Today Appointment'
+        )
+        response = self.client.get(self.week_url)
+        today_found = False
+        for day in response.context['days']:
+            if day['is_today']:
+                today_found = True
+                self.assertEqual(len(day['entries']), 1)
+        self.assertTrue(today_found)
+
+    def test_week_view_navigation(self):
+        """Week view has prev/next week navigation."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.week_url)
+        self.assertIn('prev_year', response.context)
+        self.assertIn('prev_week', response.context)
+        self.assertIn('next_year', response.context)
+        self.assertIn('next_week', response.context)
