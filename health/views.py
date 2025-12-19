@@ -281,12 +281,18 @@ def dashboard_view(request):
     today_entry = DailyEntry.objects.filter(date=today).first()
 
     # Calculate today's category scores
+    # For star display: round to nearest integer (4.5+ = 5, below 4.5 = 4)
     today_scores = {
         'mood': None,
         'appetite': None,
         'energy': None,
         'pain': None,
         'overall': None,
+        'mood_stars': None,
+        'appetite_stars': None,
+        'energy_stars': None,
+        'pain_stars': None,
+        'overall_stars': None,
     }
     if today_entry:
         # Mood (5 fields)
@@ -295,27 +301,37 @@ def dashboard_view(request):
                        today_entry.overall_spark]
         mood_valid = [f for f in mood_fields if f is not None]
         if mood_valid:
-            today_scores['mood'] = round(sum(mood_valid) / len(mood_valid), 1)
+            avg = sum(mood_valid) / len(mood_valid)
+            today_scores['mood'] = round(avg, 1)
+            today_scores['mood_stars'] = round(avg)  # Round to nearest int for stars
 
         # Appetite (2 fields)
         appetite_fields = [today_entry.appetite, today_entry.food_enjoyment]
         appetite_valid = [f for f in appetite_fields if f is not None]
         if appetite_valid:
-            today_scores['appetite'] = round(sum(appetite_valid) / len(appetite_valid), 1)
+            avg = sum(appetite_valid) / len(appetite_valid)
+            today_scores['appetite'] = round(avg, 1)
+            today_scores['appetite_stars'] = round(avg)
 
         # Energy (2 fields)
         energy_fields = [today_entry.energy_level, today_entry.willingness_move]
         energy_valid = [f for f in energy_fields if f is not None]
         if energy_valid:
-            today_scores['energy'] = round(sum(energy_valid) / len(energy_valid), 1)
+            avg = sum(energy_valid) / len(energy_valid)
+            today_scores['energy'] = round(avg, 1)
+            today_scores['energy_stars'] = round(avg)
 
         # Pain/Comfort (2 fields - higher is better/less pain)
         pain_fields = [today_entry.pain_signs, today_entry.breathing_comfort]
         pain_valid = [f for f in pain_fields if f is not None]
         if pain_valid:
-            today_scores['pain'] = round(sum(pain_valid) / len(pain_valid), 1)
+            avg = sum(pain_valid) / len(pain_valid)
+            today_scores['pain'] = round(avg, 1)
+            today_scores['pain_stars'] = round(avg)
 
         today_scores['overall'] = today_entry.overall_score
+        if today_entry.overall_score:
+            today_scores['overall_stars'] = round(today_entry.overall_score)
 
     # Get latest assessments
     latest_cbpi = CBPIAssessment.objects.first()

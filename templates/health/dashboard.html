@@ -392,7 +392,7 @@
     <div class="status-score {{ qol_status }}">{{ today_scores.overall }}</div>
     <div class="status-stars">
         {% for i in "12345" %}
-            {% if forloop.counter <= today_scores.overall|default:0 %}
+            {% if forloop.counter <= today_scores.overall_stars|default:0 %}
                 <span class="filled">&#9733;</span>
             {% else %}
                 <span class="empty">&#9733;</span>
@@ -430,7 +430,7 @@
         <div class="snapshot-label">{% trans "Mood" %}</div>
         <div class="snapshot-stars">
             {% for i in "12345" %}
-                {% if forloop.counter <= today_scores.mood|default:0 %}
+                {% if forloop.counter <= today_scores.mood_stars|default:0 %}
                     <span class="filled">&#9733;</span>
                 {% else %}
                     <span class="empty">&#9733;</span>
@@ -443,7 +443,7 @@
         <div class="snapshot-label">{% trans "Appetite" %}</div>
         <div class="snapshot-stars">
             {% for i in "12345" %}
-                {% if forloop.counter <= today_scores.appetite|default:0 %}
+                {% if forloop.counter <= today_scores.appetite_stars|default:0 %}
                     <span class="filled">&#9733;</span>
                 {% else %}
                     <span class="empty">&#9733;</span>
@@ -456,7 +456,7 @@
         <div class="snapshot-label">{% trans "Energy" %}</div>
         <div class="snapshot-stars">
             {% for i in "12345" %}
-                {% if forloop.counter <= today_scores.energy|default:0 %}
+                {% if forloop.counter <= today_scores.energy_stars|default:0 %}
                     <span class="filled">&#9733;</span>
                 {% else %}
                     <span class="empty">&#9733;</span>
@@ -469,7 +469,7 @@
         <div class="snapshot-label">{% trans "Comfort" %}</div>
         <div class="snapshot-stars">
             {% for i in "12345" %}
-                {% if forloop.counter <= today_scores.pain|default:0 %}
+                {% if forloop.counter <= today_scores.pain_stars|default:0 %}
                     <span class="filled">&#9733;</span>
                 {% else %}
                     <span class="empty">&#9733;</span>
