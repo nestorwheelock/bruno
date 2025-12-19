@@ -45,6 +45,17 @@ Same pattern - changed content block to main_content block.
 - Forms functional
 - History tables display
 
+## Follow-up Fix (d9ee8e3)
+The initial sed command also incorrectly changed `{% endblock %}` to
+`{% endblock main_content %}` for `extra_js` blocks, causing template errors.
+
+Fixed in second commit:
+- corq.html: line 306
+- events.html: line 308
+- treatments.html: line 236
+
 ## Prevention
 - Added to code review checklist: verify block names match base template
 - All templates should use `{% block main_content %}` for page content
+- Be careful with sed bulk replacements - they can affect unintended patterns
+- Always test all affected pages after template changes
