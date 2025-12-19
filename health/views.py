@@ -1480,6 +1480,7 @@ def timeline_edit(request, entry_id):
         'providers': providers,
         'entry_types': TimelineEntry.ENTRY_TYPE_CHOICES,
         'mood_choices': TimelineEntry.MOOD_CHOICES,
+        'today': date.today(),
     }
     return render(request, 'health/timeline_form.html', context)
 

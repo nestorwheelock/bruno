@@ -993,6 +993,88 @@ class TimelineCreateViewTests(TestCase):
         self.assertEqual(entry.bruno_mood, 'good')
 
 
+class TimelineEditViewTests(TestCase):
+    """Tests for timeline entry edit functionality."""
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.other_user = User.objects.create_user(
+            username='otheruser', password='otherpass123'
+        )
+        self.entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            time=time(10, 30),
+            entry_type='vet_visit',
+            title='Original Title',
+            content='Original content',
+            bruno_mood='good'
+        )
+        self.edit_url = reverse('health:timeline_edit', args=[self.entry.id])
+
+    def test_edit_requires_login(self):
+        """Test that edit view requires authentication."""
+        response = self.client.get(self.edit_url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={self.edit_url}")
+
+    def test_edit_form_get(self):
+        """Test that edit form loads successfully."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.edit_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'health/timeline_form.html')
+        self.assertContains(response, 'Original Title')
+
+    def test_edit_form_context(self):
+        """Test that edit form has correct context data."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.edit_url)
+        self.assertEqual(response.context['entry'], self.entry)
+        self.assertIn('providers', response.context)
+        self.assertIn('entry_types', response.context)
+        self.assertIn('mood_choices', response.context)
+
+    def test_edit_entry_post(self):
+        """Test that editing an entry works correctly."""
+        self.client.login(username='testuser', password='testpass123')
+        data = {
+            'date': date.today().isoformat(),
+            'time': '14:00',
+            'entry_type': 'treatment',
+            'title': 'Updated Title',
+            'content': 'Updated content',
+            'bruno_mood': 'great',
+            'tags': 'updated, test'
+        }
+        response = self.client.post(self.edit_url, data)
+
+        # Should redirect to detail view
+        self.assertEqual(response.status_code, 302)
+
+        # Entry should be updated
+        self.entry.refresh_from_db()
+        self.assertEqual(self.entry.title, 'Updated Title')
+        self.assertEqual(self.entry.content, 'Updated content')
+        self.assertEqual(self.entry.entry_type, 'treatment')
+        self.assertEqual(self.entry.bruno_mood, 'great')
+
+    def test_edit_404_for_other_user(self):
+        """Test that users cannot edit other users' entries."""
+        self.client.login(username='otheruser', password='otherpass123')
+        response = self.client.get(self.edit_url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_edit_nonexistent_entry(self):
+        """Test that editing nonexistent entry returns 404."""
+        self.client.login(username='testuser', password='testpass123')
+        bad_url = reverse('health:timeline_edit', args=[99999])
+        response = self.client.get(bad_url)
+        self.assertEqual(response.status_code, 404)
+
+
 class ProviderViewTests(TestCase):
     def setUp(self):
         self.client = Client()
