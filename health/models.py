@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -1163,6 +1165,12 @@ class TimelineEntry(models.Model):
         ('unknown', 'Unknown/Not Applicable'),
     ]
 
+    STATUS_CHOICES = [
+        ('scheduled', 'Scheduled'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField(null=True, blank=True)
@@ -1180,6 +1188,10 @@ class TimelineEntry(models.Model):
         null=True, blank=True, related_name='timeline_entries')
     bruno_mood = models.CharField(max_length=10, choices=MOOD_CHOICES,
         default='unknown', help_text="How was Bruno feeling?")
+
+    # Appointment status
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES,
+        default='completed', help_text="Appointment status")
 
     # Searchable tags
     tags = models.CharField(max_length=500, blank=True,
@@ -1201,6 +1213,36 @@ class TimelineEntry(models.Model):
         if self.tags:
             return [t.strip() for t in self.tags.split(',')]
         return []
+
+    def save(self, *args, **kwargs):
+        """Auto-set status based on date if not cancelled."""
+        if self.status != 'cancelled':
+            # Ensure date is a date object for comparison
+            entry_date = self.date
+            if isinstance(entry_date, str):
+                entry_date = date.fromisoformat(entry_date)
+            if entry_date > date.today():
+                self.status = 'scheduled'
+            elif self.status == 'scheduled':
+                # Past date with scheduled status -> completed
+                self.status = 'completed'
+        super().save(*args, **kwargs)
+
+    @property
+    def is_future(self):
+        """Returns True if entry date is in the future."""
+        entry_date = self.date
+        if isinstance(entry_date, str):
+            entry_date = date.fromisoformat(entry_date)
+        return entry_date > date.today()
+
+    @property
+    def is_overdue(self):
+        """Returns True if entry is scheduled but date has passed."""
+        entry_date = self.date
+        if isinstance(entry_date, str):
+            entry_date = date.fromisoformat(entry_date)
+        return self.status == 'scheduled' and entry_date < date.today()
 
 
 class TimelineAttachment(models.Model):

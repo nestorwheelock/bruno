@@ -813,6 +813,185 @@ class TimelineEntryModelTests(TestCase):
             self.assertEqual(entry.entry_type, entry_type)
 
 
+class TimelineEntryStatusTests(TestCase):
+    """Tests for timeline entry status field and auto-detection."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+
+    def test_future_date_auto_scheduled(self):
+        """Future dates should automatically be marked as scheduled."""
+        future_date = date.today() + timedelta(days=7)
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=future_date,
+            entry_type='vet_visit',
+            title='Future Appointment'
+        )
+        self.assertEqual(entry.status, 'scheduled')
+
+    def test_past_date_stays_completed(self):
+        """Past dates should remain completed."""
+        past_date = date.today() - timedelta(days=7)
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=past_date,
+            entry_type='vet_visit',
+            title='Past Visit'
+        )
+        self.assertEqual(entry.status, 'completed')
+
+    def test_today_date_is_completed(self):
+        """Today's date should be completed (not future)."""
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            entry_type='vet_visit',
+            title='Today Visit'
+        )
+        self.assertEqual(entry.status, 'completed')
+
+    def test_cancelled_status_preserved_future(self):
+        """Cancelled status should not be auto-changed for future dates."""
+        future_date = date.today() + timedelta(days=7)
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=future_date,
+            entry_type='vet_visit',
+            title='Cancelled Appointment',
+            status='cancelled'
+        )
+        self.assertEqual(entry.status, 'cancelled')
+
+    def test_cancelled_status_preserved_past(self):
+        """Cancelled status should not be auto-changed for past dates."""
+        past_date = date.today() - timedelta(days=7)
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=past_date,
+            entry_type='vet_visit',
+            title='Cancelled Past',
+            status='cancelled'
+        )
+        self.assertEqual(entry.status, 'cancelled')
+
+    def test_is_future_property_true(self):
+        """Test is_future property returns True for future dates."""
+        future_entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() + timedelta(days=1),
+            entry_type='vet_visit',
+            title='Future'
+        )
+        self.assertTrue(future_entry.is_future)
+
+    def test_is_future_property_false(self):
+        """Test is_future property returns False for past dates."""
+        past_entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() - timedelta(days=1),
+            entry_type='vet_visit',
+            title='Past'
+        )
+        self.assertFalse(past_entry.is_future)
+
+    def test_is_overdue_property(self):
+        """Test is_overdue property for past scheduled entries."""
+        past_date = date.today() - timedelta(days=1)
+        # Create entry then force status to scheduled
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=past_date,
+            entry_type='vet_visit',
+            title='Overdue'
+        )
+        TimelineEntry.objects.filter(pk=entry.pk).update(status='scheduled')
+        entry.refresh_from_db()
+        self.assertTrue(entry.is_overdue)
+
+    def test_is_overdue_false_for_completed(self):
+        """Completed entries should not be overdue."""
+        past_date = date.today() - timedelta(days=1)
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=past_date,
+            entry_type='vet_visit',
+            title='Completed Past',
+            status='completed'
+        )
+        self.assertFalse(entry.is_overdue)
+
+    def test_is_overdue_false_for_future(self):
+        """Future scheduled entries should not be overdue."""
+        future_entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() + timedelta(days=1),
+            entry_type='vet_visit',
+            title='Future Scheduled'
+        )
+        self.assertFalse(future_entry.is_overdue)
+
+    def test_status_choices_valid(self):
+        """Test all status choices are valid."""
+        # Scheduled - use future date so it stays scheduled
+        entry1 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() + timedelta(days=10),
+            entry_type='vet_visit',
+            title='Status scheduled',
+            status='scheduled'
+        )
+        self.assertEqual(entry1.status, 'scheduled')
+
+        # Completed - use past date
+        entry2 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() - timedelta(days=10),
+            entry_type='vet_visit',
+            title='Status completed',
+            status='completed'
+        )
+        self.assertEqual(entry2.status, 'completed')
+
+        # Cancelled - use past date, should stay cancelled
+        entry3 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() - timedelta(days=10),
+            entry_type='vet_visit',
+            title='Status cancelled',
+            status='cancelled'
+        )
+        self.assertEqual(entry3.status, 'cancelled')
+
+    def test_default_status_is_completed(self):
+        """Default status for past entries should be completed."""
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() - timedelta(days=5),
+            entry_type='vet_visit',
+            title='Default Status Test'
+        )
+        self.assertEqual(entry.status, 'completed')
+
+    def test_status_update_on_save(self):
+        """Updating date should update status appropriately."""
+        # Create past entry
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() - timedelta(days=5),
+            entry_type='vet_visit',
+            title='Changing Date'
+        )
+        self.assertEqual(entry.status, 'completed')
+
+        # Change to future date
+        entry.date = date.today() + timedelta(days=5)
+        entry.save()
+        self.assertEqual(entry.status, 'scheduled')
+
+
 # ============================================================================
 # Timeline View Tests
 # ============================================================================
