@@ -1,0 +1,343 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% if entry %}{% trans "Edit Entry" %}{% else %}{% trans "New Entry" %}{% endif %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.back-link {
+    color: var(--gray-500);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+.form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.9375rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+.form-group textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+.content-textarea {
+    min-height: 300px !important;
+    line-height: 1.6;
+}
+.hint {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    margin-top: 4px;
+}
+.type-select-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.type-option {
+    text-align: center;
+}
+.type-option input {
+    display: none;
+}
+.type-option label {
+    display: block;
+    padding: 10px 8px;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.type-option input:checked + label {
+    border-color: var(--primary);
+    background: #eef2ff;
+    color: var(--primary);
+}
+.mood-grid {
+    display: flex;
+    gap: 8px;
+}
+.mood-option {
+    flex: 1;
+}
+.mood-option input {
+    display: none;
+}
+.mood-option label {
+    display: block;
+    padding: 12px 8px;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.mood-option.great label { color: #10b981; }
+.mood-option.good label { color: #84cc16; }
+.mood-option.okay label { color: #eab308; }
+.mood-option.poor label { color: #f97316; }
+.mood-option.bad label { color: #ef4444; }
+.mood-option input:checked + label {
+    border-color: currentColor;
+    background: currentColor;
+    color: white;
+}
+.file-upload-area {
+    border: 2px dashed var(--gray-200);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.file-upload-area:hover {
+    border-color: var(--primary);
+    background: #f8fafc;
+}
+.file-upload-area input {
+    display: none;
+}
+.file-upload-area p {
+    color: var(--gray-500);
+    font-size: 0.875rem;
+}
+.file-list {
+    margin-top: 12px;
+}
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--gray-50);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+}
+.file-item .remove-file {
+    color: var(--danger);
+    cursor: pointer;
+    font-weight: bold;
+}
+.existing-attachments {
+    margin-bottom: 16px;
+}
+.existing-attachment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--gray-50);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+.existing-attachment a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.delete-attachment-btn {
+    color: var(--danger);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+.btn-secondary {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: var(--gray-700);
+}
+.btn-primary {
+    flex: 2;
+    padding: 14px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <div class="form-header">
+        <h2>{% if entry %}{% trans "Edit Entry" %}{% else %}{% trans "New Journal Entry" %}{% endif %}</h2>
+        <a href="{% url 'health:timeline' %}" class="back-link">&larr; {% trans "Back" %}</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="entryForm">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>{% trans "Date" %}</label>
+                <input type="date" name="date" value="{{ entry.date|date:'Y-m-d'|default:today }}" required>
+            </div>
+            <div class="form-group">
+                <label>{% trans "Time" %}</label>
+                <input type="time" name="time" value="{{ entry.time|time:'H:i'|default:'' }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Entry Type" %}</label>
+            <div class="type-select-grid">
+                {% for value, label in entry_types %}
+                <div class="type-option">
+                    <input type="radio" name="entry_type" id="type_{{ value }}" value="{{ value }}"
+                           {% if entry.entry_type == value or value == 'other' and not entry %}checked{% endif %}>
+                    <label for="type_{{ value }}">{{ label }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Title" %}</label>
+            <input type="text" name="title" value="{{ entry.title|default:'' }}" placeholder="{% trans 'Brief summary of this entry' %}" required>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Full Details" %}</label>
+            <textarea name="content" class="content-textarea" placeholder="{% trans 'Write the full narrative here. Include all details, observations, feelings, quotes, times, etc. This field is intentionally large - capture everything!' %}">{{ entry.content|default:'' }}</textarea>
+            <p class="hint">{% trans "Don't summarize - write everything. Include exact quotes, times, your feelings, observations, questions, concerns." %}</p>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Provider" %}</label>
+            <select name="provider">
+                <option value="">{% trans "No provider / N/A" %}</option>
+                {% for provider in providers %}
+                <option value="{{ provider.id }}" {% if entry.provider_id == provider.id %}selected{% endif %}>
+                    {{ provider.name }}{% if provider.clinic_name %} - {{ provider.clinic_name }}{% endif %}
+                </option>
+                {% endfor %}
+            </select>
+            <p class="hint"><a href="{% url 'health:provider_create' %}">{% trans "Add new provider" %}</a></p>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Bruno's Mood" %}</label>
+            <div class="mood-grid">
+                {% for value, label in mood_choices %}
+                <div class="mood-option {{ value }}">
+                    <input type="radio" name="bruno_mood" id="mood_{{ value }}" value="{{ value }}"
+                           {% if entry.bruno_mood == value or value == 'unknown' and not entry %}checked{% endif %}>
+                    <label for="mood_{{ value }}">{{ label }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Tags" %}</label>
+            <input type="text" name="tags" value="{{ entry.tags|default:'' }}" placeholder="{% trans 'e.g., lymphoma, chemo, doxycycline, fear' %}">
+            <p class="hint">{% trans "Comma-separated tags for searching" %}</p>
+        </div>
+
+        {% if entry and entry.attachments.count > 0 %}
+        <div class="existing-attachments">
+            <label>{% trans "Current Attachments" %}</label>
+            {% for att in entry.attachments.all %}
+            <div class="existing-attachment">
+                <a href="{{ att.file.url }}" target="_blank">{{ att.title|default:att.file.name }}</a>
+                <form method="post" action="{% url 'health:timeline_delete_attachment' attachment_id=att.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-attachment-btn" onclick="return confirm('{% trans 'Delete this file?' %}');">{% trans "Remove" %}</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label>{% trans "Add Files" %}</label>
+            <div class="file-upload-area" onclick="document.getElementById('fileInput').click();">
+                <input type="file" name="attachments" id="fileInput" multiple accept="image/*,video/*,.pdf,.doc,.docx">
+                <p>{% trans "Click to upload photos, videos, or documents" %}</p>
+            </div>
+            <div class="file-list" id="fileList"></div>
+        </div>
+
+        <div class="btn-row">
+            <a href="{% url 'health:timeline' %}" class="btn-secondary">{% trans "Cancel" %}</a>
+            <button type="submit" class="btn-primary">{% if entry %}{% trans "Save Changes" %}{% else %}{% trans "Create Entry" %}{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+
+fileInput.addEventListener('change', function() {
+    fileList.innerHTML = '';
+    Array.from(this.files).forEach((file, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `
+            <span>${file.name}</span>
+            <span class="remove-file" data-index="${index}">x</span>
+        `;
+        fileList.appendChild(div);
+    });
+});
+
+// Note: Removing individual files from FileList is not directly supported
+// Users can re-select files if needed
+</script>
+{% endblock %}

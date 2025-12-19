@@ -1,0 +1,191 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Providers" %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+.providers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.providers-header h2 {
+    margin: 0;
+}
+.add-provider-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+.provider-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.provider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.provider-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.provider-clinic {
+    color: var(--gray-500);
+    font-size: 0.875rem;
+}
+.trust-rating {
+    font-size: 1.25rem;
+}
+.trust-rating .filled { color: #eab308; }
+.trust-rating .empty { color: var(--gray-300); }
+.trust-label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    text-align: right;
+}
+.provider-details {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-bottom: 12px;
+}
+.provider-details p {
+    margin: 4px 0;
+}
+.provider-details .label {
+    color: var(--gray-500);
+}
+.provider-issues {
+    background: #fef2f2;
+    border-left: 3px solid #ef4444;
+    padding: 10px 12px;
+    margin: 12px 0;
+    font-size: 0.875rem;
+    color: #991b1b;
+    border-radius: 0 6px 6px 0;
+}
+.provider-issues h5 {
+    font-size: 0.8125rem;
+    margin-bottom: 4px;
+}
+.provider-notes {
+    background: var(--gray-50);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-top: 12px;
+}
+.provider-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--gray-100);
+}
+.edit-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.empty-providers {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-500);
+}
+.empty-providers p {
+    margin-bottom: 16px;
+}
+.back-link {
+    display: inline-block;
+    color: var(--gray-500);
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-top: 16px;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <div class="providers-header">
+        <h2>{% trans "Providers" %}</h2>
+        <a href="{% url 'health:provider_create' %}" class="add-provider-btn">+ {% trans "Add Provider" %}</a>
+    </div>
+    <p style="color: var(--gray-500); font-size: 0.875rem; margin-bottom: 16px;">
+        {% trans "Track veterinarians, clinics, and specialists with trust ratings and notes." %}
+    </p>
+</div>
+
+{% if providers %}
+    {% for provider in providers %}
+    <div class="provider-card">
+        <div class="provider-header">
+            <div>
+                <div class="provider-name">{{ provider.name }}</div>
+                {% if provider.clinic_name %}
+                <div class="provider-clinic">{{ provider.clinic_name }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <div class="trust-rating">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= provider.trust_rating %}
+                            <span class="filled">★</span>
+                        {% else %}
+                            <span class="empty">☆</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="trust-label">{{ provider.get_trust_rating_display }}</div>
+            </div>
+        </div>
+
+        <div class="provider-details">
+            {% if provider.location %}<p><span class="label">{% trans "Location" %}:</span> {{ provider.location }}</p>{% endif %}
+            {% if provider.specialty %}<p><span class="label">{% trans "Specialty" %}:</span> {{ provider.specialty }}</p>{% endif %}
+            {% if provider.phone %}<p><span class="label">{% trans "Phone" %}:</span> <a href="tel:{{ provider.phone }}">{{ provider.phone }}</a></p>{% endif %}
+            {% if provider.email %}<p><span class="label">{% trans "Email" %}:</span> <a href="mailto:{{ provider.email }}">{{ provider.email }}</a></p>{% endif %}
+            {% if provider.credentials %}<p><span class="label">{% trans "Credentials" %}:</span> {{ provider.credentials }}</p>{% endif %}
+        </div>
+
+        {% if provider.issues %}
+        <div class="provider-issues">
+            <h5>{% trans "Issues/Concerns" %}</h5>
+            {{ provider.issues|linebreaksbr }}
+        </div>
+        {% endif %}
+
+        {% if provider.notes %}
+        <div class="provider-notes">
+            {{ provider.notes|linebreaksbr }}
+        </div>
+        {% endif %}
+
+        <div class="provider-actions">
+            <a href="{% url 'health:provider_create' %}?id={{ provider.id }}" class="edit-link">{% trans "Edit" %}</a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-providers">
+        <p>{% trans "No providers added yet." %}</p>
+        <a href="{% url 'health:provider_create' %}" class="add-provider-btn">{% trans "Add First Provider" %}</a>
+    </div>
+{% endif %}
+
+<a href="{% url 'health:timeline' %}" class="back-link">&larr; {% trans "Back to Journal" %}</a>
+{% endblock %}

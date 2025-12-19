@@ -1,0 +1,250 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Case Journal" %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.timeline-header h2 {
+    margin: 0;
+}
+.new-entry-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+.timeline-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.filter-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.timeline-entry {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.timeline-entry:hover {
+    transform: translateY(-1px);
+}
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.entry-date-time {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+}
+.entry-type-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+.entry-type-badge.vet_visit { background: #dbeafe; color: #1e40af; }
+.entry-type-badge.lab_result { background: #fce7f3; color: #9d174d; }
+.entry-type-badge.imaging { background: #e0e7ff; color: #4338ca; }
+.entry-type-badge.procedure { background: #fee2e2; color: #991b1b; }
+.entry-type-badge.treatment { background: #fef3c7; color: #92400e; }
+.entry-type-badge.medication { background: #d1fae5; color: #065f46; }
+.entry-type-badge.symptom { background: #fef9c3; color: #854d0e; }
+.entry-type-badge.communication { background: #f3e8ff; color: #6b21a8; }
+.entry-type-badge.milestone { background: #ccfbf1; color: #115e59; }
+.entry-type-badge.concern { background: #fee2e2; color: #b91c1c; }
+.entry-type-badge.research { background: #e0f2fe; color: #0369a1; }
+.entry-type-badge.other { background: var(--gray-100); color: var(--gray-700); }
+
+.entry-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+.entry-preview {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.entry-meta {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+}
+.entry-meta .provider {
+    color: var(--primary);
+}
+.entry-meta .mood {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.mood-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.mood-dot.great { background: #10b981; }
+.mood-dot.good { background: #84cc16; }
+.mood-dot.okay { background: #facc15; }
+.mood-dot.poor { background: #f97316; }
+.mood-dot.bad { background: #ef4444; }
+
+.attachment-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.date-divider {
+    text-align: center;
+    margin: 20px 0;
+    font-weight: 600;
+    color: var(--gray-500);
+    font-size: 0.875rem;
+}
+.empty-timeline {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-500);
+}
+.empty-timeline p {
+    margin-bottom: 16px;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <div class="timeline-header">
+        <h2>{% trans "Case Journal" %}</h2>
+        <a href="{% url 'health:timeline_create' %}" class="new-entry-btn">+ {% trans "New Entry" %}</a>
+    </div>
+
+    <div class="timeline-filters">
+        <button class="filter-btn active" data-filter="all">{% trans "All" %}</button>
+        <button class="filter-btn" data-filter="vet_visit">{% trans "Vet Visits" %}</button>
+        <button class="filter-btn" data-filter="lab_result">{% trans "Labs" %}</button>
+        <button class="filter-btn" data-filter="treatment">{% trans "Treatments" %}</button>
+        <button class="filter-btn" data-filter="symptom">{% trans "Symptoms" %}</button>
+        <button class="filter-btn" data-filter="concern">{% trans "Concerns" %}</button>
+    </div>
+</div>
+
+{% if entries %}
+    {% regroup entries by date as entries_by_date %}
+    {% for date_group in entries_by_date %}
+        <div class="date-divider">{{ date_group.grouper|date:"l, F j, Y" }}</div>
+        {% for entry in date_group.list %}
+        <a href="{% url 'health:timeline_detail' entry_id=entry.id %}" class="timeline-entry" data-type="{{ entry.entry_type }}" style="text-decoration: none; color: inherit;">
+            <div class="entry-header">
+                <span class="entry-date-time">
+                    {% if entry.time %}{{ entry.time|time:"g:i A" }}{% else %}{% trans "No time" %}{% endif %}
+                </span>
+                <span class="entry-type-badge {{ entry.entry_type }}">{{ entry.get_entry_type_display }}</span>
+            </div>
+            <div class="entry-title">{{ entry.title }}</div>
+            <div class="entry-preview">{{ entry.content|truncatewords:30 }}</div>
+            <div class="entry-meta">
+                {% if entry.provider %}
+                <span class="provider">{{ entry.provider.name }}</span>
+                {% endif %}
+                {% if entry.bruno_mood != 'unknown' %}
+                <span class="mood">
+                    <span class="mood-dot {{ entry.bruno_mood }}"></span>
+                    {{ entry.get_bruno_mood_display }}
+                </span>
+                {% endif %}
+                {% if entry.attachments.count > 0 %}
+                <span class="attachment-count">
+                    {{ entry.attachments.count }} {% trans "file" %}{% if entry.attachments.count > 1 %}s{% endif %}
+                </span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    <div class="empty-timeline">
+        <p>{% trans "No journal entries yet." %}</p>
+        <a href="{% url 'health:timeline_create' %}" class="new-entry-btn">{% trans "Create First Entry" %}</a>
+    </div>
+{% endif %}
+
+<div class="card" style="margin-top: 20px;">
+    <a href="{% url 'health:provider_list' %}" style="text-decoration: none; color: var(--primary); font-weight: 500;">
+        {% trans "Manage Providers" %} &rarr;
+    </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const filter = this.dataset.filter;
+
+        // Update active state
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Filter entries
+        document.querySelectorAll('.timeline-entry').forEach(entry => {
+            if (filter === 'all' || entry.dataset.type === filter) {
+                entry.style.display = 'block';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+
+        // Show/hide date dividers based on visible entries
+        document.querySelectorAll('.date-divider').forEach(divider => {
+            let nextEl = divider.nextElementSibling;
+            let hasVisible = false;
+            while (nextEl && !nextEl.classList.contains('date-divider')) {
+                if (nextEl.style.display !== 'none') {
+                    hasVisible = true;
+                    break;
+                }
+                nextEl = nextEl.nextElementSibling;
+            }
+            divider.style.display = hasVisible ? 'block' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -36,19 +36,18 @@ class DonorAdmin(admin.ModelAdmin):
 
     readonly_fields = ['created_at', 'updated_at']
 
+    @admin.display(boolean=True, description='Donated?')
     def has_donated_display(self, obj):
         return obj.has_donated
-    has_donated_display.boolean = True
-    has_donated_display.short_description = 'Donated?'
 
     actions = ['mark_as_shared', 'mark_as_contacted']
 
+    @admin.action(description="Mark selected as shared")
     def mark_as_shared(self, request, queryset):
         from django.utils import timezone
         queryset.update(has_shared=True, share_date=timezone.now().date())
-    mark_as_shared.short_description = "Mark selected as shared"
 
+    @admin.action(description="Mark selected as contacted now")
     def mark_as_contacted(self, request, queryset):
         from django.utils import timezone
         queryset.update(last_contacted=timezone.now())
-    mark_as_contacted.short_description = "Mark selected as contacted now"

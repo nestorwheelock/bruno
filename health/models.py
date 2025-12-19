@@ -1093,3 +1093,144 @@ class LabValue(models.Model):
                 self.value > self.reference_high
             )
         super().save(*args, **kwargs)
+
+
+class Provider(models.Model):
+    """
+    Track veterinary providers/clinics for quality and reference.
+    """
+    TRUST_CHOICES = [
+        (5, 'Excellent - Highly Trusted'),
+        (4, 'Good - Trusted'),
+        (3, 'Neutral'),
+        (2, 'Concerns - Use with Caution'),
+        (1, 'Avoid - Serious Issues'),
+    ]
+
+    name = models.CharField(max_length=200, help_text="Vet name or clinic name")
+    clinic_name = models.CharField(max_length=200, blank=True)
+    location = models.CharField(max_length=200, blank=True)
+    phone = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(blank=True)
+    website = models.URLField(blank=True)
+    specialty = models.CharField(max_length=100, blank=True,
+        help_text="e.g., Oncologist, Cytologist, General Practice")
+    credentials = models.TextField(blank=True,
+        help_text="Education, certifications, qualifications")
+    trust_rating = models.IntegerField(choices=TRUST_CHOICES, default=3)
+    issues = models.TextField(blank=True,
+        help_text="Document any problems or concerns with this provider")
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-trust_rating', 'name']
+
+    def __str__(self):
+        if self.clinic_name:
+            return f"{self.name} ({self.clinic_name})"
+        return self.name
+
+
+class TimelineEntry(models.Model):
+    """
+    Unified timeline/journal for Bruno's medical case.
+    Captures the full narrative including vet visits, communications,
+    observations, symptoms, milestones, and concerns.
+    """
+    ENTRY_TYPE_CHOICES = [
+        ('vet_visit', 'Vet Visit'),
+        ('lab_result', 'Lab Result'),
+        ('imaging', 'Imaging (X-ray, Ultrasound, etc.)'),
+        ('procedure', 'Procedure (FNA, Biopsy, etc.)'),
+        ('treatment', 'Treatment Session'),
+        ('medication', 'Medication Change'),
+        ('symptom', 'Symptom/Observation'),
+        ('communication', 'Communication (Email, Call)'),
+        ('milestone', 'Milestone'),
+        ('concern', 'Concern/Issue'),
+        ('research', 'Research/Information'),
+        ('other', 'Other'),
+    ]
+
+    MOOD_CHOICES = [
+        ('great', 'Great - Happy, Energetic'),
+        ('good', 'Good - Normal'),
+        ('okay', 'Okay - Slightly Off'),
+        ('poor', 'Poor - Uncomfortable'),
+        ('bad', 'Bad - Distressed'),
+        ('unknown', 'Unknown/Not Applicable'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField(null=True, blank=True)
+
+    entry_type = models.CharField(max_length=20, choices=ENTRY_TYPE_CHOICES)
+    title = models.CharField(max_length=300)
+
+    # Very large content field for full narrative
+    content = models.TextField(
+        help_text="Full narrative - include all details, feelings, observations, exact communications"
+    )
+
+    # Optional structured fields
+    provider = models.ForeignKey(Provider, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='timeline_entries')
+    bruno_mood = models.CharField(max_length=10, choices=MOOD_CHOICES,
+        default='unknown', help_text="How was Bruno feeling?")
+
+    # Searchable tags
+    tags = models.CharField(max_length=500, blank=True,
+        help_text="Comma-separated tags for searching")
+
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-date', '-time', '-created_at']
+        verbose_name = 'Timeline Entry'
+        verbose_name_plural = 'Timeline Entries'
+
+    def __str__(self):
+        return f"{self.date} - {self.title}"
+
+    def get_tags_list(self):
+        if self.tags:
+            return [t.strip() for t in self.tags.split(',')]
+        return []
+
+
+class TimelineAttachment(models.Model):
+    """
+    File attachments for timeline entries.
+    Supports multiple files per entry.
+    """
+    FILE_TYPE_CHOICES = [
+        ('image', 'Image (Photo, Screenshot)'),
+        ('xray', 'X-Ray'),
+        ('ultrasound', 'Ultrasound'),
+        ('document', 'Document (PDF, Report)'),
+        ('lab', 'Lab Report'),
+        ('video', 'Video'),
+        ('other', 'Other'),
+    ]
+
+    timeline_entry = models.ForeignKey(TimelineEntry, on_delete=models.CASCADE,
+        related_name='attachments')
+    file = models.FileField(upload_to='timeline/%Y/%m/')
+    file_type = models.CharField(max_length=20, choices=FILE_TYPE_CHOICES, default='document')
+    title = models.CharField(max_length=200, blank=True,
+        help_text="Description of this file")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['uploaded_at']
+
+    def __str__(self):
+        return f"{self.title or self.file.name} ({self.timeline_entry.title})"
+
+    def filename(self):
+        return self.file.name.split('/')[-1] if self.file else ''

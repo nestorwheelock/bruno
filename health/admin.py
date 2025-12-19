@@ -3,7 +3,8 @@ from .models import (
     DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
     CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession,
     DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary,
-    SiteSettings, MedicalRecord, LabValue
+    SiteSettings, MedicalRecord, LabValue,
+    Provider, TimelineEntry, TimelineAttachment
 )
 
 
@@ -262,3 +263,60 @@ class LabValueAdmin(admin.ModelAdmin):
             'fields': ('notes',)
         }),
     )
+
+
+class TimelineAttachmentInline(admin.TabularInline):
+    model = TimelineAttachment
+    extra = 1
+    fields = ['file', 'file_type', 'title', 'description']
+
+
+@admin.register(Provider)
+class ProviderAdmin(admin.ModelAdmin):
+    list_display = ['name', 'clinic_name', 'location', 'specialty', 'trust_rating']
+    list_filter = ['trust_rating', 'specialty']
+    search_fields = ['name', 'clinic_name', 'location']
+    fieldsets = (
+        ('Basic Info', {
+            'fields': ('name', 'clinic_name', 'location')
+        }),
+        ('Contact', {
+            'fields': ('phone', 'email', 'website')
+        }),
+        ('Professional', {
+            'fields': ('specialty', 'credentials')
+        }),
+        ('Trust Assessment', {
+            'fields': ('trust_rating', 'issues')
+        }),
+        ('Notes', {
+            'fields': ('notes',)
+        }),
+    )
+
+
+@admin.register(TimelineEntry)
+class TimelineEntryAdmin(admin.ModelAdmin):
+    list_display = ['date', 'time', 'entry_type', 'title', 'provider', 'bruno_mood', 'user']
+    list_filter = ['entry_type', 'bruno_mood', 'provider', 'date']
+    date_hierarchy = 'date'
+    search_fields = ['title', 'content', 'tags']
+    inlines = [TimelineAttachmentInline]
+    fieldsets = (
+        ('When', {
+            'fields': ('user', 'date', 'time')
+        }),
+        ('What', {
+            'fields': ('entry_type', 'title', 'content')
+        }),
+        ('Context', {
+            'fields': ('provider', 'bruno_mood', 'tags')
+        }),
+    )
+
+
+@admin.register(TimelineAttachment)
+class TimelineAttachmentAdmin(admin.ModelAdmin):
+    list_display = ['timeline_entry', 'file_type', 'title', 'uploaded_at']
+    list_filter = ['file_type', 'uploaded_at']
+    search_fields = ['title', 'description']

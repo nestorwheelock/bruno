@@ -1,0 +1,268 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{{ entry.title }} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+.back-link {
+    color: var(--gray-500);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+.entry-actions {
+    display: flex;
+    gap: 8px;
+}
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+.edit-btn {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border: none;
+}
+.delete-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: none;
+}
+.entry-meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-200);
+}
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+.meta-item strong {
+    color: var(--gray-900);
+}
+.entry-type-badge {
+    font-size: 0.8125rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+.entry-type-badge.vet_visit { background: #dbeafe; color: #1e40af; }
+.entry-type-badge.lab_result { background: #fce7f3; color: #9d174d; }
+.entry-type-badge.imaging { background: #e0e7ff; color: #4338ca; }
+.entry-type-badge.procedure { background: #fee2e2; color: #991b1b; }
+.entry-type-badge.treatment { background: #fef3c7; color: #92400e; }
+.entry-type-badge.medication { background: #d1fae5; color: #065f46; }
+.entry-type-badge.symptom { background: #fef9c3; color: #854d0e; }
+.entry-type-badge.communication { background: #f3e8ff; color: #6b21a8; }
+.entry-type-badge.milestone { background: #ccfbf1; color: #115e59; }
+.entry-type-badge.concern { background: #fee2e2; color: #b91c1c; }
+.entry-type-badge.research { background: #e0f2fe; color: #0369a1; }
+.entry-type-badge.other { background: var(--gray-100); color: var(--gray-700); }
+
+.mood-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+.mood-badge.great { background: #d1fae5; color: #065f46; }
+.mood-badge.good { background: #ecfccb; color: #3f6212; }
+.mood-badge.okay { background: #fef9c3; color: #854d0e; }
+.mood-badge.poor { background: #ffedd5; color: #c2410c; }
+.mood-badge.bad { background: #fee2e2; color: #b91c1c; }
+
+.entry-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+.provider-link {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #f0f9ff;
+    color: #0369a1;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.provider-link .trust-stars {
+    color: #eab308;
+}
+.entry-content {
+    line-height: 1.8;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.entry-content p {
+    margin-bottom: 16px;
+}
+.tags-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+.tags-section h4 {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+}
+.tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--gray-100);
+    border-radius: 16px;
+    font-size: 0.8125rem;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+.attachments-section {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+.attachments-section h4 {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-bottom: 12px;
+}
+.attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+}
+.attachment-item {
+    display: block;
+    text-decoration: none;
+}
+.attachment-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+.attachment-item .file-icon {
+    width: 100%;
+    height: 100px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--gray-400);
+}
+.attachment-item .file-name {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    margin-top: 4px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.timestamps {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 0.75rem;
+    color: var(--gray-400);
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <div class="detail-header">
+        <a href="{% url 'health:timeline' %}" class="back-link">&larr; {% trans "Back to Journal" %}</a>
+        <div class="entry-actions">
+            <a href="{% url 'health:timeline_edit' entry_id=entry.id %}" class="action-btn edit-btn">{% trans "Edit" %}</a>
+            <form method="post" action="{% url 'health:timeline_delete' entry_id=entry.id %}" style="display: inline;" onsubmit="return confirm('{% trans 'Are you sure you want to delete this entry?' %}');">
+                {% csrf_token %}
+                <button type="submit" class="action-btn delete-btn">{% trans "Delete" %}</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="entry-meta-bar">
+        <div class="meta-item">
+            <strong>{{ entry.date|date:"l, F j, Y" }}</strong>
+            {% if entry.time %} at {{ entry.time|time:"g:i A" }}{% endif %}
+        </div>
+        <span class="entry-type-badge {{ entry.entry_type }}">{{ entry.get_entry_type_display }}</span>
+        {% if entry.bruno_mood != 'unknown' %}
+        <span class="mood-badge {{ entry.bruno_mood }}">{{ entry.get_bruno_mood_display }}</span>
+        {% endif %}
+    </div>
+
+    <h1 class="entry-title">{{ entry.title }}</h1>
+
+    {% if entry.provider %}
+    <div class="provider-link">
+        {{ entry.provider.name }}{% if entry.provider.clinic_name %} - {{ entry.provider.clinic_name }}{% endif %}
+        <span class="trust-stars">
+            {% for i in "12345" %}{% if forloop.counter <= entry.provider.trust_rating %}★{% else %}☆{% endif %}{% endfor %}
+        </span>
+    </div>
+    {% endif %}
+
+    <div class="entry-content">{{ entry.content }}</div>
+
+    {% if entry.tags %}
+    <div class="tags-section">
+        <h4>{% trans "Tags" %}</h4>
+        {% for tag in entry.tags.split %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if attachments %}
+    <div class="attachments-section">
+        <h4>{% trans "Attachments" %} ({{ attachments.count }})</h4>
+        <div class="attachment-grid">
+            {% for att in attachments %}
+            <a href="{{ att.file.url }}" target="_blank" class="attachment-item">
+                {% if att.file_type == 'photo' %}
+                <img src="{{ att.file.url }}" alt="{{ att.title }}">
+                {% elif att.file_type == 'video' %}
+                <div class="file-icon">🎬</div>
+                {% elif att.file_type == 'pdf' %}
+                <div class="file-icon">📄</div>
+                {% else %}
+                <div class="file-icon">📎</div>
+                {% endif %}
+                <div class="file-name">{{ att.title|truncatechars:20 }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="timestamps">
+        {% trans "Created" %}: {{ entry.created_at|date:"M j, Y g:i A" }}
+        {% if entry.updated_at != entry.created_at %}
+        &bull; {% trans "Updated" %}: {{ entry.updated_at|date:"M j, Y g:i A" }}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

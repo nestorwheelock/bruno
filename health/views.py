@@ -14,7 +14,8 @@ from .models import (
     DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
     CBPIAssessment, CORQAssessment, VCOGCTCAEEvent, TreatmentSession,
     DogProfile, Food, Meal, MealItem, SupplementDose, DailyNutritionSummary,
-    MedicalRecord, LabValue, SiteSettings
+    MedicalRecord, LabValue, SiteSettings,
+    Provider, TimelineEntry, TimelineAttachment
 )
 
 
@@ -1329,3 +1330,243 @@ def api_lab_values(request):
             data[test]['reference_high'] = float(lv.reference_high)
 
     return JsonResponse(data)
+
+
+# ============================================================================
+# Timeline Views - Unified journal for Bruno's medical case
+# ============================================================================
+
+@login_required(login_url='health:login')
+def timeline_view(request):
+    """Timeline list view showing all entries in reverse chronological order."""
+    entries = TimelineEntry.objects.filter(user=request.user).order_by('-date', '-time')
+    providers = Provider.objects.all().order_by('name')
+
+    context = {
+        'entries': entries,
+        'providers': providers,
+        'entry_types': TimelineEntry.ENTRY_TYPE_CHOICES,
+        'mood_choices': TimelineEntry.MOOD_CHOICES,
+        'today': date.today(),
+    }
+    return render(request, 'health/timeline.html', context)
+
+
+@login_required(login_url='health:login')
+def timeline_create(request):
+    """Create a new timeline entry."""
+    if request.method == 'POST':
+        entry = TimelineEntry.objects.create(
+            user=request.user,
+            date=request.POST.get('date', date.today()),
+            time=request.POST.get('time') or None,
+            entry_type=request.POST.get('entry_type', 'other'),
+            title=request.POST.get('title', ''),
+            content=request.POST.get('content', ''),
+            provider_id=request.POST.get('provider') or None,
+            bruno_mood=request.POST.get('bruno_mood', 'unknown'),
+            tags=request.POST.get('tags', ''),
+        )
+
+        # Handle file uploads
+        files = request.FILES.getlist('attachments')
+        for f in files:
+            file_ext = f.name.lower().split('.')[-1] if '.' in f.name else ''
+            if file_ext in ['jpg', 'jpeg', 'png', 'gif', 'webp']:
+                file_type = 'photo'
+            elif file_ext in ['mp4', 'mov', 'avi', 'webm']:
+                file_type = 'video'
+            elif file_ext == 'pdf':
+                file_type = 'pdf'
+            else:
+                file_type = 'document'
+
+            TimelineAttachment.objects.create(
+                timeline_entry=entry,
+                file=f,
+                file_type=file_type,
+                title=f.name,
+            )
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'status': 'success',
+                'id': entry.id,
+                'message': _('Entry saved successfully'),
+            })
+
+        return redirect('health:timeline_detail', entry_id=entry.id)
+
+    providers = Provider.objects.all().order_by('name')
+    context = {
+        'providers': providers,
+        'entry_types': TimelineEntry.ENTRY_TYPE_CHOICES,
+        'mood_choices': TimelineEntry.MOOD_CHOICES,
+        'today': date.today(),
+    }
+    return render(request, 'health/timeline_form.html', context)
+
+
+@login_required(login_url='health:login')
+def timeline_detail(request, entry_id):
+    """View a single timeline entry with attachments."""
+    entry = get_object_or_404(TimelineEntry, id=entry_id, user=request.user)
+    attachments = entry.attachments.all()
+
+    context = {
+        'entry': entry,
+        'attachments': attachments,
+    }
+    return render(request, 'health/timeline_detail.html', context)
+
+
+@login_required(login_url='health:login')
+def timeline_edit(request, entry_id):
+    """Edit a timeline entry."""
+    entry = get_object_or_404(TimelineEntry, id=entry_id, user=request.user)
+
+    if request.method == 'POST':
+        entry.date = request.POST.get('date', entry.date)
+        entry.time = request.POST.get('time') or None
+        entry.entry_type = request.POST.get('entry_type', entry.entry_type)
+        entry.title = request.POST.get('title', entry.title)
+        entry.content = request.POST.get('content', entry.content)
+        entry.provider_id = request.POST.get('provider') or None
+        entry.bruno_mood = request.POST.get('bruno_mood', entry.bruno_mood)
+        entry.tags = request.POST.get('tags', entry.tags)
+        entry.save()
+
+        # Handle new file uploads
+        files = request.FILES.getlist('attachments')
+        for f in files:
+            file_ext = f.name.lower().split('.')[-1] if '.' in f.name else ''
+            if file_ext in ['jpg', 'jpeg', 'png', 'gif', 'webp']:
+                file_type = 'photo'
+            elif file_ext in ['mp4', 'mov', 'avi', 'webm']:
+                file_type = 'video'
+            elif file_ext == 'pdf':
+                file_type = 'pdf'
+            else:
+                file_type = 'document'
+
+            TimelineAttachment.objects.create(
+                timeline_entry=entry,
+                file=f,
+                file_type=file_type,
+                title=f.name,
+            )
+
+        return redirect('health:timeline_detail', entry_id=entry.id)
+
+    providers = Provider.objects.all().order_by('name')
+    context = {
+        'entry': entry,
+        'providers': providers,
+        'entry_types': TimelineEntry.ENTRY_TYPE_CHOICES,
+        'mood_choices': TimelineEntry.MOOD_CHOICES,
+    }
+    return render(request, 'health/timeline_form.html', context)
+
+
+@login_required(login_url='health:login')
+@require_POST
+def timeline_delete(request, entry_id):
+    """Delete a timeline entry and its attachments."""
+    entry = get_object_or_404(TimelineEntry, id=entry_id, user=request.user)
+
+    # Delete attachment files
+    for attachment in entry.attachments.all():
+        if attachment.file:
+            attachment.file.delete(save=False)
+
+    entry.delete()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'success'})
+
+    return redirect('health:timeline')
+
+
+@login_required(login_url='health:login')
+@require_POST
+def timeline_delete_attachment(request, attachment_id):
+    """Delete a single attachment."""
+    attachment = get_object_or_404(TimelineAttachment, id=attachment_id)
+
+    # Verify user owns the entry
+    if attachment.timeline_entry.user != request.user:
+        return JsonResponse({'status': 'error', 'message': 'Not authorized'}, status=403)
+
+    entry_id = attachment.timeline_entry.id
+    if attachment.file:
+        attachment.file.delete(save=False)
+    attachment.delete()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'status': 'success'})
+
+    return redirect('health:timeline_edit', entry_id=entry_id)
+
+
+# ============================================================================
+# Provider Views
+# ============================================================================
+
+@login_required(login_url='health:login')
+def provider_list(request):
+    """List all providers."""
+    providers = Provider.objects.all().order_by('-trust_rating', 'name')
+
+    context = {
+        'providers': providers,
+        'trust_choices': Provider.TRUST_CHOICES,
+    }
+    return render(request, 'health/providers.html', context)
+
+
+@login_required(login_url='health:login')
+def provider_create(request):
+    """Create or edit a provider."""
+    provider_id = request.GET.get('id')
+    provider = None
+    if provider_id:
+        provider = get_object_or_404(Provider, id=provider_id)
+
+    if request.method == 'POST':
+        if provider:
+            # Update existing
+            provider.name = request.POST.get('name', provider.name)
+            provider.clinic_name = request.POST.get('clinic_name', provider.clinic_name)
+            provider.location = request.POST.get('location', provider.location)
+            provider.phone = request.POST.get('phone', provider.phone)
+            provider.email = request.POST.get('email', provider.email)
+            provider.website = request.POST.get('website', provider.website)
+            provider.specialty = request.POST.get('specialty', provider.specialty)
+            provider.credentials = request.POST.get('credentials', provider.credentials)
+            provider.trust_rating = int(request.POST.get('trust_rating', provider.trust_rating))
+            provider.issues = request.POST.get('issues', provider.issues)
+            provider.notes = request.POST.get('notes', provider.notes)
+            provider.save()
+        else:
+            # Create new
+            provider = Provider.objects.create(
+                name=request.POST.get('name', ''),
+                clinic_name=request.POST.get('clinic_name', ''),
+                location=request.POST.get('location', ''),
+                phone=request.POST.get('phone', ''),
+                email=request.POST.get('email', ''),
+                website=request.POST.get('website', ''),
+                specialty=request.POST.get('specialty', ''),
+                credentials=request.POST.get('credentials', ''),
+                trust_rating=int(request.POST.get('trust_rating', 3)),
+                issues=request.POST.get('issues', ''),
+                notes=request.POST.get('notes', ''),
+            )
+
+        return redirect('health:provider_list')
+
+    context = {
+        'provider': provider,
+        'trust_choices': Provider.TRUST_CHOICES,
+    }
+    return render(request, 'health/provider_form.html', context)

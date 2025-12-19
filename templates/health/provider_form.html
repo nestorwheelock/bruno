@@ -1,0 +1,228 @@
+{% extends 'health/base_health.html' %}
+{% load i18n %}
+
+{% block title %}{% if provider %}{% trans "Edit Provider" %}{% else %}{% trans "Add Provider" %}{% endif %} - Bruno Health{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.back-link {
+    color: var(--gray-500);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+.form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.9375rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+.hint {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    margin-top: 4px;
+}
+.trust-rating-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+.trust-option {
+    text-align: center;
+}
+.trust-option input {
+    display: none;
+}
+.trust-option label {
+    display: block;
+    padding: 12px 8px;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.trust-option .stars {
+    font-size: 1rem;
+    color: #eab308;
+    display: block;
+    margin-bottom: 4px;
+}
+.trust-option input:checked + label {
+    border-color: var(--primary);
+    background: #eef2ff;
+}
+.trust-option.rating-1 input:checked + label { border-color: #ef4444; background: #fef2f2; }
+.trust-option.rating-2 input:checked + label { border-color: #f97316; background: #fff7ed; }
+.trust-option.rating-3 input:checked + label { border-color: #eab308; background: #fefce8; }
+.trust-option.rating-4 input:checked + label { border-color: #84cc16; background: #f7fee7; }
+.trust-option.rating-5 input:checked + label { border-color: #10b981; background: #ecfdf5; }
+
+.issues-section {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.issues-section label {
+    color: #991b1b;
+}
+.issues-section textarea {
+    background: white;
+}
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+.btn-secondary {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: var(--gray-700);
+}
+.btn-primary {
+    flex: 2;
+    padding: 14px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block main_content %}
+<div class="card">
+    <div class="form-header">
+        <h2>{% if provider %}{% trans "Edit Provider" %}{% else %}{% trans "Add Provider" %}{% endif %}</h2>
+        <a href="{% url 'health:provider_list' %}" class="back-link">&larr; {% trans "Back" %}</a>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>{% trans "Name" %} *</label>
+            <input type="text" name="name" value="{{ provider.name|default:'' }}" placeholder="{% trans 'Dr. Name or Clinic Name' %}" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>{% trans "Clinic/Hospital" %}</label>
+                <input type="text" name="clinic_name" value="{{ provider.clinic_name|default:'' }}" placeholder="{% trans 'If different from name' %}">
+            </div>
+            <div class="form-group">
+                <label>{% trans "Specialty" %}</label>
+                <input type="text" name="specialty" value="{{ provider.specialty|default:'' }}" placeholder="{% trans 'e.g., Oncology, General' %}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Location" %}</label>
+            <input type="text" name="location" value="{{ provider.location|default:'' }}" placeholder="{% trans 'City, State/Country' %}">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>{% trans "Phone" %}</label>
+                <input type="tel" name="phone" value="{{ provider.phone|default:'' }}" placeholder="{% trans '+1 555 123 4567' %}">
+            </div>
+            <div class="form-group">
+                <label>{% trans "Email" %}</label>
+                <input type="email" name="email" value="{{ provider.email|default:'' }}" placeholder="{% trans 'email@example.com' %}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Website" %}</label>
+            <input type="url" name="website" value="{{ provider.website|default:'' }}" placeholder="{% trans 'https://...' %}">
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Credentials" %}</label>
+            <input type="text" name="credentials" value="{{ provider.credentials|default:'' }}" placeholder="{% trans 'DVM, DACVIM (Oncology), etc.' %}">
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "Trust Rating" %}</label>
+            <div class="trust-rating-grid">
+                {% for value, label in trust_choices %}
+                <div class="trust-option rating-{{ value }}">
+                    <input type="radio" name="trust_rating" id="trust_{{ value }}" value="{{ value }}"
+                           {% if provider.trust_rating == value or value == 3 and not provider %}checked{% endif %}>
+                    <label for="trust_{{ value }}">
+                        <span class="stars">{% for i in "12345" %}{% if forloop.counter <= value %}★{% else %}☆{% endif %}{% endfor %}</span>
+                        {{ label|truncatewords:2 }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="issues-section">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>{% trans "Issues / Concerns" %}</label>
+                <textarea name="issues" placeholder="{% trans 'Document any problems, concerns, or reasons for distrust...' %}">{{ provider.issues|default:'' }}</textarea>
+                <p class="hint">{% trans "Important for tracking quality of care and making informed decisions" %}</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{% trans "General Notes" %}</label>
+            <textarea name="notes" placeholder="{% trans 'Any other relevant information about this provider...' %}">{{ provider.notes|default:'' }}</textarea>
+        </div>
+
+        <div class="btn-row">
+            <a href="{% url 'health:provider_list' %}" class="btn-secondary">{% trans "Cancel" %}</a>
+            <button type="submit" class="btn-primary">{% if provider %}{% trans "Save Changes" %}{% else %}{% trans "Add Provider" %}{% endif %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -55,4 +55,16 @@ urlpatterns = [
     path('records/<int:record_id>/edit/', views.edit_record, name='edit_record'),
     path('records/<int:record_id>/delete/', views.delete_record, name='delete_record'),
     path('api/lab-values/', views.api_lab_values, name='api_lab_values'),
+
+    # Timeline (Case Journal)
+    path('timeline/', views.timeline_view, name='timeline'),
+    path('timeline/new/', views.timeline_create, name='timeline_create'),
+    path('timeline/<int:entry_id>/', views.timeline_detail, name='timeline_detail'),
+    path('timeline/<int:entry_id>/edit/', views.timeline_edit, name='timeline_edit'),
+    path('timeline/<int:entry_id>/delete/', views.timeline_delete, name='timeline_delete'),
+    path('timeline/attachment/<int:attachment_id>/delete/', views.timeline_delete_attachment, name='timeline_delete_attachment'),
+
+    # Providers
+    path('providers/', views.provider_list, name='provider_list'),
+    path('providers/new/', views.provider_create, name='provider_create'),
 ]
