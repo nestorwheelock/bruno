@@ -3,58 +3,85 @@
 
 {% block extra_css %}
 <style>
-.radio-matrix {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 16px;
+/* Star Rating Component - Mobile First */
+.rating-field {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-100);
 }
-.radio-matrix th, .radio-matrix td {
-    text-align: center;
-    padding: 8px 4px;
-    border-bottom: 1px solid var(--gray-200);
+
+.rating-field:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
-.radio-matrix th {
-    font-weight: 600;
-    font-size: 0.75rem;
-    color: var(--gray-500);
-}
-.radio-matrix .question-cell {
-    text-align: left;
-    min-width: 120px;
-    font-weight: 500;
-    font-size: 0.875rem;
-}
-.radio-matrix .hint {
+
+.rating-label {
     display: block;
-    font-size: 0.75rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    margin-bottom: 4px;
+}
+
+.rating-hint {
+    display: block;
+    font-size: 0.8125rem;
     color: var(--gray-500);
-    font-weight: 400;
+    margin-bottom: 10px;
 }
-.radio-matrix input[type="radio"] {
-    width: 20px;
-    height: 20px;
+
+.star-container {
+    display: flex;
+    gap: 4px;
+}
+
+.star {
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    accent-color: var(--primary);
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
 }
-.radio-matrix tr:hover {
-    background-color: var(--gray-50);
+
+.star svg {
+    width: 36px;
+    height: 36px;
+    transition: transform 0.1s ease;
 }
-@media (max-width: 480px) {
-    .radio-matrix {
-        font-size: 0.8rem;
+
+.star:active svg {
+    transform: scale(0.9);
+}
+
+.star.empty svg {
+    fill: var(--gray-300);
+}
+
+.star.filled svg {
+    fill: #facc15;
+}
+
+/* Touch feedback */
+@media (hover: hover) {
+    .star:hover svg {
+        transform: scale(1.1);
     }
-    .radio-matrix th, .radio-matrix td {
-        padding: 6px 2px;
+}
+
+/* Smaller stars on very small screens */
+@media (max-width: 360px) {
+    .star {
+        width: 38px;
+        height: 38px;
     }
-    .radio-matrix input[type="radio"] {
-        width: 18px;
-        height: 18px;
-    }
-    .radio-matrix .question-cell {
-        min-width: 90px;
-    }
-    .radio-matrix .hint {
-        font-size: 0.65rem;
+    .star svg {
+        width: 30px;
+        height: 30px;
     }
 }
 </style>
@@ -86,128 +113,137 @@
         <h2>{% trans "Mood & Engagement" %}</h2>
         <p class="card-subtitle">{% trans "Happiness indicators" %}</p>
 
-        <div class="table-responsive">
-            <table class="radio-matrix">
-                <thead>
-                    <tr>
-                        <th class="question-cell"></th>
-                        <th>0</th>
-                        <th>1</th>
-                        <th>2</th>
-                        <th>3</th>
-                        <th>4</th>
-                        <th>5</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Tail / Body Language" %}
-                            <span class="hint">{% trans "Relaxed, wagging vs stiff" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="tail_body_language" value="{{ forloop.counter0 }}" {% if entry.tail_body_language == forloop.counter0 or entry.tail_body_language == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Interest in People" %}
-                            <span class="hint">{% trans "Seeks affection vs disengaged" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="interest_people" value="{{ forloop.counter0 }}" {% if entry.interest_people == forloop.counter0 or entry.interest_people == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Interest in Environment" %}
-                            <span class="hint">{% trans "Sniffing, alert vs dull" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="interest_environment" value="{{ forloop.counter0 }}" {% if entry.interest_environment == forloop.counter0 or entry.interest_environment == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Enjoyment of Favorites" %}
-                            <span class="hint">{% trans "Toys, walks, treats" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="enjoyment_favorites" value="{{ forloop.counter0 }}" {% if entry.enjoyment_favorites == forloop.counter0 or entry.enjoyment_favorites == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Overall Spark" %}
-                            <span class="hint">{% trans "Joy vs flatness" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="overall_spark" value="{{ forloop.counter0 }}" {% if entry.overall_spark == forloop.counter0 or entry.overall_spark == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Tail / Body Language" %}</span>
+            <span class="rating-hint">{% trans "Relaxed, wagging vs stiff" %}</span>
+            <div class="star-container" data-field="tail_body_language" data-value="{{ default_values.tail_body_language|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Interest in People" %}</span>
+            <span class="rating-hint">{% trans "Seeks affection vs disengaged" %}</span>
+            <div class="star-container" data-field="interest_people" data-value="{{ default_values.interest_people|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Interest in Environment" %}</span>
+            <span class="rating-hint">{% trans "Sniffing, alert vs dull" %}</span>
+            <div class="star-container" data-field="interest_environment" data-value="{{ default_values.interest_environment|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Enjoyment of Favorites" %}</span>
+            <span class="rating-hint">{% trans "Toys, walks, treats" %}</span>
+            <div class="star-container" data-field="enjoyment_favorites" data-value="{{ default_values.enjoyment_favorites|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Overall Spark" %}</span>
+            <span class="rating-hint">{% trans "Joy vs flatness" %}</span>
+            <div class="star-container" data-field="overall_spark" data-value="{{ default_values.overall_spark|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
     <div class="card">
         <h2>{% trans "Appetite & Eating" %}</h2>
 
-        <div class="table-responsive">
-            <table class="radio-matrix">
-                <thead>
-                    <tr>
-                        <th class="question-cell"></th>
-                        <th>0</th>
-                        <th>1</th>
-                        <th>2</th>
-                        <th>3</th>
-                        <th>4</th>
-                        <th>5</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Appetite" %}
-                            <span class="hint">{% trans "Eats willingly vs refusal" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="appetite" value="{{ forloop.counter0 }}" {% if entry.appetite == forloop.counter0 or entry.appetite == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Food Enjoyment" %}
-                            <span class="hint">{% trans "Excited vs reluctant" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="food_enjoyment" value="{{ forloop.counter0 }}" {% if entry.food_enjoyment == forloop.counter0 or entry.food_enjoyment == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Nausea Signs" %}
-                            <span class="hint">{% trans "5 = none, 0 = vomiting" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="nausea_signs" value="{{ forloop.counter0 }}" {% if entry.nausea_signs == forloop.counter0 or entry.nausea_signs == None and forloop.counter0 == 5 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Weight / Body Condition" %}
-                            <span class="hint">{% trans "Stable vs noticeable loss" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="weight_condition" value="{{ forloop.counter0 }}" {% if entry.weight_condition == forloop.counter0 or entry.weight_condition == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Appetite" %}</span>
+            <span class="rating-hint">{% trans "Eats willingly vs refusal" %}</span>
+            <div class="star-container" data-field="appetite" data-value="{{ default_values.appetite|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
         </div>
 
-        <div class="metric">
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Food Enjoyment" %}</span>
+            <span class="rating-hint">{% trans "Excited vs reluctant" %}</span>
+            <div class="star-container" data-field="food_enjoyment" data-value="{{ default_values.food_enjoyment|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Nausea Signs" %}</span>
+            <span class="rating-hint">{% trans "5 = none, 1 = vomiting" %}</span>
+            <div class="star-container" data-field="nausea_signs" data-value="{{ default_values.nausea_signs|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Weight / Body Condition" %}</span>
+            <span class="rating-hint">{% trans "Stable vs noticeable loss" %}</span>
+            <div class="star-container" data-field="weight_condition" data-value="{{ default_values.weight_condition|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="metric" style="margin-top: 20px;">
             <label>{% trans "Meals Eaten Today" %}</label>
             <div class="meal-checkboxes">
                 <label class="checkbox-option">
@@ -233,116 +269,120 @@
     <div class="card">
         <h2>{% trans "Energy & Mobility" %}</h2>
 
-        <div class="table-responsive">
-            <table class="radio-matrix">
-                <thead>
-                    <tr>
-                        <th class="question-cell"></th>
-                        <th>0</th>
-                        <th>1</th>
-                        <th>2</th>
-                        <th>3</th>
-                        <th>4</th>
-                        <th>5</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Energy Level" %}
-                            <span class="hint">{% trans "Normal vs lethargic" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="energy_level" value="{{ forloop.counter0 }}" {% if entry.energy_level == forloop.counter0 or entry.energy_level == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Willingness to Move" %}
-                            <span class="hint">{% trans "Gets up easily vs hesitation" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="willingness_move" value="{{ forloop.counter0 }}" {% if entry.willingness_move == forloop.counter0 or entry.willingness_move == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Walking Comfort" %}
-                            <span class="hint">{% trans "Smooth gait vs limping" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="walking_comfort" value="{{ forloop.counter0 }}" {% if entry.walking_comfort == forloop.counter0 or entry.walking_comfort == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Resting Comfort" %}
-                            <span class="hint">{% trans "Settles easily vs restless" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="resting_comfort" value="{{ forloop.counter0 }}" {% if entry.resting_comfort == forloop.counter0 or entry.resting_comfort == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Energy Level" %}</span>
+            <span class="rating-hint">{% trans "Normal vs lethargic" %}</span>
+            <div class="star-container" data-field="energy_level" data-value="{{ default_values.energy_level|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Willingness to Move" %}</span>
+            <span class="rating-hint">{% trans "Gets up easily vs hesitation" %}</span>
+            <div class="star-container" data-field="willingness_move" data-value="{{ default_values.willingness_move|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Walking Comfort" %}</span>
+            <span class="rating-hint">{% trans "Smooth gait vs limping" %}</span>
+            <div class="star-container" data-field="walking_comfort" data-value="{{ default_values.walking_comfort|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Resting Comfort" %}</span>
+            <span class="rating-hint">{% trans "Settles easily vs restless" %}</span>
+            <div class="star-container" data-field="resting_comfort" data-value="{{ default_values.resting_comfort|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
     <div class="card">
         <h2>{% trans "Pain & Physical Comfort" %}</h2>
 
-        <div class="table-responsive">
-            <table class="radio-matrix">
-                <thead>
-                    <tr>
-                        <th class="question-cell"></th>
-                        <th>0</th>
-                        <th>1</th>
-                        <th>2</th>
-                        <th>3</th>
-                        <th>4</th>
-                        <th>5</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Breathing Comfort" %}
-                            <span class="hint">{% trans "Normal vs labored" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="breathing_comfort" value="{{ forloop.counter0 }}" {% if entry.breathing_comfort == forloop.counter0 or entry.breathing_comfort == None and forloop.counter0 == 5 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Pain Signs" %}
-                            <span class="hint">{% trans "5 = none, 0 = panting, whining" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="pain_signs" value="{{ forloop.counter0 }}" {% if entry.pain_signs == forloop.counter0 or entry.pain_signs == None and forloop.counter0 == 5 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Sleep Quality" %}
-                            <span class="hint">{% trans "Restful vs disrupted" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="sleep_quality" value="{{ forloop.counter0 }}" {% if entry.sleep_quality == forloop.counter0 or entry.sleep_quality == None and forloop.counter0 == 3 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td class="question-cell">
-                            {% trans "Response to Touch" %}
-                            <span class="hint">{% trans "Enjoys vs flinches" %}</span>
-                        </td>
-                        {% for i in "012345" %}
-                        <td><input type="radio" name="response_touch" value="{{ forloop.counter0 }}" {% if entry.response_touch == forloop.counter0 or entry.response_touch == None and forloop.counter0 == 5 %}checked{% endif %}></td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Breathing Comfort" %}</span>
+            <span class="rating-hint">{% trans "Normal vs labored" %}</span>
+            <div class="star-container" data-field="breathing_comfort" data-value="{{ default_values.breathing_comfort|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Pain Signs" %}</span>
+            <span class="rating-hint">{% trans "5 = none, 1 = panting, whining" %}</span>
+            <div class="star-container" data-field="pain_signs" data-value="{{ default_values.pain_signs|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Sleep Quality" %}</span>
+            <span class="rating-hint">{% trans "Restful vs disrupted" %}</span>
+            <div class="star-container" data-field="sleep_quality" data-value="{{ default_values.sleep_quality|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="rating-field">
+            <span class="rating-label">{% trans "Response to Touch" %}</span>
+            <span class="rating-hint">{% trans "Enjoys vs flinches" %}</span>
+            <div class="star-container" data-field="response_touch" data-value="{{ default_values.response_touch|default:'' }}">
+                {% for i in "12345" %}
+                <button type="button" class="star empty" data-value="{{ forloop.counter }}">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -371,38 +411,60 @@
 
 {% block extra_js %}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize star ratings with pre-filled values
+    document.querySelectorAll('.star-container').forEach(container => {
+        const currentValue = container.dataset.value;
+        if (currentValue && currentValue !== '' && currentValue !== 'None') {
+            updateStars(container, parseInt(currentValue));
+        }
+    });
+
+    // Star click handler
+    document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+            const container = this.closest('.star-container');
+            const value = parseInt(this.dataset.value);
+            updateStars(container, value);
+        });
+    });
+
+    function updateStars(container, value) {
+        container.dataset.value = value;
+        container.querySelectorAll('.star').forEach(star => {
+            const starValue = parseInt(star.dataset.value);
+            if (starValue <= value) {
+                star.classList.remove('empty');
+                star.classList.add('filled');
+            } else {
+                star.classList.remove('filled');
+                star.classList.add('empty');
+            }
+        });
+    }
+
+    // Form submission
     document.getElementById('dailyForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
 
+        // Collect star rating values
         const data = {
-            good_day: formData.get('good_day') || '',
-            tail_body_language: parseInt(formData.get('tail_body_language')),
-            interest_people: parseInt(formData.get('interest_people')),
-            interest_environment: parseInt(formData.get('interest_environment')),
-            enjoyment_favorites: parseInt(formData.get('enjoyment_favorites')),
-            overall_spark: parseInt(formData.get('overall_spark')),
-            appetite: parseInt(formData.get('appetite')),
-            food_enjoyment: parseInt(formData.get('food_enjoyment')),
-            nausea_signs: parseInt(formData.get('nausea_signs')),
-            weight_condition: parseInt(formData.get('weight_condition')),
-            breakfast: formData.get('breakfast') === 'on',
-            lunch: formData.get('lunch') === 'on',
-            dinner: formData.get('dinner') === 'on',
-            treats: formData.get('treats') === 'on',
-            energy_level: parseInt(formData.get('energy_level')),
-            willingness_move: parseInt(formData.get('willingness_move')),
-            walking_comfort: parseInt(formData.get('walking_comfort')),
-            resting_comfort: parseInt(formData.get('resting_comfort')),
-            breathing_comfort: parseInt(formData.get('breathing_comfort')),
-            pain_signs: parseInt(formData.get('pain_signs')),
-            sleep_quality: parseInt(formData.get('sleep_quality')),
-            response_touch: parseInt(formData.get('response_touch')),
-            good_notes: formData.get('good_notes'),
-            hard_notes: formData.get('hard_notes'),
-            other_notes: formData.get('other_notes'),
+            good_day: document.querySelector('input[name="good_day"]:checked')?.value || '',
+            breakfast: document.querySelector('input[name="breakfast"]').checked,
+            lunch: document.querySelector('input[name="lunch"]').checked,
+            dinner: document.querySelector('input[name="dinner"]').checked,
+            treats: document.querySelector('input[name="treats"]').checked,
+            good_notes: document.querySelector('textarea[name="good_notes"]').value,
+            hard_notes: document.querySelector('textarea[name="hard_notes"]').value,
+            other_notes: document.querySelector('textarea[name="other_notes"]').value,
         };
+
+        // Collect all star ratings
+        document.querySelectorAll('.star-container').forEach(container => {
+            const field = container.dataset.field;
+            const value = container.dataset.value;
+            data[field] = (value && value !== '' && value !== 'None') ? parseInt(value) : null;
+        });
 
         try {
             const response = await fetch('{% url "health:save_entry" %}', {
@@ -423,5 +485,6 @@
             showToast('{% trans "Error saving entry" %}');
         }
     });
+});
 </script>
 {% endblock %}

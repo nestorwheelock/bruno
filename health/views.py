@@ -43,10 +43,39 @@ def logout_view(request):
 @login_required(login_url='health:login')
 def tracker_view(request):
     today = date.today()
+    yesterday = today - timedelta(days=1)
+
     entry, created = DailyEntry.objects.get_or_create(
         date=today,
         defaults={'user': request.user}
     )
+
+    # Get yesterday's entry for pre-fill defaults (only if today is new)
+    yesterday_entry = None
+    if created:
+        yesterday_entry = DailyEntry.objects.filter(
+            date=yesterday, user=request.user
+        ).first()
+
+    # Build default values: today's value > yesterday's value > None
+    rating_fields = [
+        'tail_body_language', 'interest_people', 'interest_environment',
+        'enjoyment_favorites', 'overall_spark', 'appetite', 'food_enjoyment',
+        'nausea_signs', 'weight_condition', 'energy_level', 'willingness_move',
+        'walking_comfort', 'resting_comfort', 'breathing_comfort', 'pain_signs',
+        'sleep_quality', 'response_touch'
+    ]
+
+    default_values = {}
+    for field in rating_fields:
+        today_val = getattr(entry, field)
+        if today_val is not None:
+            default_values[field] = today_val
+        elif yesterday_entry:
+            default_values[field] = getattr(yesterday_entry, field)
+        else:
+            default_values[field] = None
+
     medications = Medication.objects.filter(active=True)
 
     today_doses = MedicationDose.objects.filter(
@@ -62,6 +91,7 @@ def tracker_view(request):
 
     context = {
         'entry': entry,
+        'default_values': default_values,
         'medications': medications,
         'today_doses': today_doses,
         'good_day_percent': good_day_percent,

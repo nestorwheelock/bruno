@@ -25,32 +25,32 @@ class DailyEntry(models.Model):
     good_day = models.CharField(max_length=5, choices=GOOD_DAY_CHOICES, blank=True)
 
     tail_body_language = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     interest_people = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     interest_environment = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     enjoyment_favorites = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     overall_spark = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
 
     appetite = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     food_enjoyment = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     nausea_signs = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     weight_condition = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
 
     breakfast = models.BooleanField(default=False)
@@ -59,29 +59,29 @@ class DailyEntry(models.Model):
     treats = models.BooleanField(default=False)
 
     energy_level = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     willingness_move = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     walking_comfort = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     resting_comfort = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
 
     breathing_comfort = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     pain_signs = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     sleep_quality = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
     response_touch = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], null=True, blank=True
+        validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True
     )
 
     good_notes = models.TextField(blank=True)
