@@ -53,7 +53,7 @@
 </style>
 {% endblock %}
 
-{% block content %}
+{% block main_content %}
 <div class="container py-3">
     <h2>{% trans "Canine Owner-Reported Quality of Life (CORQ)" %}</h2>
     <p class="text-muted">{% trans "Validated quality of life questionnaire for dogs with cancer" %}</p>
@@ -273,7 +273,7 @@
     </div>
     {% endif %}
 </div>
-{% endblock %}
+{% endblock main_content %}
 
 {% block extra_js %}
 <script>
@@ -303,4 +303,4 @@ document.getElementById('corqForm').addEventListener('submit', async function(e)
     }
 });
 </script>
-{% endblock %}
+{% endblock main_content %}
