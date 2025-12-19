@@ -1413,9 +1413,25 @@ def timeline_detail(request, entry_id):
     entry = get_object_or_404(TimelineEntry, id=entry_id, user=request.user)
     attachments = entry.attachments.all()
 
+    # Get all entries for navigation (ordered by date desc, time desc)
+    all_entries = list(TimelineEntry.objects.filter(user=request.user).order_by('-date', '-time').values_list('id', flat=True))
+
+    # Find current position and get prev/next
+    try:
+        current_idx = all_entries.index(entry.id)
+        prev_entry_id = all_entries[current_idx + 1] if current_idx + 1 < len(all_entries) else None
+        next_entry_id = all_entries[current_idx - 1] if current_idx > 0 else None
+    except (ValueError, IndexError):
+        prev_entry_id = None
+        next_entry_id = None
+
     context = {
         'entry': entry,
         'attachments': attachments,
+        'prev_entry_id': prev_entry_id,
+        'next_entry_id': next_entry_id,
+        'entry_position': current_idx + 1 if all_entries else 0,
+        'total_entries': len(all_entries),
     }
     return render(request, 'health/timeline_detail.html', context)
 

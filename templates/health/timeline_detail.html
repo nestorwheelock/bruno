@@ -187,6 +187,61 @@
     font-size: 0.75rem;
     color: var(--gray-400);
 }
+.entry-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background 0.2s;
+    min-width: 80px;
+}
+.nav-btn:hover {
+    background: var(--gray-200);
+}
+.nav-btn.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+.nav-btn.prev {
+    justify-content: flex-start;
+}
+.nav-btn.next {
+    justify-content: flex-end;
+}
+.nav-position {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+.swipe-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    margin-top: 8px;
+}
+@media (max-width: 480px) {
+    .nav-btn span.label {
+        display: none;
+    }
+    .nav-btn {
+        min-width: 50px;
+        padding: 10px 12px;
+    }
+}
 </style>
 {% endblock %}
 
@@ -264,5 +319,70 @@
         &bull; {% trans "Updated" %}: {{ entry.updated_at|date:"M j, Y g:i A" }}
         {% endif %}
     </div>
+
+    <nav class="entry-nav" id="entry-nav">
+        {% if prev_entry_id %}
+        <a href="{% url 'health:timeline_detail' entry_id=prev_entry_id %}" class="nav-btn prev" id="prev-btn">
+            &larr; <span class="label">{% trans "Older" %}</span>
+        </a>
+        {% else %}
+        <span class="nav-btn prev disabled">&larr; <span class="label">{% trans "Older" %}</span></span>
+        {% endif %}
+
+        <span class="nav-position">{{ entry_position }} {% trans "of" %} {{ total_entries }}</span>
+
+        {% if next_entry_id %}
+        <a href="{% url 'health:timeline_detail' entry_id=next_entry_id %}" class="nav-btn next" id="next-btn">
+            <span class="label">{% trans "Newer" %}</span> &rarr;
+        </a>
+        {% else %}
+        <span class="nav-btn next disabled"><span class="label">{% trans "Newer" %}</span> &rarr;</span>
+        {% endif %}
+    </nav>
+    <p class="swipe-hint">{% trans "Swipe left/right to navigate" %}</p>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50;
+
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const swipeDistance = touchEndX - touchStartX;
+
+        if (Math.abs(swipeDistance) < minSwipeDistance) return;
+
+        if (swipeDistance > 0 && prevBtn) {
+            window.location.href = prevBtn.href;
+        } else if (swipeDistance < 0 && nextBtn) {
+            window.location.href = nextBtn.href;
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key === 'ArrowLeft' && prevBtn) {
+            window.location.href = prevBtn.href;
+        } else if (e.key === 'ArrowRight' && nextBtn) {
+            window.location.href = nextBtn.href;
+        }
+    });
+})();
+</script>
 {% endblock %}

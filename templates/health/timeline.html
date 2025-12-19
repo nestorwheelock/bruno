@@ -130,6 +130,21 @@
     align-items: center;
     gap: 4px;
 }
+.quick-edit {
+    margin-left: auto;
+    padding: 4px 10px;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+.quick-edit:hover {
+    background: var(--primary);
+    color: white;
+}
 .date-divider {
     text-align: center;
     margin: 20px 0;
@@ -194,6 +209,7 @@
                     {{ entry.attachments.count }} {% trans "file" %}{% if entry.attachments.count > 1 %}s{% endif %}
                 </span>
                 {% endif %}
+                <a href="{% url 'health:timeline_edit' entry_id=entry.id %}" class="quick-edit" onclick="event.stopPropagation();">{% trans "Edit" %}</a>
             </div>
         </a>
         {% endfor %}

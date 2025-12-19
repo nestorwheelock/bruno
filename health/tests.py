@@ -6,7 +6,11 @@ from datetime import date, timedelta
 from decimal import Decimal
 import json
 
-from .models import DailyEntry, Medication, MedicationDose, LymphNodeMeasurement
+from .models import (
+    DailyEntry, Medication, MedicationDose, LymphNodeMeasurement,
+    Provider, TimelineEntry, TimelineAttachment
+)
+from datetime import time
 
 
 class DailyEntryModelTests(TestCase):
@@ -680,3 +684,346 @@ class NodesViewTests(TestCase):
         )
         response = self.client.get(self.nodes_url)
         self.assertEqual(response.context['measurement'], measurement)
+
+
+# ============================================================================
+# Provider Model Tests
+# ============================================================================
+
+class ProviderModelTests(TestCase):
+    def test_create_provider(self):
+        provider = Provider.objects.create(
+            name='Dr. Test',
+            clinic_name='Test Clinic',
+            location='Test City',
+            trust_rating=4
+        )
+        self.assertEqual(provider.name, 'Dr. Test')
+        self.assertEqual(provider.trust_rating, 4)
+
+    def test_provider_str(self):
+        provider = Provider.objects.create(
+            name='Dr. Pablo',
+            clinic_name='Vet Friendly'
+        )
+        self.assertIn('Dr. Pablo', str(provider))
+
+    def test_provider_trust_rating_choices(self):
+        for rating in [1, 2, 3, 4, 5]:
+            provider = Provider.objects.create(
+                name=f'Provider_{rating}',
+                trust_rating=rating
+            )
+            self.assertEqual(provider.trust_rating, rating)
+
+    def test_provider_with_issues(self):
+        provider = Provider.objects.create(
+            name='Bad Vet',
+            trust_rating=1,
+            issues='Many problems documented'
+        )
+        self.assertEqual(provider.issues, 'Many problems documented')
+
+
+# ============================================================================
+# TimelineEntry Model Tests
+# ============================================================================
+
+class TimelineEntryModelTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.provider = Provider.objects.create(
+            name='Dr. Test',
+            trust_rating=5
+        )
+
+    def test_create_timeline_entry(self):
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            entry_type='vet_visit',
+            title='Test Visit',
+            content='Test content'
+        )
+        self.assertEqual(entry.title, 'Test Visit')
+        self.assertEqual(entry.entry_type, 'vet_visit')
+
+    def test_timeline_entry_str(self):
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date(2024, 12, 15),
+            entry_type='symptom',
+            title='Test Entry'
+        )
+        self.assertIn('Test Entry', str(entry))
+
+    def test_timeline_entry_with_provider(self):
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            entry_type='vet_visit',
+            title='Vet Visit',
+            provider=self.provider
+        )
+        self.assertEqual(entry.provider.name, 'Dr. Test')
+
+    def test_timeline_entry_ordering(self):
+        entry1 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date(2024, 12, 10),
+            entry_type='symptom',
+            title='Earlier Entry'
+        )
+        entry2 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date(2024, 12, 15),
+            entry_type='symptom',
+            title='Later Entry'
+        )
+        entries = list(TimelineEntry.objects.filter(user=self.user).order_by('-date'))
+        self.assertEqual(entries[0], entry2)
+        self.assertEqual(entries[1], entry1)
+
+    def test_timeline_entry_mood_choices(self):
+        for mood in ['great', 'good', 'okay', 'poor', 'bad', 'unknown']:
+            entry = TimelineEntry.objects.create(
+                user=self.user,
+                date=date.today() - timedelta(days=hash(mood) % 100 + 1),
+                entry_type='symptom',
+                title=f'Mood test {mood}',
+                bruno_mood=mood
+            )
+            self.assertEqual(entry.bruno_mood, mood)
+
+    def test_timeline_entry_type_choices(self):
+        entry_types = ['vet_visit', 'lab_result', 'imaging', 'procedure',
+                       'treatment', 'medication', 'symptom', 'communication',
+                       'milestone', 'concern', 'research', 'other']
+        for i, entry_type in enumerate(entry_types):
+            entry = TimelineEntry.objects.create(
+                user=self.user,
+                date=date.today() - timedelta(days=i + 1),
+                entry_type=entry_type,
+                title=f'Type test {entry_type}'
+            )
+            self.assertEqual(entry.entry_type, entry_type)
+
+
+# ============================================================================
+# Timeline View Tests
+# ============================================================================
+
+class TimelineViewTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.timeline_url = reverse('health:timeline')
+
+    def test_timeline_requires_login(self):
+        response = self.client.get(self.timeline_url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={self.timeline_url}")
+
+    def test_timeline_authenticated(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.timeline_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'health/timeline.html')
+
+    def test_timeline_context(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.timeline_url)
+        self.assertIn('entries', response.context)
+        self.assertIn('providers', response.context)
+        self.assertIn('entry_types', response.context)
+
+    def test_timeline_shows_entries(self):
+        self.client.login(username='testuser', password='testpass123')
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today(),
+            entry_type='vet_visit',
+            title='Test Entry'
+        )
+        response = self.client.get(self.timeline_url)
+        self.assertEqual(len(response.context['entries']), 1)
+
+
+class TimelineDetailViewTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        # Create multiple entries for navigation testing
+        self.entry1 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date(2024, 12, 10),
+            time=time(10, 0),
+            entry_type='symptom',
+            title='First Entry',
+            content='First content'
+        )
+        self.entry2 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date(2024, 12, 15),
+            time=time(14, 0),
+            entry_type='vet_visit',
+            title='Second Entry',
+            content='Second content'
+        )
+        self.entry3 = TimelineEntry.objects.create(
+            user=self.user,
+            date=date(2024, 12, 20),
+            time=time(9, 0),
+            entry_type='milestone',
+            title='Third Entry',
+            content='Third content'
+        )
+
+    def test_detail_requires_login(self):
+        url = reverse('health:timeline_detail', args=[self.entry1.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={url}")
+
+    def test_detail_authenticated(self):
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('health:timeline_detail', args=[self.entry2.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'health/timeline_detail.html')
+
+    def test_detail_context_has_entry(self):
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('health:timeline_detail', args=[self.entry2.id])
+        response = self.client.get(url)
+        self.assertEqual(response.context['entry'], self.entry2)
+
+    def test_detail_has_prev_next_navigation(self):
+        """Test that detail view provides prev/next entry IDs for navigation."""
+        self.client.login(username='testuser', password='testpass123')
+        # Entry2 is in the middle (ordered by date desc: entry3, entry2, entry1)
+        url = reverse('health:timeline_detail', args=[self.entry2.id])
+        response = self.client.get(url)
+
+        # prev = older entry (entry1), next = newer entry (entry3)
+        self.assertEqual(response.context['prev_entry_id'], self.entry1.id)
+        self.assertEqual(response.context['next_entry_id'], self.entry3.id)
+
+    def test_detail_first_entry_has_no_next(self):
+        """Test that the newest entry has no 'next' entry."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('health:timeline_detail', args=[self.entry3.id])
+        response = self.client.get(url)
+
+        # entry3 is newest, so no next but has prev
+        self.assertIsNone(response.context['next_entry_id'])
+        self.assertEqual(response.context['prev_entry_id'], self.entry2.id)
+
+    def test_detail_last_entry_has_no_prev(self):
+        """Test that the oldest entry has no 'prev' entry."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('health:timeline_detail', args=[self.entry1.id])
+        response = self.client.get(url)
+
+        # entry1 is oldest, so no prev but has next
+        self.assertIsNone(response.context['prev_entry_id'])
+        self.assertEqual(response.context['next_entry_id'], self.entry2.id)
+
+    def test_detail_shows_position_and_total(self):
+        """Test that detail view shows position (e.g., '2 of 3')."""
+        self.client.login(username='testuser', password='testpass123')
+        url = reverse('health:timeline_detail', args=[self.entry2.id])
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['entry_position'], 2)
+        self.assertEqual(response.context['total_entries'], 3)
+
+    def test_detail_404_for_other_user(self):
+        """Test that users cannot view other users' entries."""
+        other_user = User.objects.create_user(
+            username='otheruser', password='testpass456'
+        )
+        self.client.login(username='otheruser', password='testpass456')
+        url = reverse('health:timeline_detail', args=[self.entry1.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+
+class TimelineCreateViewTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.create_url = reverse('health:timeline_create')
+
+    def test_create_requires_login(self):
+        response = self.client.get(self.create_url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={self.create_url}")
+
+    def test_create_form_get(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'health/timeline_form.html')
+
+    def test_create_entry_post(self):
+        self.client.login(username='testuser', password='testpass123')
+        data = {
+            'date': date.today().isoformat(),
+            'time': '10:30',
+            'entry_type': 'vet_visit',
+            'title': 'New Test Entry',
+            'content': 'Test content here',
+            'bruno_mood': 'good',
+            'tags': 'test, entry'
+        }
+        response = self.client.post(self.create_url, data)
+
+        # Should redirect to detail view
+        self.assertEqual(response.status_code, 302)
+
+        # Entry should exist
+        entry = TimelineEntry.objects.get(title='New Test Entry')
+        self.assertEqual(entry.entry_type, 'vet_visit')
+        self.assertEqual(entry.bruno_mood, 'good')
+
+
+class ProviderViewTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.provider_list_url = reverse('health:provider_list')
+
+    def test_provider_list_requires_login(self):
+        response = self.client.get(self.provider_list_url)
+        self.assertRedirects(response, f"{reverse('health:login')}?next={self.provider_list_url}")
+
+    def test_provider_list_authenticated(self):
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.provider_list_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'health/providers.html')
+
+    def test_create_provider(self):
+        self.client.login(username='testuser', password='testpass123')
+        data = {
+            'name': 'Dr. New Provider',
+            'clinic_name': 'New Clinic',
+            'location': 'Test City',
+            'trust_rating': 4
+        }
+        response = self.client.post(reverse('health:provider_create'), data)
+
+        # Should redirect to provider list
+        self.assertEqual(response.status_code, 302)
+
+        # Provider should exist
+        provider = Provider.objects.get(name='Dr. New Provider')
+        self.assertEqual(provider.trust_rating, 4)
