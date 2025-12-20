@@ -711,6 +711,46 @@
 </div>
 {% endif %}
 
+<!-- Upcoming Appointments Section -->
+{% if overdue_appointments or upcoming_appointments %}
+<div class="dashboard-section">
+    <div class="section-header" onclick="toggleSection(this)">
+        <span class="section-title">{% trans "Appointments" %}</span>
+        <span class="section-toggle">&#9662;</span>
+    </div>
+    <div class="section-content">
+        {% if overdue_appointments %}
+        <div style="background: #fee2e2; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+            <div style="color: #991b1b; font-weight: 600; font-size: 0.8125rem; margin-bottom: 8px;">
+                ⚠️ {% trans "Overdue" %}
+            </div>
+            {% for appt in overdue_appointments %}
+            <a href="{% url 'health:timeline_detail' appt.id %}" style="display: block; padding: 6px 0; color: #991b1b; text-decoration: none; font-size: 0.875rem;">
+                <strong>{{ appt.title }}</strong>
+                <span style="float: right;">{{ appt.date|date:"M j" }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if upcoming_appointments %}
+        <div style="font-size: 0.75rem; color: var(--gray-500); margin-bottom: 8px;">{% trans "Next 7 days" %}</div>
+        {% for appt in upcoming_appointments %}
+        <a href="{% url 'health:timeline_detail' appt.id %}" class="reminder-item" style="text-decoration: none; color: inherit;">
+            <div>
+                <div class="reminder-name">{{ appt.title }}</div>
+                {% if appt.time %}<div style="font-size: 0.75rem; color: var(--gray-500);">{{ appt.time|time:"g:i A" }}</div>{% endif %}
+            </div>
+            <span class="reminder-status due">{{ appt.date|date:"D, M j" }}</span>
+        </a>
+        {% endfor %}
+        {% else %}
+        <div class="no-data">{% trans "No upcoming appointments" %}</div>
+        {% endif %}
+        <a href="{% url 'health:calendar' %}" class="section-action">{% trans "View Calendar" %} &rarr;</a>
+    </div>
+</div>
+{% endif %}
+
 <!-- 30-Day Summary -->
 <div class="dashboard-section">
     <div class="section-header collapsed" onclick="toggleSection(this)">

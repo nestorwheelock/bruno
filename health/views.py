@@ -474,6 +474,22 @@ def dashboard_view(request):
             qol_status = 'red'
             qol_message = _('Poor - urgent consultation needed')
 
+    # Upcoming appointments (next 7 days, scheduled)
+    seven_days_from_now = today + timedelta(days=7)
+    upcoming_appointments = TimelineEntry.objects.filter(
+        user=request.user,
+        date__gte=today,
+        date__lte=seven_days_from_now,
+        status='scheduled'
+    ).order_by('date', 'time')[:5]
+
+    # Overdue appointments (past dates still marked as scheduled)
+    overdue_appointments = TimelineEntry.objects.filter(
+        user=request.user,
+        date__lt=today,
+        status='scheduled'
+    ).order_by('date')[:3]
+
     context = {
         'today_entry': today_entry,
         'today_scores': today_scores,
@@ -495,6 +511,8 @@ def dashboard_view(request):
         'trend_value': trend_value,
         'qol_status': qol_status,
         'qol_message': qol_message,
+        'upcoming_appointments': upcoming_appointments,
+        'overdue_appointments': overdue_appointments,
     }
     return render(request, 'health/dashboard.html', context)
 
@@ -1357,6 +1375,8 @@ def timeline_view(request):
 def timeline_create(request):
     """Create a new timeline entry."""
     if request.method == 'POST':
+        # Get status from form, but let model save() handle auto-detection
+        status = request.POST.get('status', 'completed')
         entry = TimelineEntry.objects.create(
             user=request.user,
             date=request.POST.get('date', date.today()),
@@ -1367,6 +1387,7 @@ def timeline_create(request):
             provider_id=request.POST.get('provider') or None,
             bruno_mood=request.POST.get('bruno_mood', 'unknown'),
             tags=request.POST.get('tags', ''),
+            status=status,
         )
 
         # Handle file uploads
@@ -1399,11 +1420,14 @@ def timeline_create(request):
         return redirect('health:timeline_detail', entry_id=entry.id)
 
     providers = Provider.objects.all().order_by('name')
+    # Accept date from query param (e.g., from calendar click)
+    initial_date = request.GET.get('date', date.today().isoformat())
     context = {
         'providers': providers,
         'entry_types': TimelineEntry.ENTRY_TYPE_CHOICES,
         'mood_choices': TimelineEntry.MOOD_CHOICES,
-        'today': date.today(),
+        'status_choices': TimelineEntry.STATUS_CHOICES,
+        'today': initial_date,
     }
     return render(request, 'health/timeline_form.html', context)
 
@@ -1451,6 +1475,7 @@ def timeline_edit(request, entry_id):
         entry.provider_id = request.POST.get('provider') or None
         entry.bruno_mood = request.POST.get('bruno_mood', entry.bruno_mood)
         entry.tags = request.POST.get('tags', entry.tags)
+        entry.status = request.POST.get('status', entry.status)
         entry.save()
 
         # Handle new file uploads
@@ -1481,6 +1506,7 @@ def timeline_edit(request, entry_id):
         'providers': providers,
         'entry_types': TimelineEntry.ENTRY_TYPE_CHOICES,
         'mood_choices': TimelineEntry.MOOD_CHOICES,
+        'status_choices': TimelineEntry.STATUS_CHOICES,
         'today': date.today(),
     }
     return render(request, 'health/timeline_form.html', context)

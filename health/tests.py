@@ -1173,6 +1173,41 @@ class TimelineCreateViewTests(TestCase):
         self.assertEqual(entry.entry_type, 'vet_visit')
         self.assertEqual(entry.bruno_mood, 'good')
 
+    def test_create_with_date_param(self):
+        """Test that date query param pre-fills the form."""
+        self.client.login(username='testuser', password='testpass123')
+        future_date = (date.today() + timedelta(days=5)).isoformat()
+        response = self.client.get(f"{self.create_url}?date={future_date}")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, f'value="{future_date}"')
+
+    def test_create_form_has_status_choices(self):
+        """Test that create form includes status choices in context."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('status_choices', response.context)
+
+    def test_create_entry_with_status(self):
+        """Test creating entry with specific status."""
+        self.client.login(username='testuser', password='testpass123')
+        future_date = (date.today() + timedelta(days=3)).isoformat()
+        data = {
+            'date': future_date,
+            'time': '14:00',
+            'entry_type': 'vet_visit',
+            'title': 'Scheduled Vet Visit',
+            'content': 'Future appointment',
+            'bruno_mood': 'unknown',
+            'status': 'scheduled',
+            'tags': ''
+        }
+        response = self.client.post(self.create_url, data)
+        self.assertEqual(response.status_code, 302)
+
+        entry = TimelineEntry.objects.get(title='Scheduled Vet Visit')
+        self.assertEqual(entry.status, 'scheduled')
+
 
 class TimelineEditViewTests(TestCase):
     """Tests for timeline entry edit functionality."""
@@ -3202,3 +3237,79 @@ class CalendarAPITests(TestCase):
         self.assertEqual(entry_data['entry_type'], 'vet_visit')
         self.assertEqual(entry_data['status'], 'scheduled')
         self.assertIn('url', entry_data)
+
+
+class DashboardAppointmentsTests(TestCase):
+    """Tests for dashboard upcoming/overdue appointments."""
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.dashboard_url = reverse('health:dashboard')
+
+    def test_upcoming_appointments_in_context(self):
+        """Dashboard shows upcoming scheduled appointments."""
+        self.client.login(username='testuser', password='testpass123')
+        # Create today's DailyEntry to avoid template errors
+        DailyEntry.objects.create(user=self.user, date=date.today(), good_day='yes')
+        # Create future appointment
+        future_date = date.today() + timedelta(days=3)
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=future_date,
+            entry_type='vet_visit',
+            title='Future Vet Visit'
+        )
+        response = self.client.get(self.dashboard_url)
+        self.assertIn('upcoming_appointments', response.context)
+        self.assertEqual(len(response.context['upcoming_appointments']), 1)
+
+    def test_overdue_appointments_in_context(self):
+        """Dashboard shows overdue scheduled appointments."""
+        self.client.login(username='testuser', password='testpass123')
+        DailyEntry.objects.create(user=self.user, date=date.today(), good_day='yes')
+        past_date = date.today() - timedelta(days=1)
+        # Create entry then force status to scheduled
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=past_date,
+            entry_type='vet_visit',
+            title='Overdue Appointment'
+        )
+        TimelineEntry.objects.filter(pk=entry.pk).update(status='scheduled')
+
+        response = self.client.get(self.dashboard_url)
+        self.assertIn('overdue_appointments', response.context)
+        self.assertEqual(len(response.context['overdue_appointments']), 1)
+
+    def test_no_appointments_empty(self):
+        """Dashboard handles no appointments gracefully."""
+        self.client.login(username='testuser', password='testpass123')
+        DailyEntry.objects.create(user=self.user, date=date.today(), good_day='yes')
+        response = self.client.get(self.dashboard_url)
+        self.assertEqual(len(response.context['upcoming_appointments']), 0)
+        self.assertEqual(len(response.context['overdue_appointments']), 0)
+
+    def test_upcoming_limited_to_7_days(self):
+        """Upcoming appointments only shows next 7 days."""
+        self.client.login(username='testuser', password='testpass123')
+        DailyEntry.objects.create(user=self.user, date=date.today(), good_day='yes')
+        # Appointment within 7 days
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() + timedelta(days=5),
+            entry_type='vet_visit',
+            title='Near Future'
+        )
+        # Appointment beyond 7 days
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=date.today() + timedelta(days=10),
+            entry_type='vet_visit',
+            title='Far Future'
+        )
+        response = self.client.get(self.dashboard_url)
+        self.assertEqual(len(response.context['upcoming_appointments']), 1)
+        self.assertEqual(response.context['upcoming_appointments'][0].title, 'Near Future')

@@ -595,6 +595,7 @@
         <a href="{% url 'health:nutrition' %}" class="tab-btn {% if request.resolver_match.url_name == 'nutrition' or request.resolver_match.url_name == 'food_database' or request.resolver_match.url_name == 'meal_planning' %}active{% endif %}">Nutrition</a>
         <a href="{% url 'health:records' %}" class="tab-btn {% if request.resolver_match.url_name == 'records' %}active{% endif %}">Records</a>
         <a href="{% url 'health:timeline' %}" class="tab-btn {% if request.resolver_match.url_name == 'timeline' or request.resolver_match.url_name == 'timeline_detail' or request.resolver_match.url_name == 'timeline_create' or request.resolver_match.url_name == 'timeline_edit' %}active{% endif %}">Journal</a>
+        <a href="{% url 'health:calendar' %}" class="tab-btn {% if request.resolver_match.url_name == 'calendar' or request.resolver_match.url_name == 'calendar_month' or request.resolver_match.url_name == 'calendar_week' or request.resolver_match.url_name == 'calendar_week_detail' %}active{% endif %}">Calendar</a>
         <a href="{% url 'health:history' %}" class="tab-btn {% if request.resolver_match.url_name == 'history' %}active{% endif %}">History</a>
     </nav>
 
