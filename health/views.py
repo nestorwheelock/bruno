@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.conf import settings
@@ -1735,3 +1736,40 @@ def calendar_week_view(request, year=None, week=None):
         'view_mode': 'week',
     }
     return render(request, 'health/calendar.html', context)
+
+
+@login_required(login_url='health:login')
+def api_calendar_entries(request):
+    """API endpoint for calendar data (JSON)."""
+    start_date = request.GET.get('start')
+    end_date = request.GET.get('end')
+
+    if not start_date or not end_date:
+        return JsonResponse({'error': 'start and end parameters required'}, status=400)
+
+    try:
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
+
+    entries = TimelineEntry.objects.filter(
+        user=request.user,
+        date__gte=start,
+        date__lte=end
+    ).select_related('provider').order_by('date', 'time')
+
+    data = [{
+        'id': e.id,
+        'title': e.title,
+        'date': e.date.isoformat(),
+        'time': e.time.strftime('%H:%M') if e.time else None,
+        'entry_type': e.entry_type,
+        'entry_type_display': e.get_entry_type_display(),
+        'status': e.status,
+        'status_display': e.get_status_display(),
+        'provider': e.provider.name if e.provider else None,
+        'url': reverse('health:timeline_detail', args=[e.id]),
+    } for e in entries]
+
+    return JsonResponse({'entries': data})

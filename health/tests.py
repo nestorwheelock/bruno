@@ -3108,3 +3108,97 @@ class CalendarWeekViewTests(TestCase):
         self.assertIn('prev_week', response.context)
         self.assertIn('next_year', response.context)
         self.assertIn('next_week', response.context)
+
+
+class CalendarAPITests(TestCase):
+    """Tests for calendar API endpoint."""
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpass123'
+        )
+        self.api_url = reverse('health:api_calendar_entries')
+
+    def test_api_requires_login(self):
+        """API requires authentication."""
+        response = self.client.get(self.api_url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_api_requires_date_params(self):
+        """API requires start and end parameters."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.api_url)
+        self.assertEqual(response.status_code, 400)
+        data = response.json()
+        self.assertIn('error', data)
+
+    def test_api_returns_entries(self):
+        """API returns entries within date range."""
+        self.client.login(username='testuser', password='testpass123')
+        today = date.today()
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=today,
+            entry_type='vet_visit',
+            title='Test Entry'
+        )
+        response = self.client.get(
+            self.api_url,
+            {'start': today.isoformat(), 'end': today.isoformat()}
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('entries', data)
+        self.assertEqual(len(data['entries']), 1)
+        self.assertEqual(data['entries'][0]['title'], 'Test Entry')
+
+    def test_api_filters_by_date_range(self):
+        """API only returns entries within specified date range."""
+        self.client.login(username='testuser', password='testpass123')
+        today = date.today()
+        # Entry in range
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=today,
+            entry_type='vet_visit',
+            title='In Range'
+        )
+        # Entry out of range
+        TimelineEntry.objects.create(
+            user=self.user,
+            date=today - timedelta(days=10),
+            entry_type='vet_visit',
+            title='Out of Range'
+        )
+        response = self.client.get(
+            self.api_url,
+            {'start': today.isoformat(), 'end': today.isoformat()}
+        )
+        data = response.json()
+        self.assertEqual(len(data['entries']), 1)
+        self.assertEqual(data['entries'][0]['title'], 'In Range')
+
+    def test_api_entry_format(self):
+        """API returns entries with correct fields."""
+        self.client.login(username='testuser', password='testpass123')
+        future_date = date.today() + timedelta(days=5)
+        entry = TimelineEntry.objects.create(
+            user=self.user,
+            date=future_date,
+            entry_type='vet_visit',
+            title='Format Test',
+            status='scheduled'
+        )
+        response = self.client.get(
+            self.api_url,
+            {'start': future_date.isoformat(), 'end': future_date.isoformat()}
+        )
+        data = response.json()
+        entry_data = data['entries'][0]
+        self.assertEqual(entry_data['id'], entry.id)
+        self.assertEqual(entry_data['title'], 'Format Test')
+        self.assertEqual(entry_data['date'], future_date.isoformat())
+        self.assertEqual(entry_data['entry_type'], 'vet_visit')
+        self.assertEqual(entry_data['status'], 'scheduled')
+        self.assertIn('url', entry_data)

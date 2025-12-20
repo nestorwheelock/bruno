@@ -73,4 +73,5 @@ urlpatterns = [
     path('calendar/<int:year>/<int:month>/', views.calendar_month_view, name='calendar_month'),
     path('calendar/week/', views.calendar_week_view, name='calendar_week'),
     path('calendar/week/<int:year>/<int:week>/', views.calendar_week_view, name='calendar_week_detail'),
+    path('api/calendar-entries/', views.api_calendar_entries, name='api_calendar_entries'),
 ]
